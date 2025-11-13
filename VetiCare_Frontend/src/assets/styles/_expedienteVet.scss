@@ -1,0 +1,422 @@
+@use './variables' as *;
+
+.expedientes-app {
+  height: 100%;
+  overflow: hidden;
+  background-color: $primary-color;
+
+  //margin: top right bottom left;
+  .records-header {
+    &__title {
+      font-size: xxx-large;
+      font-family: "The Seasons";
+      padding: 0rem 0rem 2rem 0rem;
+    }
+  }
+
+  .app-header {
+    background-color: $verde-oscuro;
+    height: 90px;
+
+
+    .app-header__title {
+      color: #fff;
+      font-size: 1.75rem;
+    }
+
+    .app-header__user {
+      color: #fff;
+
+      .app-header__username {
+        //padding: 2rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 1rem;
+        font-family: "The Seasons";
+        font-size: 28px;
+        //font-weight: 700;
+        height: 55px;
+      }
+
+      .app-header__avatar {
+        width: 40px;
+        height: 40px;
+        background-color: #fff;
+        border-radius: 50%;
+      }
+
+
+    }
+
+    .menu-toggle {
+      display: none;
+      background: transparent;
+      border: none;
+      color: #fff;
+      padding: 0.5rem;
+    }
+  }
+
+  .app-body {
+    height: calc(100% - 60px);
+    position: relative;
+
+    .sidebar-menu {
+      width: 200px;
+      font-size: 23px;
+      background-color: $verde-oscuro;
+      color: #fff;
+      font-family: "The Seasons";
+
+      ul {
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        padding-top: 2rem;
+        align-items: center;
+      }
+
+      #superadmin-item{
+       margin-bottom: 0.5rem;
+
+        .nav-link {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          width: 130px;
+          padding: 0.7rem 1rem;
+          color: #ffffff;
+          border-radius: 4px 0 0 4px;
+          border-bottom: 1px solid #fff;
+          transition: background-color 0.2s;
+
+          &:hover {
+            background-color: #ffffff;
+            border-radius: 20px;
+            color: #999;
+          }
+
+          &.active {
+            background-color: $primary-color;
+            color: $cafe;
+            border-radius: 20px;
+            font-weight: bold;
+          }
+        }
+      }
+
+      .nav-item {
+        margin-bottom: 0.5rem;
+
+        .nav-link {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          width: 130px;
+          padding: 0.7rem 1rem;
+          color: #ffffff;
+          border-radius: 4px 0 0 4px;
+          border-bottom: 1px solid #fff;
+          transition: background-color 0.2s;
+
+          &:hover {
+            background-color: #ffffff;
+            border-radius: 20px;
+            color: #999;
+          }
+
+          &.active {
+            background-color: $primary-color;
+            color: $cafe;
+            border-radius: 20px;
+            font-weight: bold;
+          }
+        }
+      }
+    }
+
+    .expedientes-page {
+
+      background-color: $primary-color;
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      margin: 2rem 2rem 3rem 5rem;
+
+      .toolbar {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        position: sticky;
+        top: 0;
+        background: inherit;
+        z-index: 10;
+
+        .search-wrapper {
+          font-family: "The Seasons";
+          font-size: 1.25rem;
+          color: #6d6a6a;
+          border-bottom: 1px solid #999;
+          flex: 0 0 auto;
+          width: 300px;
+          max-width: 100%;
+
+          .search-input {
+            width: 100%;
+            border: none;
+            background: transparent;
+            padding: 0.5rem 2rem 0.5rem 0;
+            font-size: 1.4rem;
+
+            &:focus {
+              outline: none;
+              box-shadow: none;
+
+            }
+          }
+        }
+
+
+        .btn-open-new {
+          display: inline-flex;
+          justify-content: center;
+          align-items: center;
+          background-color: $verde-claro;
+          color: black;
+          border-radius: 40px;
+          padding: 2rem;
+          font-family: "The Seasons";
+          font-size: x-large;
+          font-weight: 700;
+          height: 55px;
+          text-align: center;
+
+          &:hover {
+            background-color: #a5b68dc9;
+            color: $primary-color;
+          }
+        }
+      }
+
+      .records-list {
+        flex: 1 1 auto;
+        overflow-y: auto;
+        padding-right: 1rem;
+        padding-bottom: 5rem;
+
+        .record-item {
+          display: flex;
+          align-items: center;
+          background-color: $verde-claro;
+          border-radius: 40px;
+          padding: 1rem 3rem;
+          margin: 1.5rem 0;
+          width: 100%;
+          box-sizing: border-box;
+
+          .record-item__id,
+          .record-item__date,
+          .record-item__created {
+            flex: 1 1 0;
+            text-align: center;
+            padding: 0 4rem;
+            font-size: 22px;
+          }
+
+          .record-item__name {
+            font-size: 22px;
+            font-weight: 500;
+          }
+
+          .btn-remove {
+            background: transparent;
+            border: none;
+            color: black;
+            font-size: 1.2rem;
+          }
+
+          .btn-update {
+            background-color: $primary-color;
+            border: none;
+            border-radius: 50px;
+            padding: 0.75rem 1rem;
+            color: black;
+            font-size: 20px;
+          }
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 770px) {
+  .expedientes-app {
+    height: 100%;
+    overflow-y: auto;
+
+    .app-header {
+      .menu-toggle {
+        display: block;
+      }
+
+      .imagenLogoHeader {
+        width: 10rem;
+        height: auto;
+      }
+    }
+
+    .app-body {
+      .sidebar-menu {
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 100vh;
+        width: 220px;
+        transform: translateX(-100%);
+        transition: transform 0.3s ease-in-out;
+        z-index: 1000;
+
+        ul {
+          flex-direction: column;
+        }
+
+        .nav-link {
+          padding: 1rem;
+          border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+      }
+
+      &.sidebar-open .sidebar-menu {
+      transform: translateX(0);
+        box-shadow: 2px 0 8px rgba(0, 0, 0, 0.2);
+      }
+
+      .main-content {
+        // padding: <top> <right> <bottom> <left>;
+        margin: 0rem -0rem 2rem -3.5rem;
+        //padding: 0;
+
+        .toolbar {
+          flex-direction: column;
+          align-items: stretch;
+          gap: 0.75rem;
+
+          .search-wrapper {
+            order: 1;
+            flex: 1 1 auto !important;
+            width: 100% ;
+            max-width: none;
+            margin-bottom: 0.75rem;
+            font-size: 1rem !important;
+            border-bottom: 1px solid #999;
+            position: relative;
+
+            .search-input {
+              width: 100%;
+              padding: 0.4rem 2.5rem 0.4rem 0.5rem;
+              font-size: 1.5rem !important;
+              background: transparent;
+              border: none;
+            }
+          }
+
+          .btn-open-new {
+            font-size: 1.2rem;
+            padding: 0.5rem 1rem;
+            height: auto;
+            width: auto;
+          }
+
+          .records-header {
+            order: 3;
+            width: 100%;
+            margin-top: 0.5rem;
+
+            &__title {
+              font-size: 0.5rem;
+              color: $primary-color;
+              line-height: 1.2;
+            }
+          }
+        }
+
+        .records-list {
+          padding: 0;
+        }
+
+        .record-item {
+          display: flex;
+          flex-direction: column;
+          background-color: $verde-claro;
+          border-radius: 24px;
+          padding: 0.2rem;
+          margin-bottom: 1rem;
+
+          &__id {
+            font-size: 0.8rem;
+            color: #555;
+          }
+
+          &__name {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #222;
+            margin-bottom: 0.5rem;
+          }
+
+          &__date,
+          &__created {
+            font-size: 0.5rem;
+            color: #222;
+          }
+
+          .btn-remove,
+          .btn-update {
+            margin-top: 0;
+            display: inline-block;
+            width: calc(50% - 0.25rem);
+          }
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 1000px) {
+  .main-cardPet{
+.cardPetVet{
+  // padding: <top> <right> <bottom> <left>;
+  margin: 2rem 3rem 2rem 4rem;
+}}
+.expedientes-page {
+  margin: -2rem;
+    .records-list {
+      padding: 0 1rem;
+    }
+    .record-item {
+      flex-direction: column;
+      align-items: flex-start;
+      padding: 1rem;
+      margin: 0.75rem 0;
+      .record-item__id,
+      .record-item__date,
+      .record-item__created {
+        padding: 0.5rem 0;
+      }
+      .record-item__name {
+        font-size: 1.25rem;
+      }
+      .record-item__date,
+      .record-item__created {
+        font-size: 1rem;
+      }
+      .btn-remove,
+      .btn-update {
+        width: 100%;
+        margin-top: 0.5rem;
+      }
+    }
+  }
+}

@@ -1,0 +1,59 @@
+  @use '../mixins' as *;
+  @use '../variables' as *;
+  
+
+.edit-form{
+margin: 0.3rem;
+display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: medium;
+    display: flex;
+    flex-direction: column;
+    row-gap: 0.4em;
+
+
+    .error-message{
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: small;
+      padding-top: 2rem;
+      padding-bottom: 2rem;
+    }
+    
+
+   label{
+    font-weight: 700;
+    align-self: flex-start;
+    margin-top: 0.9rem;
+   }
+
+
+    input{        
+        width: 100%;
+        padding: 0.4rem;
+        border: 1px gray solid;
+        border-radius: 0.35em;       
+    }
+
+    select{
+        width: 100%;
+        padding: 0.4rem;
+         border: 1px gray solid;
+        border-radius: 0.35em;      
+
+    }
+
+ 
+}
+   .edit-submit{
+        background-color: $admin-azul;
+        color: white;
+        margin-top: 0.5rem;
+        align-self: start;
+        padding: 0.5rem;
+        border-radius: 0.4rem;
+
+
+        
+
+    }

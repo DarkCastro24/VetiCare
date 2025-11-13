@@ -1,0 +1,198 @@
+
+@use './variables' as *;
+
+.body-home {
+    background-color: $primary-color;
+    min-height: 100vh;
+    background-image: url('../images/homeFondo.jpg');
+    background-size: cover;
+    background-position: center;
+    text-align: center;
+    position: relative;
+    font-family: "The Seasons";
+}
+
+.fotoAniHome {
+    position: absolute;
+    top: 65%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 80%;
+    max-width: 800px;
+
+    img {
+        width: 100%;
+        height: auto;
+        object-fit: contain;
+        display: block;
+        transition: transform 0.3s ease;
+
+        &:hover {
+            transform: scale(1.02);
+        }
+    }
+}
+
+.home-titulo {
+    position: absolute;
+    top: 20%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100%;
+    max-width: 800px;
+
+    .home-texto {
+        font-size: 4.5rem;
+        font-weight: 150;
+
+        @media (max-width: 850px) {
+            font-size: 2.5rem;
+            font-weight: 50;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+    }
+}
+
+.serviHora {
+    background-color: $primary-color;
+    background-image: url('../images/homeFondo.jpg');
+    background-size: cover;
+    background-position: center;
+
+    &Titulo {
+        font-family: "The Seasons";
+        font-size: 3.5rem;
+        font-weight: 900;
+        text-align: center;
+        margin-bottom: 2rem;
+        color: black;
+    }
+
+    .servicios {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: -10px;
+    }
+
+    &__services-item {
+        text-align: center;
+        padding: 2rem;
+        flex: 0 0 calc(20% - 2rem);
+
+        &__icon {
+            background-color: $verde-claro;
+            border-radius: 1.5rem;
+            width: 100%;
+            padding-bottom: 100%;
+            position: relative;
+            transition: transform .2s ease;
+
+            &:hover {
+                transform: scale(1.04);
+            }
+
+            img {
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                width: 6.5rem;
+                height: 6.5rem;
+            }
+        }
+
+        &__label {
+            margin-top: .75rem;
+            font-size: 1.2rem;
+            color: black;
+        }
+    }
+
+    &__schedule {
+        margin-top: 4rem;
+        color: black;
+
+        &__title {
+            font-family: "The Seasons";
+            font-size: 3.5rem;
+            font-weight: 900;
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+
+        &__box {
+            background-color: $verde-claro;
+            border-radius: 1.5rem;
+            padding: 2rem;
+            max-width: 600px;
+            margin: 0 auto;
+
+            &:hover {
+                transform: scale(1.01);
+            }
+        }
+
+        &__list {
+            display: grid;
+
+            grid-template-columns: auto auto;
+            justify-content: center;
+            column-gap: 2rem;
+            row-gap: 1rem;
+
+            dt {
+                font-weight: 700;
+                font-size: 1.25rem;
+                text-align: right;
+            }
+
+            dd {
+                margin: 0;
+                font-size: 1.25rem;
+                text-align: left;
+            }
+        }
+    }
+}
+
+@media (max-width: 1200px) {
+    .serviHora {
+        padding: 3rem 1rem;
+
+        &__services-item {
+            flex: 0 0 calc(33.333% - 1rem);
+            padding: 1rem;
+        }
+
+        &__services-item__icon {
+            width: 80%;
+            padding-bottom: 80%;
+        }
+
+        &__services-item__icon img {
+            width: 50%;
+            height: 50%;
+        }
+
+        &__schedule {
+            &__title {
+                font-size: 2.5rem;
+            }
+
+            &__box {
+                padding: 1.5rem;
+                max-width: 100%;
+            }
+
+            &__list dt,
+            &__list dd {
+                font-size: 1rem;
+            }
+        }
+    }
+}

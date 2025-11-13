@@ -1,0 +1,59 @@
+@use '../mixins' as *;
+  @use '../variables' as *;
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+ // background: rgba(0, 0, 0, 0.5); 
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.edit-modal {
+  background: #fff;
+  border-radius: 8px;
+  width: 90%;
+  max-width: 500px;
+  padding: 2rem;
+  position: relative;
+  //box-shadow: 0 5px 25px rgba(0, 0, 0, 0.2);
+  //animation: fadeIn 0.3s ease;
+}
+
+.close-button {
+  position: absolute;
+  top: 0.75rem;
+  right: 1rem;
+  font-size: 1.5rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #888;
+
+  &:hover {
+    color: #000;
+  }
+}
+
+.modal-content {
+
+  
+  
+}
+
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10%);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

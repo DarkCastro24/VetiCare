@@ -1,0 +1,102 @@
+  @use '../mixins' as *;
+  @use '../variables' as *;
+  
+
+  #main-container-appointments {
+    background-color: $primary-color;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+    overflow-y: auto;
+
+    #title{
+        margin-top: 2rem;
+        margin-left: 2rem;
+        font-family: "The Seasons";;
+        font-size: 2.5rem;
+        
+    }
+
+    p{
+        margin-top: 0rem;
+        margin-left: 2rem;
+        font-family: "The Seasons";;
+        font-size: 2.5rem; 
+        margin-right: 2rem;
+    }
+
+    #search-box-container{
+  
+        display: flex;
+        flex-direction: row;
+
+     
+    }
+
+    #table-container {
+      display: flex;
+      justify-content: center;
+     width: 100%;
+
+      .simple-table{
+    font-family: "The Seasons";;
+    margin: 4rem;
+     border: 1px solid black;
+
+      th{
+        border: 1px solid black;
+      }
+
+     
+
+      tr{
+        border: 1px solid black;
+        height: 4rem;
+
+
+        text-align: center;
+      }
+
+      td{
+        border: 1px solid black;
+        width: 13rem;
+        height: 5rem;
+    
+      }
+
+
+      td#no-rows{
+        width: 100%;
+      }
+
+
+      td:first-child{
+        width: 4rem;
+        min-width: 7rem;
+      }
+
+      td#extra-row{
+      display: flex;
+      justify-content:center;
+      align-items: center;
+      border: 0px solid black;
+      
+      }
+  }
+  
+
+
+    
+  }
+    
+
+
+
+
+
+
+
+
+
+  }

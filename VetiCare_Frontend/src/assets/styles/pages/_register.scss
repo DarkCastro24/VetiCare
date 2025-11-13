@@ -1,0 +1,270 @@
+  @use '../mixins' as *;
+  @use '../variables' as *;
+  
+  #main-container-register {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    height:100%;
+    background-color: $primary-color;
+
+
+    #image-container-register {
+
+
+    height: 100%;
+    min-height: 100%;
+    margin: 0;
+     padding: 0;
+    flex-direction: column;
+      
+
+       @include respond-to($mobile) {
+        width: 0vw;
+      }
+
+      @include respond-to($tablet) {
+        width: 95vw;
+
+      }
+
+      @include respond-to($desktop) {
+        width: 34vw;
+      }
+
+
+      
+     
+
+      img {
+        height: 100%;
+        width: 540px;
+        
+
+        @include respond-to($tablet) {
+          max-width: 395px;
+          min-width: 380px;
+
+        }
+
+        @include respond-to($desktop) {
+          max-width: 400px;
+          min-width: 380px;
+          
+          
+
+
+        }
+
+         @include respond-to($mobile) {
+          min-width: none;
+    
+
+        }
+
+
+
+      }
+    }
+
+    #fields-container-register {
+        
+        
+
+
+
+      @include respond-to($tablet) {
+        padding-right: 3rem;
+        width: 72vw;
+       
+        
+      }
+
+
+       @include respond-to($desktop) {
+      width: 72vw;
+       
+        
+      }
+      
+
+       @include respond-to($mobile) {
+        width: 100vw;
+        padding-right: 2rem;
+      
+       
+        
+      }
+      
+
+
+      flex: content;
+      flex-direction: column;
+      justify-content: center;
+      
+      height: 100%;
+      padding-top: 1vh;
+
+
+      h4 {
+        font-size: 2.7rem;
+        margin-top: 0.5rem;
+        font-family: "The Seasons";;
+        font-style: normal;
+        font-weight: 300;
+        text-align: left;
+        padding-left: 4.5rem;
+
+
+
+      }
+
+      #logo-container-register {
+        flex: content;
+        flex-direction: row;
+        justify-content: left;
+        padding-left: 2rem;
+        width: 100%;
+
+        img {
+          justify-content: left;
+          
+          @include respond-to($desktop) {
+          padding-left: 1.5em;
+       
+        
+
+          
+        }
+
+ 
+
+        }
+      }
+
+
+      form {
+     
+        padding-left: 2.2rem;
+       
+        box-sizing: border-box;
+
+        @include respond-to($tablet) {
+        padding-right: 3rem;
+         padding-left: 5rem;
+        
+      }
+
+
+      @include respond-to($desktop) {
+        padding-right: 3rem;
+        padding-left: 5rem;
+        
+      }
+
+
+
+        label {
+          font-family: "The Seasons";;
+          font-style: normal;
+          font-size: 1.7rem;
+          box-sizing: border-box;
+          text-align: left;
+          padding-top: 0.1rem;
+
+          padding-bottom: 0.5rem;
+        }
+
+
+
+        input {
+          border-radius: 8rem;
+          width: 100%;
+          height: 3rem;
+          background-color: $primary-color;
+          padding-top: 1.5rem;
+          box-sizing: border-box;
+          align-self: center;
+          border: revert;
+          outline: revert;
+          border-color: $cafe;
+          border: 1px solid $cafe;
+          border-top: none;
+          border-top: 1px solid $cafe;
+          padding-bottom: 1.5rem;
+          padding-left: 1rem;
+          color: black;
+          
+        @include respond-to($mobile) {
+        width: 100%;
+
+       
+        
+        }
+
+
+
+
+        }
+
+        input:focus {
+          border: revert;
+          outline: revert;
+          outline: none;
+          border: 1px solid $cafe;
+
+
+
+
+
+
+        }
+
+        input:-webkit-autofill,
+        input:-webkit-autofill:hover,
+        input:-webkit-autofill:focus,
+        input:-webkit-autofill:active {
+          -webkit-box-shadow: 0 0 0 30px $primary-color inset !important;
+          -webkit-text-fill-color: black !important;
+          background-color: $primary-color !important;
+          background-image: none !important;
+        }
+
+        button {
+          width: 100%;
+          border-radius: 8rem;
+          margin-top: 2rem;
+          background-color: $cafe;
+          font-family: "The Seasons";;
+          font-size: 1.5rem;
+          padding: 0.4rem;
+        }
+
+
+
+      }
+
+
+      #signin-link-register {
+        width: 100%;
+        margin-top: 1.1rem;
+        flex: content;
+        flex-direction: row;
+        text-align: center;
+
+
+
+        a {
+          color: $cafe;
+          font-size: 1.4rem;
+          text-decoration: none;
+        
+          
+        }
+      }
+
+    }
+
+
+
+  }

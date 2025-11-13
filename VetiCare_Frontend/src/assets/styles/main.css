@@ -1,0 +1,2056 @@
+#main-container {
+  background-color: #ede8dc;
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  height: 100%;
+}
+#main-container #image-container {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  flex-direction: column;
+}
+@media (min-width: 0px) {
+  #main-container #image-container {
+    width: 0vw;
+  }
+}
+@media (min-width: 768px) {
+  #main-container #image-container {
+    width: 95vw;
+  }
+}
+@media (min-width: 1024px) {
+  #main-container #image-container {
+    width: 34vw;
+  }
+}
+#main-container #image-container img {
+  height: 100%;
+  width: 540px;
+}
+@media (min-width: 768px) {
+  #main-container #image-container img {
+    max-width: 395px;
+    min-width: 380px;
+  }
+}
+@media (min-width: 1024px) {
+  #main-container #image-container img {
+    max-width: 400px;
+    min-width: 380px;
+  }
+}
+@media (min-width: 0px) {
+  #main-container #image-container img {
+    min-width: none;
+  }
+}
+#main-container #fields-container {
+  flex: content;
+  flex-direction: column;
+  justify-content: center;
+  height: 100%;
+  padding-top: 12vh;
+}
+@media (min-width: 768px) {
+  #main-container #fields-container {
+    padding-right: 3rem;
+    width: 72vw;
+  }
+}
+@media (min-width: 1024px) {
+  #main-container #fields-container {
+    width: 72vw;
+  }
+}
+@media (min-width: 0px) {
+  #main-container #fields-container {
+    width: 100vw;
+    padding-right: 2rem;
+  }
+}
+#main-container #fields-container h4 {
+  font-size: 2.7rem;
+  margin-top: 0.5rem;
+  font-family: "The Seasons";
+  font-style: normal;
+  font-weight: 300;
+  text-align: left;
+  padding-left: 4.5rem;
+}
+#main-container #fields-container #logo-container {
+  flex: content;
+  flex-direction: row;
+  justify-content: left;
+  padding-left: 2rem;
+  width: 100%;
+}
+#main-container #fields-container #logo-container img {
+  justify-content: left;
+}
+@media (min-width: 1024px) {
+  #main-container #fields-container #logo-container img {
+    padding-left: 1.5em;
+  }
+}
+#main-container #fields-container form {
+  padding-left: 2.2rem;
+  box-sizing: border-box;
+}
+@media (min-width: 768px) {
+  #main-container #fields-container form {
+    padding-right: 3rem;
+    padding-left: 5rem;
+  }
+}
+@media (min-width: 1024px) {
+  #main-container #fields-container form {
+    padding-right: 3rem;
+    padding-left: 5rem;
+  }
+}
+#main-container #fields-container form label {
+  font-family: "The Seasons";
+  font-style: normal;
+  font-size: 1.7rem;
+  box-sizing: border-box;
+  text-align: left;
+  padding-top: 2rem;
+  padding-bottom: 1rem;
+}
+#main-container #fields-container form input {
+  border-radius: 8rem;
+  width: 100%;
+  height: 3rem;
+  background-color: #ede8dc;
+  padding-top: 1.5rem;
+  box-sizing: border-box;
+  align-self: center;
+  border: revert;
+  outline: revert;
+  border-color: #b17f59;
+  border: 1px solid #b17f59;
+  border-top: none;
+  border-top: 1px solid #b17f59;
+  padding-bottom: 1.5rem;
+  padding-left: 1rem;
+  color: black;
+}
+@media (min-width: 0px) {
+  #main-container #fields-container form input {
+    width: 100%;
+  }
+}
+#main-container #fields-container form input:focus {
+  border: revert;
+  outline: revert;
+  outline: none;
+  border: 1px solid #b17f59;
+}
+#main-container #fields-container form input:-webkit-autofill,
+#main-container #fields-container form input:-webkit-autofill:hover,
+#main-container #fields-container form input:-webkit-autofill:focus,
+#main-container #fields-container form input:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0 30px #ede8dc inset !important;
+  -webkit-text-fill-color: black !important;
+  background-color: #ede8dc !important;
+  background-image: none !important;
+}
+#main-container #fields-container form button {
+  width: 100%;
+  border-radius: 8rem;
+  margin-top: 3rem;
+  background-color: #b17f59;
+  font-family: "The Seasons";
+  font-size: 1.6rem;
+  padding: 0.4rem;
+}
+#main-container #fields-container #register-link {
+  width: 100%;
+  margin-top: 2rem;
+  flex: content;
+  flex-direction: row;
+  text-align: center;
+}
+#main-container #fields-container #register-link a {
+  color: #b17f59;
+  font-size: 1.4rem;
+  text-decoration: none;
+}
+
+#main-container-register {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  height: 100%;
+  background-color: #ede8dc;
+}
+#main-container-register #image-container-register {
+  height: 100%;
+  min-height: 100%;
+  margin: 0;
+  padding: 0;
+  flex-direction: column;
+}
+@media (min-width: 0px) {
+  #main-container-register #image-container-register {
+    width: 0vw;
+  }
+}
+@media (min-width: 768px) {
+  #main-container-register #image-container-register {
+    width: 95vw;
+  }
+}
+@media (min-width: 1024px) {
+  #main-container-register #image-container-register {
+    width: 34vw;
+  }
+}
+#main-container-register #image-container-register img {
+  height: 100%;
+  width: 540px;
+}
+@media (min-width: 768px) {
+  #main-container-register #image-container-register img {
+    max-width: 395px;
+    min-width: 380px;
+  }
+}
+@media (min-width: 1024px) {
+  #main-container-register #image-container-register img {
+    max-width: 400px;
+    min-width: 380px;
+  }
+}
+@media (min-width: 0px) {
+  #main-container-register #image-container-register img {
+    min-width: none;
+  }
+}
+#main-container-register #fields-container-register {
+  flex: content;
+  flex-direction: column;
+  justify-content: center;
+  height: 100%;
+  padding-top: 1vh;
+}
+@media (min-width: 768px) {
+  #main-container-register #fields-container-register {
+    padding-right: 3rem;
+    width: 72vw;
+  }
+}
+@media (min-width: 1024px) {
+  #main-container-register #fields-container-register {
+    width: 72vw;
+  }
+}
+@media (min-width: 0px) {
+  #main-container-register #fields-container-register {
+    width: 100vw;
+    padding-right: 2rem;
+  }
+}
+#main-container-register #fields-container-register h4 {
+  font-size: 2.7rem;
+  margin-top: 0.5rem;
+  font-family: "The Seasons";
+  font-style: normal;
+  font-weight: 300;
+  text-align: left;
+  padding-left: 4.5rem;
+}
+#main-container-register #fields-container-register #logo-container-register {
+  flex: content;
+  flex-direction: row;
+  justify-content: left;
+  padding-left: 2rem;
+  width: 100%;
+}
+#main-container-register #fields-container-register #logo-container-register img {
+  justify-content: left;
+}
+@media (min-width: 1024px) {
+  #main-container-register #fields-container-register #logo-container-register img {
+    padding-left: 1.5em;
+  }
+}
+#main-container-register #fields-container-register form {
+  padding-left: 2.2rem;
+  box-sizing: border-box;
+}
+@media (min-width: 768px) {
+  #main-container-register #fields-container-register form {
+    padding-right: 3rem;
+    padding-left: 5rem;
+  }
+}
+@media (min-width: 1024px) {
+  #main-container-register #fields-container-register form {
+    padding-right: 3rem;
+    padding-left: 5rem;
+  }
+}
+#main-container-register #fields-container-register form label {
+  font-family: "The Seasons";
+  font-style: normal;
+  font-size: 1.7rem;
+  box-sizing: border-box;
+  text-align: left;
+  padding-top: 0.1rem;
+  padding-bottom: 0.5rem;
+}
+#main-container-register #fields-container-register form input {
+  border-radius: 8rem;
+  width: 100%;
+  height: 3rem;
+  background-color: #ede8dc;
+  padding-top: 1.5rem;
+  box-sizing: border-box;
+  align-self: center;
+  border: revert;
+  outline: revert;
+  border-color: #b17f59;
+  border: 1px solid #b17f59;
+  border-top: none;
+  border-top: 1px solid #b17f59;
+  padding-bottom: 1.5rem;
+  padding-left: 1rem;
+  color: black;
+}
+@media (min-width: 0px) {
+  #main-container-register #fields-container-register form input {
+    width: 100%;
+  }
+}
+#main-container-register #fields-container-register form input:focus {
+  border: revert;
+  outline: revert;
+  outline: none;
+  border: 1px solid #b17f59;
+}
+#main-container-register #fields-container-register form input:-webkit-autofill,
+#main-container-register #fields-container-register form input:-webkit-autofill:hover,
+#main-container-register #fields-container-register form input:-webkit-autofill:focus,
+#main-container-register #fields-container-register form input:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0 30px #ede8dc inset !important;
+  -webkit-text-fill-color: black !important;
+  background-color: #ede8dc !important;
+  background-image: none !important;
+}
+#main-container-register #fields-container-register form button {
+  width: 100%;
+  border-radius: 8rem;
+  margin-top: 2rem;
+  background-color: #b17f59;
+  font-family: "The Seasons";
+  font-size: 1.5rem;
+  padding: 0.4rem;
+}
+#main-container-register #fields-container-register #signin-link-register {
+  width: 100%;
+  margin-top: 1.1rem;
+  flex: content;
+  flex-direction: row;
+  text-align: center;
+}
+#main-container-register #fields-container-register #signin-link-register a {
+  color: #b17f59;
+  font-size: 1.4rem;
+  text-decoration: none;
+}
+
+#main-container-appointments {
+  background-color: #ede8dc;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  overflow-y: auto;
+}
+#main-container-appointments #title {
+  margin-top: 2rem;
+  margin-left: 2rem;
+  font-family: "The Seasons";
+  font-size: 2.5rem;
+}
+#main-container-appointments p {
+  margin-top: 0rem;
+  margin-left: 2rem;
+  font-family: "The Seasons";
+  font-size: 2.5rem;
+  margin-right: 2rem;
+}
+#main-container-appointments #search-box-container {
+  display: flex;
+  flex-direction: row;
+}
+#main-container-appointments #table-container {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+#main-container-appointments #table-container .simple-table {
+  font-family: "The Seasons";
+  margin: 4rem;
+  border: 1px solid black;
+}
+#main-container-appointments #table-container .simple-table th {
+  border: 1px solid black;
+}
+#main-container-appointments #table-container .simple-table tr {
+  border: 1px solid black;
+  height: 4rem;
+  text-align: center;
+}
+#main-container-appointments #table-container .simple-table td {
+  border: 1px solid black;
+  width: 13rem;
+  height: 5rem;
+}
+#main-container-appointments #table-container .simple-table td#no-rows {
+  width: 100%;
+}
+#main-container-appointments #table-container .simple-table td:first-child {
+  width: 4rem;
+  min-width: 7rem;
+}
+#main-container-appointments #table-container .simple-table td#extra-row {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 0px solid black;
+}
+
+#search-container {
+  margin-top: 10px;
+  position: relative;
+  width: 25rem;
+  margin-bottom: 2rem;
+}
+@media (min-width: 0px) {
+  #search-container {
+    width: 20rem;
+    padding: 1rem 1rem 0rem 1rem;
+  }
+  #search-container input.search-box {
+    height: 2.5rem;
+    margin-left: 0rem;
+    background-color: transparent;
+    border-color: transparent;
+    border-bottom-color: gray;
+    border-bottom-width: 1px;
+    width: 20rem;
+  }
+}
+#search-container img {
+  position: absolute;
+  height: 20px;
+  top: 27px;
+  left: 96%;
+}
+#search-container input {
+  color: black;
+  font-family: "" The Seasons ";";
+  padding-left: 4px;
+  font-size: 1.3rem;
+}
+#search-container input:focus {
+  border: revert;
+  outline: revert;
+  outline: none;
+  border-width: 0px 0px 1px 0px;
+  border-color: gray;
+}
+#search-container input::placeholder {
+  color: black;
+}
+#search-container input:-webkit-autofill,
+#search-container input:-webkit-autofill:hover,
+#search-container input:-webkit-autofill:focus,
+#search-container input:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0 30px #ede8dc inset !important;
+  -webkit-text-fill-color: black !important;
+  background-color: transparent !important;
+  background-image: none !important;
+}
+
+input.search-box {
+  height: 2.5rem;
+  margin-left: 0rem;
+  background-color: transparent;
+  border-color: transparent;
+  border-bottom-color: gray;
+  border-bottom-width: 1px;
+  width: 25rem;
+}
+
+.table-wrapper {
+  width: 100%;
+  max-width: 95vw;
+  overflow-x: auto;
+  padding: 1rem;
+}
+.table-wrapper .simple-table {
+  font-family: "The Seasons";
+  margin: 4rem 0;
+  width: 100%;
+  min-width: 600px;
+  border-collapse: collapse;
+  border: 1px solid black;
+}
+.table-wrapper .simple-table th,
+.table-wrapper .simple-table td {
+  border: 1px solid black;
+  text-align: center;
+}
+.table-wrapper .simple-table tr {
+  border: 1px solid black;
+  height: 4rem;
+}
+.table-wrapper .simple-table td {
+  width: 13rem;
+}
+.table-wrapper .simple-table td#no-rows {
+  width: 100%;
+}
+@media (min-width: 768px) {
+  .table-wrapper .simple-table th,
+  .table-wrapper .simple-table td {
+    min-width: 5rem;
+  }
+}
+@media (min-width: 0px) {
+  .table-wrapper .simple-table th,
+  .table-wrapper .simple-table td {
+    min-width: 6rem;
+    padding: 4px;
+  }
+}
+
+@media (max-width: 768px) {
+  .table-wrapper .simple-table {
+    font-size: 1rem;
+    min-width: 400px;
+    max-width: 600px;
+  }
+}
+.check-box {
+  width: 22px;
+  height: 22px;
+  background-color: transparent;
+  cursor: pointer;
+  border: 1px solid black;
+}
+
+#true-box {
+  position: relative;
+  justify-content: center;
+  align-items: center;
+}
+#true-box img {
+  position: absolute;
+  top: 3.5px;
+  left: 2px;
+}
+
+.container-header {
+  background-color: #a5b68d;
+  padding: 1rem 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  width: 100%;
+  position: relative;
+  z-index: 1000;
+}
+.container-header .navbar-brand {
+  display: flex;
+  align-items: center;
+}
+.container-header .navbar-toggler {
+  display: none;
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+.container-header .navbar-menu {
+  flex-grow: 1;
+  display: flex;
+  justify-content: flex-end;
+}
+.container-header .navbar-menu ul {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 3rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  font-size: 1.5rem;
+}
+.container-header .navbar-menu ul li a.nav-link {
+  color: black;
+  font-weight: 550;
+  font-family: "The Seasons";
+  text-decoration: none;
+}
+.container-header .navbar-menu ul li a.nav-link:hover {
+  color: #524f4f;
+  text-decoration: underline;
+}
+@media (max-width: 690px) {
+  .container-header {
+    align-items: flex-start;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: auto;
+    border: none;
+    padding: 0.5rem;
+    cursor: pointer;
+  }
+  .container-header svg {
+    width: 32px;
+    height: 32px;
+  }
+  .container-header .navbar-toggler {
+    display: block;
+    margin-left: auto;
+  }
+  .container-header .navbar-menu {
+    display: none;
+    width: 100%;
+  }
+  .container-header .navbar-menu.open {
+    display: block;
+  }
+  .container-header .navbar-menu.open ul {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.1rem;
+    margin-top: 1rem;
+    font-size: 1.1rem;
+    align-items: center;
+    justify-content: center;
+  }
+}
+
+.body-home {
+  background-color: #ede8dc;
+  min-height: 100vh;
+  background-image: url("../images/homeFondo.jpg");
+  background-size: cover;
+  background-position: center;
+  text-align: center;
+  position: relative;
+  font-family: "The Seasons";
+}
+
+.fotoAniHome {
+  position: absolute;
+  top: 65%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 80%;
+  max-width: 800px;
+}
+.fotoAniHome img {
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+  display: block;
+  transition: transform 0.3s ease;
+}
+.fotoAniHome img:hover {
+  transform: scale(1.02);
+}
+
+.home-titulo {
+  position: absolute;
+  top: 20%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  max-width: 800px;
+}
+.home-titulo .home-texto {
+  font-size: 4.5rem;
+  font-weight: 150;
+}
+@media (max-width: 850px) {
+  .home-titulo .home-texto {
+    font-size: 2.5rem;
+    font-weight: 50;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+  }
+}
+
+.serviHora {
+  background-color: #ede8dc;
+  background-image: url("../images/homeFondo.jpg");
+  background-size: cover;
+  background-position: center;
+}
+.serviHoraTitulo {
+  font-family: "The Seasons";
+  font-size: 3.5rem;
+  font-weight: 900;
+  text-align: center;
+  margin-bottom: 2rem;
+  color: black;
+}
+.serviHora .servicios {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: -10px;
+}
+.serviHora__services-item {
+  text-align: center;
+  padding: 2rem;
+  flex: 0 0 calc(20% - 2rem);
+}
+.serviHora__services-item__icon {
+  background-color: #c1cfa0;
+  border-radius: 1.5rem;
+  width: 100%;
+  padding-bottom: 100%;
+  position: relative;
+  transition: transform 0.2s ease;
+}
+.serviHora__services-item__icon:hover {
+  transform: scale(1.04);
+}
+.serviHora__services-item__icon img {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 6.5rem;
+  height: 6.5rem;
+}
+.serviHora__services-item__label {
+  margin-top: 0.75rem;
+  font-size: 1.2rem;
+  color: black;
+}
+.serviHora__schedule {
+  margin-top: 4rem;
+  color: black;
+}
+.serviHora__schedule__title {
+  font-family: "The Seasons";
+  font-size: 3.5rem;
+  font-weight: 900;
+  text-align: center;
+  margin-bottom: 2rem;
+}
+.serviHora__schedule__box {
+  background-color: #c1cfa0;
+  border-radius: 1.5rem;
+  padding: 2rem;
+  max-width: 600px;
+  margin: 0 auto;
+}
+.serviHora__schedule__box:hover {
+  transform: scale(1.01);
+}
+.serviHora__schedule__list {
+  display: grid;
+  grid-template-columns: auto auto;
+  justify-content: center;
+  column-gap: 2rem;
+  row-gap: 1rem;
+}
+.serviHora__schedule__list dt {
+  font-weight: 700;
+  font-size: 1.25rem;
+  text-align: right;
+}
+.serviHora__schedule__list dd {
+  margin: 0;
+  font-size: 1.25rem;
+  text-align: left;
+}
+
+@media (max-width: 1200px) {
+  .serviHora {
+    padding: 3rem 1rem;
+  }
+  .serviHora__services-item {
+    flex: 0 0 calc(33.333% - 1rem);
+    padding: 1rem;
+  }
+  .serviHora__services-item__icon {
+    width: 80%;
+    padding-bottom: 80%;
+  }
+  .serviHora__services-item__icon img {
+    width: 50%;
+    height: 50%;
+  }
+  .serviHora__schedule__title {
+    font-size: 2.5rem;
+  }
+  .serviHora__schedule__box {
+    padding: 1.5rem;
+    max-width: 100%;
+  }
+  .serviHora__schedule__list dt, .serviHora__schedule__list dd {
+    font-size: 1rem;
+  }
+}
+.containerGato {
+  background-image: url("../images/homeFondo.jpg");
+  background-size: cover;
+  background-position: center;
+  padding: 8rem;
+  position: relative;
+  font-family: "The Seasons";
+}
+
+.icon-gato {
+  width: 5em;
+  height: auto;
+}
+.icon-gato:hover {
+  transform: scale(1.08);
+}
+@media (max-width: 1200px) {
+  .icon-gato {
+    display: none;
+  }
+}
+
+.text-justify {
+  text-align: justify;
+  text-align-last: left;
+  font-family: "Open Sans", sans-serif;
+}
+@media (max-width: 600px) {
+  .text-justify {
+    text-align: left;
+  }
+}
+
+.expedientes-app {
+  height: 100%;
+  overflow: hidden;
+  background-color: #ede8dc;
+}
+.expedientes-app .records-header__title {
+  font-size: xxx-large;
+  font-family: "The Seasons";
+  padding: 0rem 0rem 2rem 0rem;
+}
+.expedientes-app .app-header {
+  background-color: #a5b68d;
+  height: 90px;
+}
+.expedientes-app .app-header .app-header__title {
+  color: #fff;
+  font-size: 1.75rem;
+}
+.expedientes-app .app-header .app-header__user {
+  color: #fff;
+}
+.expedientes-app .app-header .app-header__user .app-header__username {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  font-family: "The Seasons";
+  font-size: 28px;
+  height: 55px;
+}
+.expedientes-app .app-header .app-header__user .app-header__avatar {
+  width: 40px;
+  height: 40px;
+  background-color: #fff;
+  border-radius: 50%;
+}
+.expedientes-app .app-header .menu-toggle {
+  display: none;
+  background: transparent;
+  border: none;
+  color: #fff;
+  padding: 0.5rem;
+}
+.expedientes-app .app-body {
+  height: calc(100% - 60px);
+  position: relative;
+}
+.expedientes-app .app-body .sidebar-menu {
+  width: 200px;
+  font-size: 23px;
+  background-color: #a5b68d;
+  color: #fff;
+  font-family: "The Seasons";
+}
+.expedientes-app .app-body .sidebar-menu ul {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  padding-top: 2rem;
+  align-items: center;
+}
+.expedientes-app .app-body .sidebar-menu #superadmin-item {
+  margin-bottom: 0.5rem;
+}
+.expedientes-app .app-body .sidebar-menu #superadmin-item .nav-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 130px;
+  padding: 0.7rem 1rem;
+  color: #ffffff;
+  border-radius: 4px 0 0 4px;
+  border-bottom: 1px solid #fff;
+  transition: background-color 0.2s;
+}
+.expedientes-app .app-body .sidebar-menu #superadmin-item .nav-link:hover {
+  background-color: #ffffff;
+  border-radius: 20px;
+  color: #999;
+}
+.expedientes-app .app-body .sidebar-menu #superadmin-item .nav-link.active {
+  background-color: #ede8dc;
+  color: #b17f59;
+  border-radius: 20px;
+  font-weight: bold;
+}
+.expedientes-app .app-body .sidebar-menu .nav-item {
+  margin-bottom: 0.5rem;
+}
+.expedientes-app .app-body .sidebar-menu .nav-item .nav-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 130px;
+  padding: 0.7rem 1rem;
+  color: #ffffff;
+  border-radius: 4px 0 0 4px;
+  border-bottom: 1px solid #fff;
+  transition: background-color 0.2s;
+}
+.expedientes-app .app-body .sidebar-menu .nav-item .nav-link:hover {
+  background-color: #ffffff;
+  border-radius: 20px;
+  color: #999;
+}
+.expedientes-app .app-body .sidebar-menu .nav-item .nav-link.active {
+  background-color: #ede8dc;
+  color: #b17f59;
+  border-radius: 20px;
+  font-weight: bold;
+}
+.expedientes-app .app-body .expedientes-page {
+  background-color: #ede8dc;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  margin: 2rem 2rem 3rem 5rem;
+}
+.expedientes-app .app-body .expedientes-page .toolbar {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  background: inherit;
+  z-index: 10;
+}
+.expedientes-app .app-body .expedientes-page .toolbar .search-wrapper {
+  font-family: "The Seasons";
+  font-size: 1.25rem;
+  color: #6d6a6a;
+  border-bottom: 1px solid #999;
+  flex: 0 0 auto;
+  width: 300px;
+  max-width: 100%;
+}
+.expedientes-app .app-body .expedientes-page .toolbar .search-wrapper .search-input {
+  width: 100%;
+  border: none;
+  background: transparent;
+  padding: 0.5rem 2rem 0.5rem 0;
+  font-size: 1.4rem;
+}
+.expedientes-app .app-body .expedientes-page .toolbar .search-wrapper .search-input:focus {
+  outline: none;
+  box-shadow: none;
+}
+.expedientes-app .app-body .expedientes-page .toolbar .btn-open-new {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #c1cfa0;
+  color: black;
+  border-radius: 40px;
+  padding: 2rem;
+  font-family: "The Seasons";
+  font-size: x-large;
+  font-weight: 700;
+  height: 55px;
+  text-align: center;
+}
+.expedientes-app .app-body .expedientes-page .toolbar .btn-open-new:hover {
+  background-color: rgba(165, 182, 141, 0.7882352941);
+  color: #ede8dc;
+}
+.expedientes-app .app-body .expedientes-page .records-list {
+  flex: 1 1 auto;
+  overflow-y: auto;
+  padding-right: 1rem;
+  padding-bottom: 5rem;
+}
+.expedientes-app .app-body .expedientes-page .records-list .record-item {
+  display: flex;
+  align-items: center;
+  background-color: #c1cfa0;
+  border-radius: 40px;
+  padding: 1rem 3rem;
+  margin: 1.5rem 0;
+  width: 100%;
+  box-sizing: border-box;
+}
+.expedientes-app .app-body .expedientes-page .records-list .record-item .record-item__id,
+.expedientes-app .app-body .expedientes-page .records-list .record-item .record-item__date,
+.expedientes-app .app-body .expedientes-page .records-list .record-item .record-item__created {
+  flex: 1 1 0;
+  text-align: center;
+  padding: 0 4rem;
+  font-size: 22px;
+}
+.expedientes-app .app-body .expedientes-page .records-list .record-item .record-item__name {
+  font-size: 22px;
+  font-weight: 500;
+}
+.expedientes-app .app-body .expedientes-page .records-list .record-item .btn-remove {
+  background: transparent;
+  border: none;
+  color: black;
+  font-size: 1.2rem;
+}
+.expedientes-app .app-body .expedientes-page .records-list .record-item .btn-update {
+  background-color: #ede8dc;
+  border: none;
+  border-radius: 50px;
+  padding: 0.75rem 1rem;
+  color: black;
+  font-size: 20px;
+}
+
+@media (max-width: 770px) {
+  .expedientes-app {
+    height: 100%;
+    overflow-y: auto;
+  }
+  .expedientes-app .app-header .menu-toggle {
+    display: block;
+  }
+  .expedientes-app .app-header .imagenLogoHeader {
+    width: 10rem;
+    height: auto;
+  }
+  .expedientes-app .app-body .sidebar-menu {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    width: 220px;
+    transform: translateX(-100%);
+    transition: transform 0.3s ease-in-out;
+    z-index: 1000;
+  }
+  .expedientes-app .app-body .sidebar-menu ul {
+    flex-direction: column;
+  }
+  .expedientes-app .app-body .sidebar-menu .nav-link {
+    padding: 1rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  }
+  .expedientes-app .app-body.sidebar-open .sidebar-menu {
+    transform: translateX(0);
+    box-shadow: 2px 0 8px rgba(0, 0, 0, 0.2);
+  }
+  .expedientes-app .app-body .main-content {
+    margin: 0rem 0rem 2rem -3.5rem;
+  }
+  .expedientes-app .app-body .main-content .toolbar {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.75rem;
+  }
+  .expedientes-app .app-body .main-content .toolbar .search-wrapper {
+    order: 1;
+    flex: 1 1 auto !important;
+    width: 100%;
+    max-width: none;
+    margin-bottom: 0.75rem;
+    font-size: 1rem !important;
+    border-bottom: 1px solid #999;
+    position: relative;
+  }
+  .expedientes-app .app-body .main-content .toolbar .search-wrapper .search-input {
+    width: 100%;
+    padding: 0.4rem 2.5rem 0.4rem 0.5rem;
+    font-size: 1.5rem !important;
+    background: transparent;
+    border: none;
+  }
+  .expedientes-app .app-body .main-content .toolbar .btn-open-new {
+    font-size: 1.2rem;
+    padding: 0.5rem 1rem;
+    height: auto;
+    width: auto;
+  }
+  .expedientes-app .app-body .main-content .toolbar .records-header {
+    order: 3;
+    width: 100%;
+    margin-top: 0.5rem;
+  }
+  .expedientes-app .app-body .main-content .toolbar .records-header__title {
+    font-size: 0.5rem;
+    color: #ede8dc;
+    line-height: 1.2;
+  }
+  .expedientes-app .app-body .main-content .records-list {
+    padding: 0;
+  }
+  .expedientes-app .app-body .main-content .record-item {
+    display: flex;
+    flex-direction: column;
+    background-color: #c1cfa0;
+    border-radius: 24px;
+    padding: 0.2rem;
+    margin-bottom: 1rem;
+  }
+  .expedientes-app .app-body .main-content .record-item__id {
+    font-size: 0.8rem;
+    color: #555;
+  }
+  .expedientes-app .app-body .main-content .record-item__name {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #222;
+    margin-bottom: 0.5rem;
+  }
+  .expedientes-app .app-body .main-content .record-item__date, .expedientes-app .app-body .main-content .record-item__created {
+    font-size: 0.5rem;
+    color: #222;
+  }
+  .expedientes-app .app-body .main-content .record-item .btn-remove,
+  .expedientes-app .app-body .main-content .record-item .btn-update {
+    margin-top: 0;
+    display: inline-block;
+    width: calc(50% - 0.25rem);
+  }
+}
+@media (max-width: 1000px) {
+  .main-cardPet .cardPetVet {
+    margin: 2rem 3rem 2rem 4rem;
+  }
+  .expedientes-page {
+    margin: -2rem;
+  }
+  .expedientes-page .records-list {
+    padding: 0 1rem;
+  }
+  .expedientes-page .record-item {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 1rem;
+    margin: 0.75rem 0;
+  }
+  .expedientes-page .record-item .record-item__id,
+  .expedientes-page .record-item .record-item__date,
+  .expedientes-page .record-item .record-item__created {
+    padding: 0.5rem 0;
+  }
+  .expedientes-page .record-item .record-item__name {
+    font-size: 1.25rem;
+  }
+  .expedientes-page .record-item .record-item__date,
+  .expedientes-page .record-item .record-item__created {
+    font-size: 1rem;
+  }
+  .expedientes-page .record-item .btn-remove,
+  .expedientes-page .record-item .btn-update {
+    width: 100%;
+    margin-top: 0.5rem;
+  }
+}
+#admin-main-container {
+  background-color: #f7f9f8;
+  overflow-y: scroll;
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+}
+@media (min-width: 0px) {
+  #admin-main-container {
+    padding: 1rem 1rem 3rem 4em;
+  }
+}
+@media (min-width: 768px) {
+  #admin-main-container {
+    padding: 0.5px;
+  }
+}
+
+.table-wrapper .admin-table {
+  overflow-x: scroll;
+  border-width: 3px;
+  margin: 0rem;
+}
+.table-wrapper .admin-table tr {
+  border-width: 3px;
+}
+.table-wrapper .admin-table th {
+  border-width: 3px;
+  width: 16rem;
+}
+.table-wrapper .admin-table td {
+  border-width: 3px;
+  width: 16rem;
+}
+
+#action-button-container {
+  display: flex;
+  flex-direction: row;
+  width: fit-content;
+  gap: 30px;
+  justify-content: center;
+  align-items: center;
+  margin-left: 30px;
+  padding-right: 10px;
+}
+#action-button-container .action-button {
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+#action-button-container .action-button img {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.edit-appointment-form {
+  font-family: "The Seasons";
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  row-gap: 0.7rem;
+}
+.edit-appointment-form h2 {
+  align-self: self-start;
+  margin-top: 0;
+}
+.edit-appointment-form .field-row-appo {
+  width: 100%;
+}
+.edit-appointment-form .field-row-appo input {
+  border-radius: 0.3rem;
+  padding: 0.2rem;
+  width: 70%;
+  margin-left: 2rem;
+  border: 0.5px solid black;
+}
+.edit-appointment-form .field-row-appo select {
+  border-radius: 0.3rem;
+  width: 70%;
+  padding: 0.3rem;
+  margin-left: 1.3rem;
+}
+.edit-appointment-form #edit-appo-submit {
+  margin-top: 0.6rem;
+  align-self: center;
+  background-color: #374f59;
+  color: white;
+  width: 50%;
+  border-radius: 0.8rem;
+  padding: 0.35rem;
+}
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.edit-modal {
+  background: #fff;
+  border-radius: 8px;
+  width: 90%;
+  max-width: 500px;
+  padding: 2rem;
+  position: relative;
+  animation: fadeIn 0.3s ease;
+}
+
+.close-button {
+  position: absolute;
+  top: 0.75rem;
+  right: 1rem;
+  font-size: 1.5rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #888;
+}
+.close-button:hover {
+  color: #000;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10%);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.edit-form {
+  margin: 0.3rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: medium;
+  display: flex;
+  flex-direction: column;
+  row-gap: 0.4em;
+}
+.edit-form .error-message {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: small;
+  padding-top: 2rem;
+  padding-bottom: 2rem;
+}
+.edit-form label {
+  font-weight: 700;
+  align-self: flex-start;
+  margin-top: 0.9rem;
+}
+.edit-form input {
+  width: 100%;
+  padding: 0.4rem;
+  border: 1px gray solid;
+  border-radius: 0.35em;
+}
+.edit-form select {
+  width: 100%;
+  padding: 0.4rem;
+  border: 1px gray solid;
+  border-radius: 0.35em;
+}
+
+.edit-submit {
+  background-color: #374f59;
+  color: white;
+  margin-top: 0.5rem;
+  align-self: start;
+  padding: 0.5rem;
+  border-radius: 0.4rem;
+}
+
+@media (min-width: 0px) {
+  .search-add-row {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+}
+@media (min-width: 768px) {
+  .search-add-row {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    padding-right: 2rem;
+  }
+}
+.search-add-row .edit-submit {
+  margin-top: 2rem;
+}
+@media (min-width: 0px) {
+  .search-add-row .edit-submit {
+    display: flex;
+    align-self: center;
+    margin-top: 0rem;
+  }
+}
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.4);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1050;
+}
+
+.edit-modal-app {
+  background: white;
+  padding: 2rem;
+  width: 90%;
+  max-width: 700px;
+  border-radius: 1.5rem;
+  font-family: "The Seasons", serif;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  position: relative;
+}
+.edit-modal-app .modal-close {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: transparent;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+.edit-modal-app .edit-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+.edit-modal-app .edit-group label {
+  font-size: 1.3rem;
+  padding-left: 1.3rem;
+}
+.edit-modal-app .edit-group input,
+.edit-modal-app .edit-group select {
+  background: #f3ecde;
+  border: none;
+  border-radius: 1.5rem;
+  padding: 0.6rem 1rem;
+  font-size: 1rem;
+  width: 100%;
+}
+.edit-modal-app .edit-group select {
+  padding: 0.6rem 1.4rem;
+}
+.edit-modal-app .button-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 1rem;
+}
+.edit-modal-app .button-container button#submit {
+  background-color: #a5b68d;
+  border: none;
+  padding: 0.6rem;
+  border-radius: 1rem;
+  width: 30%;
+}
+@media (max-width: 576px) {
+  .edit-modal-app .button-container button#submit {
+    width: 100%;
+  }
+}
+@media (max-width: 576px) {
+  .edit-modal-app {
+    padding: 1rem;
+  }
+}
+
+#main-container-appointments {
+  padding-left: 2rem !important;
+  padding-right: 2rem !important;
+  padding-top: 2rem !important;
+  padding-bottom: 2rem !important;
+}
+@media (max-width: 768px) {
+  #main-container-appointments {
+    padding-left: 2rem !important;
+    padding-right: 1rem !important;
+  }
+  #main-container-appointments .search-add-row {
+    margin-left: 1rem !important;
+    flex-direction: column !important;
+    gap: 1rem !important;
+    align-items: flex-start !important;
+  }
+  #main-container-appointments .search-add-row .edit-submit {
+    margin-right: 32rem !important;
+  }
+}
+
+#table-container {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.table-responsive {
+  display: block;
+  width: 100%;
+  overflow-x: auto;
+}
+
+.simple-table {
+  width: 100%;
+  min-width: 600px;
+  border-collapse: collapse;
+}
+.simple-table th,
+.simple-table td {
+  white-space: nowrap;
+  padding: 0.75rem;
+  text-align: left;
+}
+
+.modal-backdrop {
+  background-color: #fff;
+}
+
+.modal {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  outline: none;
+  font-family: "The Seasons";
+  font-size: larger;
+}
+.modal.fade {
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+.modal.fade.show {
+  opacity: 1;
+}
+
+.modal-dialog {
+  position: relative;
+  width: auto;
+  margin: 1.75rem auto;
+  max-width: 90vw;
+}
+.modal-dialog.modal-sm {
+  max-width: 300px;
+}
+.modal-dialog.modal-lg {
+  max-width: 800px;
+}
+.modal-dialog.modal-xl {
+  max-width: 1140px;
+}
+@media (max-width: 768px) {
+  .modal-dialog {
+    margin: 0.5rem;
+  }
+}
+@media (min-width: 768px) and (max-width: 1024px) {
+  .modal-dialog {
+    margin: 1rem auto;
+  }
+}
+@media (min-width: 1024px) {
+  .modal-dialog {
+    margin: 2rem auto;
+  }
+}
+
+.modal-content {
+  background-color: #fff;
+  border-radius: 0.5rem;
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.2);
+  display: flex;
+  flex-direction: column;
+  outline: none;
+}
+.modal-content .form-control {
+  background-color: #f7f3ea;
+  border-radius: 40px;
+}
+.modal-content .form-control:focus {
+  background-color: #f7f3ea;
+  border-color: #b17f59;
+  box-shadow: 0 0 0 0.25rem rgba(80, 66, 50, 0.25);
+}
+
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
+  padding: 1rem 1.5rem;
+  background-color: #fff;
+}
+.modal-header .modal-title {
+  flex: 1;
+  margin: 0 auto;
+  text-align: center;
+  font-size: 1.25rem;
+  color: #000000;
+  font-size: xx-large;
+}
+.modal-header .btn-close {
+  background: none;
+  border: none;
+  font-size: 1.25rem;
+  opacity: 0.6;
+}
+.modal-header .btn-close:hover {
+  opacity: 1;
+}
+
+.modal-body {
+  flex: 1 1 auto;
+  padding: 1.5rem;
+  margin: 2rem;
+  background-color: #fff;
+}
+.modal-body .form-select {
+  background-color: #f7f3ea;
+  border-radius: 40px;
+}
+.modal-body .btn-link {
+  color: #b17f59;
+}
+
+.modal-footer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding: 1rem 1.5rem;
+  background-color: #ede8dc;
+}
+.modal-footer .btn {
+  margin-left: 0.5rem;
+}
+.modal-footer .btn-primary {
+  background-color: #b17f59;
+  border-color: #b17f59;
+}
+.modal-footer .btn-secondary {
+  background-color: #918b8b;
+  border-color: #918b8b;
+}
+
+.vaccination-history__table th,
+.vaccination-history__table td {
+  border: 2px;
+  padding: 0.5rem;
+}
+.vaccination-history__table input.form-control {
+  border: none;
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.25rem;
+  width: 100%;
+}
+.vaccination-history__table .btn-remove {
+  color: #c00;
+  background: transparent;
+  border: none;
+  font-size: 1rem;
+  padding: 0;
+}
+.vaccination-history .btn-link {
+  font-size: 0.9rem;
+  padding-left: 0;
+}
+
+.formPetAdmin {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 1.5rem;
+  background-color: #fff;
+  border-radius: 0.5rem;
+}
+.formPetAdmin .divPetAdminNombre,
+.formPetAdmin .divPetAdminDuenio,
+.formPetAdmin .divPetAdminFecha,
+.formPetAdmin .divPetAdminPeso,
+.formPetAdmin .divPetAdminEspecie,
+.formPetAdmin .divPetAdminRaza {
+  display: flex;
+  flex-direction: column;
+}
+.formPetAdmin .divPetAdminNombre .labelPetAdmin,
+.formPetAdmin .divPetAdminDuenio .labelPetAdmin,
+.formPetAdmin .divPetAdminFecha .labelPetAdmin,
+.formPetAdmin .divPetAdminPeso .labelPetAdmin,
+.formPetAdmin .divPetAdminEspecie .labelPetAdmin,
+.formPetAdmin .divPetAdminRaza .labelPetAdmin {
+  margin-bottom: 0.25rem;
+  font-weight: 600;
+  color: #333;
+}
+.formPetAdmin .divPetAdminNombre .inputPetAdmin,
+.formPetAdmin .divPetAdminDuenio .inputPetAdmin,
+.formPetAdmin .divPetAdminFecha .inputPetAdmin,
+.formPetAdmin .divPetAdminPeso .inputPetAdmin,
+.formPetAdmin .divPetAdminEspecie .inputPetAdmin,
+.formPetAdmin .divPetAdminRaza .inputPetAdmin {
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 0.25rem;
+  font-size: 1rem;
+}
+.formPetAdmin .btnPetAdminCrear {
+  background-color: #374f59;
+  color: #fff;
+  padding: 0.75rem 1rem;
+  border: none;
+  border-radius: 0.25rem;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  align-self: flex-start;
+}
+.formPetAdmin .btnPetAdminCrear:hover {
+  background-color: #243339;
+}
+.formPetAdmin .btnPetAdminCrear:active {
+  background-color: #1a252a;
+}
+
+.profile-container {
+  background-color: #ede8dc;
+  padding: 2rem;
+  display: flex;
+  justify-content: center;
+  padding: 5rem;
+}
+
+.profile-card {
+  background-color: #ede8dc;
+  border-radius: 2rem;
+  padding: 2rem;
+  width: 100%;
+  max-width: 800px;
+}
+
+.profile-header {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+}
+
+.profile-avatar {
+  width: 100px;
+  height: 100px;
+  background-color: #bfc7b2;
+  border-radius: 50%;
+}
+
+.profile-fields {
+  margin-top: 2rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1rem;
+}
+
+.field-box {
+  background-color: #c1cfa0;
+  border-radius: 1rem;
+  padding: 0.8rem 1rem;
+}
+
+.mascota-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.btn-circle-outside {
+  background-color: #bfc7b2;
+  border: none;
+  border-radius: 50%;
+  width: 28px;
+  height: 28px;
+  font-size: 1.2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  padding: 0;
+}
+
+.profile-actions {
+  margin-top: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.btn-main {
+  background-color: #a5b68d;
+  padding: 0.75rem;
+  border-radius: 2rem;
+  border: none;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.btn-main.btn-normal {
+  font-weight: normal;
+}
+
+.btn-secondary {
+  background-color: #bfc7b2;
+  padding: 0.75rem;
+  border-radius: 2rem;
+  border: none;
+  cursor: pointer;
+}
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10000;
+}
+
+.modal-close {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: none;
+  border: none;
+  font-size: 2rem;
+  cursor: pointer;
+}
+
+.edit-modal {
+  background: white;
+  padding: 2rem;
+  width: 90%;
+  max-width: 700px;
+  border-radius: 1.5rem;
+  position: relative;
+  font-family: "The Seasons", serif;
+}
+
+.edit-modal h2 {
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+.edit-modal h3 {
+  margin-top: 2rem;
+  font-weight: bold;
+}
+
+.edit-group {
+  margin-top: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.edit-group.horizontal {
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.edit-group.horizontal input {
+  flex: 1;
+}
+
+.edit-group input {
+  background: #f3ecde;
+  border: none;
+  border-radius: 1.5rem;
+  padding: 0.6rem 1rem;
+  font-size: 1rem;
+}
+
+.pet-tags {
+  display: flex;
+  gap: 1rem;
+  margin-top: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.pet-tag {
+  background-color: #a5b68d;
+  border-radius: 2rem;
+  padding: 0.5rem 1rem;
+  font-weight: bold;
+  color: white;
+}
+
+.visit-info {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 1.5rem;
+  background: #f3ecde;
+  border-radius: 1.5rem;
+  padding: 0.8rem 1rem;
+  font-size: 0.95rem;
+}
+
+.password-modal {
+  background: white;
+  padding: 2rem;
+  width: 90%;
+  max-width: 500px;
+  border-radius: 1.5rem;
+  position: relative;
+  font-family: "The Seasons", serif;
+}
+
+.password-modal h2 {
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+.password-modal form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.password-modal input,
+.password-modal select {
+  padding: 0.6rem 1rem;
+  border-radius: 1rem;
+  border: 1px solid #ccc;
+  background-color: #ede8dc;
+  font-size: 1rem;
+}
+
+.btn-modal-submit {
+  background-color: #a5b68d;
+  color: black;
+  border: none;
+  border-radius: 2rem;
+  padding: 0.75rem;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.button-container {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+.button-container .btn-modal-submit#edit-profile-data {
+  margin-top: 2rem;
+  width: 60%;
+}
+
+.related-title {
+  font-size: 0.9rem;
+  font-weight: 400;
+  margin-bottom: 1rem;
+}
+
+.vet-name {
+  font-weight: 700;
+}
+
+body,
+html,
+#root {
+  width: 100vw;
+  height: 100vh;
+  overflow-y: auto;
+  margin: 0;
+  padding: 0;
+  text-align: left;
+  -webkit-appearance: none;
+}
+body *,
+body *::before,
+body *::after,
+html *,
+html *::before,
+html *::after,
+#root *,
+#root *::before,
+#root *::after {
+  box-sizing: border-box;
+}
+body .app-header.vet-header,
+html .app-header.vet-header,
+#root .app-header.vet-header {
+  background-color: #a5b68d;
+  width: 100%;
+}
+body .app-header.admin-header,
+html .app-header.admin-header,
+#root .app-header.admin-header {
+  background-color: #374f59;
+}
+body .sidebar-menu.vet-sidebar,
+html .sidebar-menu.vet-sidebar,
+#root .sidebar-menu.vet-sidebar {
+  background-color: #a5b68d;
+}
+body .sidebar-menu.admin-sidebar,
+html .sidebar-menu.admin-sidebar,
+#root .sidebar-menu.admin-sidebar {
+  background-color: #374f59;
+}
+body .admin-background,
+html .admin-background,
+#root .admin-background {
+  background-color: #f7f9f8;
+}
+body .vet-background,
+html .vet-background,
+#root .vet-background {
+  background-color: #ede8dc;
+}
+@media (min-width: 0px) {
+  body .search-add-row,
+  html .search-add-row,
+  #root .search-add-row {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+}
+@media (min-width: 768px) {
+  body .search-add-row,
+  html .search-add-row,
+  #root .search-add-row {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    padding-right: 2rem;
+  }
+}
+
+/*# sourceMappingURL=main.css.map */

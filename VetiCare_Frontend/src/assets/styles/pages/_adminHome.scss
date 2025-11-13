@@ -1,0 +1,25 @@
+@use '../variables' as *;
+@use '../mixins' as *;
+@use '../base' as *;
+
+
+#admin-main-container{
+background-color: $admin-background;
+overflow-y: scroll;
+padding: 2rem;
+display: flex;
+
+@include respond-to($mobile){
+  // top right bottom left
+  padding: 1rem 1rem 3rem 4em;
+}
+
+flex-direction: column;
+
+
+  @include respond-to($tablet) {
+      padding: 0.5px;
+
+
+
+}}

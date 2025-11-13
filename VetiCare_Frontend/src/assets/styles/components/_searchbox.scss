@@ -1,0 +1,90 @@
+  @use '../mixins' as *;
+
+  @use '../variables' as *;
+
+
+
+  #search-container {
+    margin-top: 10px;
+    position: relative;
+    width: 25rem;
+    margin-bottom: 2rem;
+
+    @include respond-to($mobile) {
+      width: 20rem;
+
+      // top right bottom left
+      padding: 1rem 1rem 0rem 1rem;
+
+      input.search-box {
+        height: 2.5rem;
+        margin-left: 0rem;
+        background-color: transparent;
+        border-color: transparent;
+        border-bottom-color: gray;
+        border-bottom-width: 1px;
+        width: 20rem;
+
+
+      }
+    }
+
+    img {
+      position: absolute;
+      height: 20px;
+      top: 27px;
+      left: 96%;
+
+    }
+
+    input {
+
+      color: black;
+      font-family: ""The Seasons";";
+      padding-left: 4px;
+      font-size: 1.3rem;
+
+    }
+
+    input:focus {
+      border: revert;
+      outline: revert;
+      outline: none;
+      border-width: 0px 0px 1px 0px;
+      border-color: gray;
+
+
+    }
+
+
+    input::placeholder {
+      color: black;
+
+    }
+
+    input:-webkit-autofill,
+    input:-webkit-autofill:hover,
+    input:-webkit-autofill:focus,
+    input:-webkit-autofill:active {
+      -webkit-box-shadow: 0 0 0 30px $primary-color inset !important;
+      -webkit-text-fill-color: black !important;
+      background-color: transparent !important;
+      background-image: none !important;
+    }
+
+  }
+
+
+
+  input.search-box {
+    height: 2.5rem;
+    margin-left: 0rem;
+    background-color: transparent;
+    border-color: transparent;
+    border-bottom-color: gray;
+    border-bottom-width: 1px;
+    width: 25rem;
+
+
+  }
+

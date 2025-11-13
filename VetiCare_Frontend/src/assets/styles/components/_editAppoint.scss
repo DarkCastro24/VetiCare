@@ -1,0 +1,61 @@
+  @use '../mixins' as *;
+  @use '../variables' as *;
+
+
+
+  .edit-appointment-form{
+    font-family: "The Seasons";;
+
+    h2{
+        align-self: self-start;
+        margin-top: 0;
+    }
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    row-gap: 0.7rem;
+
+
+    .field-row-appo{
+        width: 100%;
+      label{
+      
+      }
+
+      input{
+        border-radius: 0.3rem;
+        padding: 0.2rem;
+        width: 70%;
+        margin-left: 2rem;
+        border: 0.5px solid black;
+      }
+
+
+      select{
+        border-radius: 0.3rem;
+        width: 70%;
+        padding: 0.3rem;
+            margin-left: 1.3rem;
+        
+      }
+    }
+  
+
+  #edit-appo-submit{
+    margin-top: 0.6rem;
+    align-self:center;
+    background-color: $admin-azul;
+    color: white;
+    width: 50%;
+    border-radius: 0.8rem;
+    padding: 0.35rem;
+    
+  }
+
+
+
+}
+
+

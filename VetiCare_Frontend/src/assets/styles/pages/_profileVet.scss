@@ -1,0 +1,251 @@
+  @use '../mixins' as *;
+  @use '../variables' as *;
+
+
+.profile-container {
+  background-color: #ede8dc;
+  padding: 2rem;
+  display: flex;
+  justify-content: center;
+  padding: 5rem;
+}
+
+.profile-card {
+  background-color: $primary-color;
+  border-radius: 2rem;
+  padding: 2rem;
+  width: 100%;
+  max-width: 800px;
+}
+
+.profile-header {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+}
+
+.profile-avatar {
+  width: 100px;
+  height: 100px;
+  background-color: #bfc7b2;
+  border-radius: 50%;
+}
+
+.profile-fields {
+  margin-top: 2rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1rem;
+}
+
+.field-box {
+  background-color: #c1cfa0;
+  border-radius: 1rem;
+  padding: 0.8rem 1rem;
+}
+
+.mascota-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.btn-circle-outside {
+  background-color: #bfc7b2;
+  border: none;
+  border-radius: 50%;
+  width: 28px;
+  height: 28px;
+  font-size: 1.2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  padding: 0;
+}
+
+.profile-actions {
+  margin-top: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.btn-main {
+  background-color: #a5b68d;
+  padding: 0.75rem;
+  border-radius: 2rem;
+  border: none;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.btn-main.btn-normal {
+  font-weight: normal;
+}
+
+.btn-secondary {
+  background-color: #bfc7b2;
+  padding: 0.75rem;
+  border-radius: 2rem;
+  border: none;
+  cursor: pointer;
+}
+
+.modal-overlay {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10000;
+}
+
+.modal-close {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: none;
+  border: none;
+  font-size: 2rem;
+  cursor: pointer;
+}
+
+.edit-modal {
+  background: white;
+  padding: 2rem;
+  width: 90%;
+  max-width: 700px;
+  border-radius: 1.5rem;
+  position: relative;
+  font-family: 'The Seasons', serif;
+}
+
+.edit-modal h2 {
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+.edit-modal h3 {
+  margin-top: 2rem;
+  font-weight: bold;
+}
+
+.edit-group {
+  margin-top: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.edit-group.horizontal {
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.edit-group.horizontal input {
+  flex: 1;
+}
+
+.edit-group input {
+  background: #f3ecde;
+  border: none;
+  border-radius: 1.5rem;
+  padding: 0.6rem 1rem;
+  font-size: 1rem;
+}
+
+.pet-tags {
+  display: flex;
+  gap: 1rem;
+  margin-top: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.pet-tag {
+  background-color: #a5b68d;
+  border-radius: 2rem;
+  padding: 0.5rem 1rem;
+  font-weight: bold;
+  color: white;
+}
+
+.visit-info {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 1.5rem;
+  background: #f3ecde;
+  border-radius: 1.5rem;
+  padding: 0.8rem 1rem;
+  font-size: 0.95rem;
+}
+
+.password-modal {
+  background: white;
+  padding: 2rem;
+  width: 90%;
+  max-width: 500px;
+  border-radius: 1.5rem;
+  position: relative;
+  font-family: 'The Seasons', serif;
+}
+
+.password-modal h2 {
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+.password-modal form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.password-modal input,
+.password-modal select {
+  padding: 0.6rem 1rem;
+  border-radius: 1rem;
+  border: 1px solid #ccc;
+  background-color: #ede8dc;
+  font-size: 1rem;
+}
+
+.btn-modal-submit {
+  background-color: #a5b68d;
+  color: black;
+  border: none;
+  border-radius: 2rem;
+  padding: 0.75rem;
+  font-weight: bold;
+  cursor: pointer;
+
+}
+
+.button-container{
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+.btn-modal-submit#edit-profile-data {
+  margin-top: 2rem;
+  width: 60%;
+ 
+}
+}
+
+.related-title {
+  font-size: 0.9rem;
+  font-weight: 400;
+  margin-bottom: 1rem;
+}
+
+.vet-name {
+  font-weight: 700;
+}
+
+

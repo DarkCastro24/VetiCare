@@ -1,0 +1,35 @@
+# Binaries for programs and plugins
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+*.test
+*.out
+
+# Output of the go coverage tool, specifically when used with LiteIDE
+*.coverprofile
+
+# Configuration files
+.env
+
+# Vendor directory (si usas Go Modules, normalmente no se sube)
+vendor/
+
+# IDE/editor folders
+.vscode/
+.idea/
+*.iml
+
+# Mac OS metadata
+.DS_Store
+
+# Logs
+*.log
+
+# Node modules (si en algún momento usas JS frontend)
+node_modules/
+
+# Otros archivos temporales
+*.tmp
+*.swp

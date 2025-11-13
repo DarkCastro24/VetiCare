@@ -1,0 +1,171 @@
+  @use '../mixins' as *;
+  @use '../variables' as *;
+  
+.modal-backdrop {
+  background-color: #fff;
+  
+}
+
+.modal {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  outline: none;
+  font-family:"The Seasons";
+  font-size: larger;
+
+  &.fade {
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    &.show {
+      opacity: 1;
+    }
+  }
+}
+
+.modal-dialog {
+  position: relative;
+  width: auto;
+  margin: 1.75rem auto;
+  max-width: 90vw;
+  &.modal-sm {
+    max-width: 300px;
+  }
+  &.modal-lg {
+    max-width: 800px;
+  }
+  &.modal-xl {
+    max-width: 1140px;
+  }
+  @media (max-width: $tablet) {
+    margin: 0.5rem;
+  }
+  @media (min-width: $tablet) and (max-width: $desktop) {
+    margin: 1rem auto;
+  }
+  @media (min-width: $desktop) {
+    margin: 2rem auto;
+  }
+}
+
+.modal-content {
+  background-color: #fff;
+  border-radius: 0.5rem;
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.2);
+  display: flex;
+  flex-direction: column;
+  outline: none;
+
+  .form-control{
+    background-color: #f7f3ea;
+    border-radius: 40px;
+
+    &:focus{
+    background-color: #f7f3ea;
+    border-color: $cafe;
+    box-shadow: 0 0 0 .25rem rgba(80, 66, 50, 0.25);
+  }
+  }
+
+
+}
+
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
+  padding: 1rem 1.5rem;
+  background-color: #fff;
+  
+  .modal-title {
+    flex: 1;
+    margin: 0 auto;
+    text-align: center;
+    font-size: 1.25rem;
+    color: #000000;
+    font-size: xx-large;
+  }
+
+  .btn-close {
+    background: none;
+    border: none;
+    font-size: 1.25rem;
+    opacity: 0.6;
+    &:hover {
+      opacity: 1;
+    }
+  }
+}
+
+
+.modal-body {
+  flex: 1 1 auto;
+  padding: 1.5rem;
+  margin: 2rem;
+  background-color: #fff;
+
+  .form-select{
+    background-color: #f7f3ea;
+    border-radius: 40px;
+  }
+
+  .btn-link{
+    color: $cafe;
+  }
+
+}
+
+
+.modal-footer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding: 1rem 1.5rem;
+  background-color: $primary-color;
+
+  .btn{
+    margin-left: 0.5rem;
+  }
+
+  .btn-primary{
+        background-color: $cafe;
+        border-color: $cafe;
+    }
+
+    .btn-secondary{
+        background-color: #918b8b;
+        border-color: #918b8b;
+    }
+}
+
+  .vaccination-history {
+    &__table {
+
+      th,
+      td {
+        border: 2px;
+        padding: 0.5rem;
+      }
+
+      input.form-control {
+        border: none;
+        padding: 0.25rem 0.5rem;
+        border-radius: 0.25rem;
+        width: 100%;
+      }
+
+      .btn-remove {
+        color: #c00;
+        background: transparent;
+        border: none;
+        font-size: 1rem;
+        padding: 0;
+      }
+    }
+
+    .btn-link {
+      font-size: 0.9rem;
+      padding-left: 0;
+    }
+  }

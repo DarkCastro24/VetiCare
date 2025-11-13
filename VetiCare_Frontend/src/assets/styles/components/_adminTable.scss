@@ -1,0 +1,32 @@
+  @use '../mixins' as *;
+  @use '../variables' as *;
+
+
+  .table-wrapper{
+
+   
+  .admin-table{
+     overflow-x: scroll;
+ border-width: 3px ;
+ margin: 0rem;
+
+    tr{
+        border-width: 3px;
+    }
+
+    th{
+        border-width: 3px;
+        width: 16rem;
+    }
+    td{
+        border-width: 3px;
+        width: 16rem;
+
+    }
+
+
+
+  
+}
+}
+

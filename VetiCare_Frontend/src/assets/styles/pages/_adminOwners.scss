@@ -1,0 +1,43 @@
+  @use '../mixins' as *;
+
+  @use '../variables' as *;
+
+
+  .search-add-row{
+    
+    @include respond-to($mobile) {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+
+
+
+    }
+     @include respond-to($tablet) {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+      padding-right: 2rem;
+
+
+    }
+
+
+    .edit-submit{
+    margin-top: 2rem;
+
+        
+    @include respond-to($mobile) {
+    display: flex;
+     align-self: center;
+     margin-top: 0rem;
+
+
+
+    }
+    
+    }
+
+  }

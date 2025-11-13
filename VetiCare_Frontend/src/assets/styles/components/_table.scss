@@ -1,0 +1,65 @@
+
+@use '../mixins' as *;
+@use '../variables' as *;
+
+.table-wrapper {
+  width: 100%;
+  max-width: 95vw;
+  overflow-x: auto;
+  padding: 1rem;
+
+  .simple-table{
+    font-family: "The Seasons";
+    margin: 4rem 0;
+    width: 100%;
+    min-width: 600px;
+    border-collapse: collapse;
+    border: 1px solid black;
+
+    th,
+    td {
+      border: 1px solid black;
+      text-align: center;
+    }
+
+    tr {
+      border: 1px solid black;
+      height: 4rem;
+    }
+
+    td {
+      width: 13rem;
+    }
+    td#no-rows {
+      width: 100%;
+    }
+
+    @include respond-to($tablet) {
+      th,
+      td {
+        min-width: 5rem;
+      }
+    }
+
+    @include respond-to($mobile) {
+      th,
+      td {
+        min-width: 6rem;
+        padding: 4px;
+      }
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .table-wrapper {
+   // padding: 2rem;
+   // margin: 2rem;
+
+    .simple-table{
+      font-size: 1rem;
+      min-width: 400px;
+      max-width: 600px;
+    }
+  }
+}

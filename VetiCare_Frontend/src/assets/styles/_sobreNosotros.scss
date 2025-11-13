@@ -1,0 +1,35 @@
+@use './variables' as *;
+
+.containerGato {
+    background-image: url('../images/homeFondo.jpg');
+    background-size: cover;
+    background-position: center;
+    padding: 8rem;
+    position: relative;
+    font-family: "The Seasons";
+
+
+}
+
+.icon-gato {
+    width: 5em;
+    height: auto;
+
+    &:hover {
+        transform: scale(1.08);
+    }
+
+    @media (max-width: 1200px) {
+        display: none;
+    }
+}
+
+.text-justify {
+    text-align: justify;
+    text-align-last: left;
+    font-family: 'Open Sans', sans-serif;
+
+    @media (max-width: 600px) {
+        text-align: left;
+    }
+}
