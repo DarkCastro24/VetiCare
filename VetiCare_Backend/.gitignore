@@ -11,7 +11,7 @@
 *.coverprofile
 
 # Configuration files
-.env
+.env.example
 
 # Vendor directory (si usas Go Modules, normalmente no se sube)
 vendor/
