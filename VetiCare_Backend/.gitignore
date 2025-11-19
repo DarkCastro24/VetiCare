@@ -12,6 +12,7 @@
 
 # Configuration files
 .env.example
+.env
 
 # Vendor directory (si usas Go Modules, normalmente no se sube)
 vendor/
