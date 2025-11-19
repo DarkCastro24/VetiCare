@@ -10,7 +10,8 @@ function MascotasOwner() {
   const token = localStorage.getItem("token");
   const API_URL = import.meta.env.VITE_API_URL;
 
-  const columns = ["#", "Mascota"];
+  const columns = ["#", "Nombre", "Especie", "Raza", "Icono"];
+
   const [pets, setPets] = useState([]);
   const [showEditModal, setShowEditModal] = useState(false);
   const [selectedPetId, setSelectedPetId] = useState("");
@@ -18,11 +19,14 @@ function MascotasOwner() {
   const [editedBreed, setEditedBreed] = useState("");
   const [actionWasDone, setActionWasDone] = useState(false);
 
-  const openEditModal = () => setShowEditModal(true);
-  const closeEditModal = () => setShowEditModal(false);
+  // Modal agregar mascota
+  const [showAddPetModal, setShowAddPetModal] = useState(false);
+  const [name, setName] = useState("");
+  const [birthDate, setBirthDate] = useState("");
+  const [speciesId, setSpeciesId] = useState("1");
+  const [breed, setBreed] = useState("");
 
-  // VALIDAR USER LOCALSTORAGE
-  const userFromLocal = JSON.parse(localStorage.getItem("user"));
+  const userFromLocal = JSON.parse(localStorage.getItem("user") || "{}");
 
   if (!userFromLocal || !userFromLocal.id) {
     Swal.fire({
@@ -37,7 +41,13 @@ function MascotasOwner() {
 
   const user = { id: userFromLocal.id };
 
-  // GET PETS
+  const openEditModal = () => setShowEditModal(true);
+  const closeEditModal = () => setShowEditModal(false);
+
+  const openAddPetModal = () => setShowAddPetModal(true);
+  const closeAddPetModal = () => setShowAddPetModal(false);
+
+  // CARGAR MASCOTAS
   useEffect(() => {
     async function getPets(userId) {
       try {
@@ -56,7 +66,6 @@ function MascotasOwner() {
         }
 
         const data = await response.json();
-
         const safeData = Array.isArray(data) ? data : [];
 
         const activePets = safeData.filter((item) => item.status === "Activa");
@@ -67,18 +76,19 @@ function MascotasOwner() {
         const filteredData = activePets.map((item, index) => ({
           id: item.id,
           rowNumber: (currentPage - 1) * itemsPerPage + index + 1,
-          Mascota: item.name,
+          name: item.name,
+          speciesName: item.species?.name || "Sin especie",
+          breed: item.breed || "Sin raza",
+          icon:
+            item.species?.name === "Gato"
+              ? "🐱"
+              : item.species?.name === "Perro"
+              ? "🐶"
+              : "🐾",
         }));
 
         setPets(filteredData);
 
-        if (filteredData.length === 0) {
-          Swal.fire({
-            icon: "info",
-            title: "Sin mascotas registradas",
-            text: "Aún no has registrado ninguna mascota.",
-          });
-        }
       } catch (error) {
         Swal.fire({
           icon: "error",
@@ -90,9 +100,9 @@ function MascotasOwner() {
     }
 
     getPets(user.id);
-  }, [actionWasDone]);
+  }, [API_URL, token, user.id, actionWasDone]);
 
-  // OBTENER MASCOTA POR ID
+  // OBTENER POR ID
   async function getById(id) {
     try {
       const response = await fetch(`${API_URL}/api/pets/${id}`, {
@@ -117,7 +127,7 @@ function MascotasOwner() {
       Swal.fire({
         icon: "error",
         title: "Error",
-        text: error.message || "Error al conectar con el servidor.",
+        text: error.message,
       });
     }
   }
@@ -130,7 +140,6 @@ function MascotasOwner() {
       setSelectedPetId(pet.id);
       setEditedName(pet.name || "");
       setEditedBreed(pet.breed || "");
-
       setShowEditModal(true);
     } catch (error) {
       Swal.fire({
@@ -141,7 +150,6 @@ function MascotasOwner() {
     }
   };
 
-  // ACTUALIZAR MASCOTA
   const handleUpdatePet = async () => {
     try {
       const response = await fetch(`${API_URL}/api/pets/${selectedPetId}`, {
@@ -181,7 +189,22 @@ function MascotasOwner() {
     }
   };
 
-  // ELIMINAR
+  // ELIMINAR CON CONFIRMACIÓN
+  const handleDeleteClick = (id) => {
+    Swal.fire({
+      title: "¿Deseas desactivar esta mascota?",
+      text: "Podrás registrarla nuevamente si es necesario.",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Sí, desactivar",
+      cancelButtonText: "Cancelar",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        deletePet(id);
+      }
+    });
+  };
+
   async function deletePet(id) {
     try {
       const response = await fetch(`${API_URL}/api/pets/${id}`, {
@@ -213,39 +236,121 @@ function MascotasOwner() {
     }
   }
 
-  const col = columns.slice(1);
+  // AGREGAR NUEVA MASCOTA
+  const handleSubmitPet = async (e) => {
+    e.preventDefault();
+
+    const parsed = new Date(`${birthDate}T00:00:00Z`)
+      .toISOString()
+      .replace(".000Z", "Z");
+
+    const payload = {
+      owner_id: user.id,
+      name: name,
+      birth_date: parsed,
+      species_id: parseInt(speciesId),
+      breed: breed,
+    };
+
+    try {
+      const response = await fetch(`${API_URL}/api/pets`, {
+        method: "POST",
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+        },
+        body: JSON.stringify(payload),
+      });
+
+      if (response.ok) {
+        closeAddPetModal();
+        setName("");
+        setBirthDate("");
+        setSpeciesId("1");
+        setBreed("");
+        setActionWasDone(prev => !prev); // recargar tabla
+      } else {
+        closeAddPetModal();
+        const errorText = await response.text();
+        return Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: errorText,
+        });
+      }
+    } catch (err) {
+      closeAddPetModal();
+      await Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: err.message || 'No se pudo conectar con el servidor.',
+      });
+    }
+  };
 
   return (
     <>
       <Layout menuItems={menuItemsOwner} userType="vet">
         <div id="main-container-appointments">
-          <div className="search-add-row">
-            <p>Tus mascotas:</p>
+
+          {/* Encabezado corregido */}
+          <div 
+            className="search-add-row" 
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              marginBottom: "20px"
+            }}
+          >
+            <p 
+              style={{
+                fontSize: "20px",
+                fontWeight: "600",
+                margin: 0
+              }}
+            >
+              Mis mascotas
+            </p>
+
+            <button
+              className="btn-main btn-normal"
+              type="button"
+              onClick={openAddPetModal}
+            >
+              Agregar mascota
+            </button>
           </div>
 
+          {/* TABLA */}
           <div id="table-container">
-            <table className="simple-table">
+            <table
+              className="simple-table"
+              style={{ width: "100%", textAlign: "center" }}
+            >
               <thead>
                 <tr>
                   {pets.length !== 0 &&
-                    columns.map((column, i) => <th key={i}>{column}</th>)}
+                    columns.map((column, i) => (
+                      <th key={i}>{column}</th>
+                    ))}
                   {pets.length !== 0 && <th>Acciones</th>}
                 </tr>
               </thead>
 
               <tbody>
-                {pets.map((pet, idx) => (
-                  <tr key={idx}>
+                {pets.map((pet) => (
+                  <tr key={pet.id}>
                     <td>{pet.rowNumber}</td>
-
-                    {col.map((c, j) => (
-                      <td key={j}>{pet[c]}</td>
-                    ))}
+                    <td>{pet.name}</td>
+                    <td>{pet.speciesName}</td>
+                    <td>{pet.breed}</td>
+                    <td style={{ fontSize: "28px" }}>{pet.icon}</td>
 
                     <td>
                       <ActionComponents
                         onEdit={handleEdit}
-                        onDelete={deletePet}
+                        onDelete={handleDeleteClick}
                         elementId={pet.id}
                       />
                     </td>
@@ -254,7 +359,6 @@ function MascotasOwner() {
               </tbody>
             </table>
 
-            {/* MENSAJE VISUAL EN PANTALLA */}
             {pets.length === 0 && (
               <div
                 style={{
@@ -273,10 +377,7 @@ function MascotasOwner() {
                   fontSize: "16px",
                 }}
               >
-                <i
-                  className="fa-regular fa-circle-info"
-                  style={{ fontSize: "20px" }}
-                ></i>
+                <i className="fa-regular fa-circle-info" style={{ fontSize: "20px" }}></i>
                 No tienes mascotas registradas.
               </div>
             )}
@@ -288,18 +389,16 @@ function MascotasOwner() {
       {showEditModal && (
         <div className="modal-overlay">
           <div className="edit-modal-app">
-            <button className="modal-close" onClick={closeEditModal}>
-              ×
-            </button>
-
+            <button className="modal-close" onClick={closeEditModal}>×</button>
             <form
               onSubmit={(e) => {
                 e.preventDefault();
                 handleUpdatePet();
               }}
             >
+              <h2>Editar Mascota</h2>
               <div className="edit-group">
-                <label>Nuevo nombre</label>
+                <label>Nombre</label>
                 <input
                   type="text"
                   value={editedName}
@@ -307,9 +406,8 @@ function MascotasOwner() {
                   required
                 />
               </div>
-
               <div className="edit-group">
-                <label>Nueva raza</label>
+                <label>Raza</label>
                 <input
                   type="text"
                   value={editedBreed}
@@ -317,12 +415,67 @@ function MascotasOwner() {
                   required
                 />
               </div>
-
               <div className="button-container">
                 <button type="submit" id="submit">
                   Actualizar Mascota
                 </button>
               </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* MODAL AGREGAR MASCOTA */}
+      {showAddPetModal && (
+        <div className="modal-overlay">
+          <div className="password-modal">
+            <button className="modal-close" onClick={closeAddPetModal}>×</button>
+            <h2>Registrar nueva mascota</h2>
+            <form onSubmit={handleSubmitPet}>
+
+              <label>Nombre</label>
+              <input
+                type="text"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                required
+              />
+
+              <label>Fecha de nacimiento</label>
+              <input
+                type="date"
+                value={birthDate}
+                onChange={(e) => setBirthDate(e.target.value)}
+                required
+              />
+
+              <label>Especie</label>
+              <select
+                value={speciesId}
+                onChange={(e) => setSpeciesId(e.target.value)}
+                required
+              >
+                <option value="1">Perro</option>
+                <option value="2">Gato</option>
+                <option value="3">Ave</option>
+              </select>
+
+              <label>Raza</label>
+              <input
+                type="text"
+                value={breed}
+                onChange={(e) => setBreed(e.target.value)}
+                required
+                style={{ marginBottom: "25px" }}  // 👈 ESPACIO EXTRA
+              />
+
+              <button 
+                type="submit" 
+                className="btn-modal-submit"
+                style={{ marginTop: "10px" }}
+              >
+                Registrar
+              </button>
             </form>
           </div>
         </div>

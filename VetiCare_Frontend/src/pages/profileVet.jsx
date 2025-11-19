@@ -1,3 +1,4 @@
+// src/pages/ProfileVet.jsx
 import React, { useState, useEffect } from 'react';
 import Layout from './layout';
 import { menuItemsVet, menuItemsOwner } from '../config/layout/sidebar';
@@ -10,27 +11,16 @@ const ProfileVet = () => {
   const userFromLocal = JSON.parse(localStorage.getItem("user") || "{}");
   const API_URL = import.meta.env.VITE_API_URL;
 
-
   const [showEditModal, setShowEditModal] = useState(false);
-  const [showAddPetModal, setShowAddPetModal] = useState(false);
   const [mascotas, setMascotas] = useState([]);
-  const [petAdded, setPetAdded] = useState(false);
-
-  const openEditModal = () => setShowEditModal(true);
-  const closeEditModal = () => setShowEditModal(false);
-  const openAddPetModal = () => setShowAddPetModal(true);
-  const closeAddPetModal = () => setShowAddPetModal(false);
 
   const [editedName, setEditedName] = useState("");
   const [editedEmail, setEditedEmail] = useState("");
   const [editedDui, setEditedDui] = useState("");
   const [editedPhone, setEditedPhone] = useState("");
 
-
-  const [name, setName] = useState("Toffie");
-  const [birthDate, setBirthDate] = useState("2023-05-15");
-  const [speciesId, setSpeciesId] = useState("2");
-  const [breed, setBreed] = useState("Tabby");
+  const openEditModal = () => setShowEditModal(true);
+  const closeEditModal = () => setShowEditModal(false);
 
   const user = {
     id: userFromLocal["id"],
@@ -41,11 +31,12 @@ const ProfileVet = () => {
     role: userFromLocal["role_id"] === 2 ? 'vet' : 'owner',
   };
 
+  // Cargar mascotas solo si es dueño
   useEffect(() => {
     const fetchPets = async () => {
       try {
         const userLocal = JSON.parse(localStorage.getItem("user") || "{}");
-        if (userLocal?.role_id === 1) {
+        if (userLocal?.role_id === 1) { // Dueño
           const result = await getPets(userLocal.id);
           setMascotas(result || []);
         }
@@ -54,7 +45,7 @@ const ProfileVet = () => {
       }
     };
     fetchPets();
-  }, [petAdded]);
+  }, []);
 
   useEffect(() => {
     if (userFromLocal) {
@@ -64,8 +55,6 @@ const ProfileVet = () => {
       setEditedPhone(userFromLocal.phone);
     }
   }, []);
-
-
 
   async function getPets(userId) {
     try {
@@ -80,56 +69,14 @@ const ProfileVet = () => {
       }
       const data = await response.json();
       const filteredData = data.map((item) => ({
-        name: item.name
+        id: item.id,
+        name: item.name,
       }));
-      console.log('Filtered data:', filteredData);
       return filteredData;
     } catch (error) {
       console.error('Fetch error:', error);
     }
   }
-
-  const handleSubmitPet = async (e) => {
-    const parsed = new Date(`${birthDate}T00:00:00Z`).toISOString()
-      .replace(".000Z", "Z");
-    e.preventDefault();
-    const payload = {
-      owner_id: user.id,
-      name: name,
-      birth_date: parsed,
-      species_id: parseInt(speciesId),
-      breed: breed
-    };
-    try {
-      const response = await fetch(`${API_URL}/api/pets`, {
-        method: "POST",
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`,
-        },
-        body: JSON.stringify(payload),
-      });
-      if (response.ok) {
-        closeAddPetModal();
-        setPetAdded(prev => !prev)
-      } else {
-        closeAddPetModal();
-        const errorText = await response.text();
-        return Swal.fire({
-          icon: 'error',
-          title: 'Error',
-          text: errorText,
-        });
-      }
-    } catch (err) {
-      closeAddPetModal();
-      await Swal.fire({
-        icon: 'error',
-        title: 'Error',
-        text: err.message || 'No se pudo conectar con el servidor.',
-      });
-    }
-  };
 
   const handleProfileUpdate = async (e) => {
     e.preventDefault();
@@ -175,8 +122,7 @@ const ProfileVet = () => {
         text: err.message || 'No se pudo conectar con el servidor.',
       });
     }
-
-  }
+  };
 
   return (
     <>
@@ -185,52 +131,47 @@ const ProfileVet = () => {
           <div className="profile-card">
             <div className="profile-header">
               <div className="profile-avatar" />
-              {/* Solo aquí va la negrita */}
               <h2>
                 {user.role === 'owner' ? (
                   <span className="vet-name">{user.nombre}</span>
-                ) :
-                  <span className="vet-name"> Dr. {user.nombre}</span>
-                }
+                ) : (
+                  <span className="vet-name">Dr. {user.nombre}</span>
+                )}
               </h2>
             </div>
 
             <div className="profile-fields">
               <div>
                 <label>Nombre</label>
-                {/* Aquí NO va la negrita */}
                 <div className="field-box">{user.nombre}</div>
               </div>
               <div>
-                <label>Email</label>
-                <div className="field-box">{user.email}</div>
+                <label>DUI</label>
+                <div className="field-box">{user.dui}</div>
               </div>
               <div>
                 <label>Teléfono</label>
                 <div className="field-box">{user.telefono}</div>
               </div>
-              {user.role == "owner" ? (
-                <div className="mascota-wrapper">
-                  <label>Mascota</label>
-                  <div className="field-box">{mascotas[0]?.name}</div>
-                  <button className="btn-circle-outside" onClick={openAddPetModal}>+</button>
-                </div>
-              ) :
-                <></>
-              }
+              <div>
+                <label>Email</label>
+                <div className="field-box">{user.email}</div>
+              </div>
             </div>
 
             <div className="profile-actions">
-              <button className="btn-main btn-normal" onClick={openEditModal}>Actualizar perfil</button>
+              <button className="btn-main btn-normal" onClick={openEditModal}>
+                Actualizar perfil
+              </button>
             </div>
           </div>
         </div>
       </Layout>
+
       {showEditModal && (
         <div className="modal-overlay">
           <div className="edit-modal">
             <button className="modal-close" onClick={closeEditModal}>×</button>
-            {/* Solo aquí va la negrita */}
             <h2><span className="vet-name">{userFromLocal["full_name"]}</span></h2>
 
             <form onSubmit={handleProfileUpdate}>
@@ -266,42 +207,23 @@ const ProfileVet = () => {
                   required
                 />
               </div>
+
               {user.role === "owner" && (
                 <>
                   <h3 className="related-title">Expedientes relacionados</h3>
                   <div className="pet-tags">
                     {mascotas.map((m) => (
-                      <div key={m.name} className="pet-tag">{m.name}</div>
+                      <div key={m.id} className="pet-tag">{m.name}</div>
                     ))}
                   </div>
                 </>
               )}
+
               <div className="button-container">
-                <button type="submit" className="btn-modal-submit" id='edit-profile-data'>Guardar Cambios</button>
+                <button type="submit" className="btn-modal-submit" id="edit-profile-data">
+                  Guardar Cambios
+                </button>
               </div>
-            </form>
-          </div>
-        </div>
-      )}
-      {showAddPetModal && (
-        <div className="modal-overlay">
-          <div className="password-modal">
-            <button className="modal-close" onClick={closeAddPetModal}>×</button>
-            <h2>Registra otra mascota</h2>
-            <form onSubmit={handleSubmitPet}>
-              <label>Nombre</label>
-              <input type="text" value={name} onChange={(e) => setName(e.target.value)} required />
-              <label>Fecha de nacimiento</label>
-              <input type="date" value={birthDate} onChange={(e) => setBirthDate(e.target.value)} required />
-              <label>Especie</label>
-              <select value={speciesId} onChange={(e) => setSpeciesId(e.target.value)} required>
-                <option value="1">Perro</option>
-                <option value="2">Gato</option>
-                <option value="3">Ave</option>
-              </select>
-              <label>Raza</label>
-              <input type="text" value={breed} onChange={(e) => setBreed(e.target.value)} required />
-              <button type="submit" className="btn-modal-submit">Registrar</button>
             </form>
           </div>
         </div>
