@@ -24,7 +24,7 @@ ChartJS.register(
 // Para que los ejes vayan de 1 en 1
 ChartJS.defaults.scales.linear.ticks.stepSize = 1;
 
-//Para rreglar el responsive
+//Para arreglar el responsive
 ChartJS.defaults.maintainAspectRatio = false;
 
 export default function Dashboard() {
