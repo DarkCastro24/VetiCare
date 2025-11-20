@@ -351,7 +351,7 @@ const ExpedienteVet = () => {
                           />
                         </div>
                       </div>
-                      <section className="vaccination-history mt-4">
+                      <section className="vaccination-history">
                         <h5 className="vaccination-history__title">Historial de vacunación</h5>
                         <table className="table vaccination-history__table mb-2">
                           <thead>
