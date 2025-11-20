@@ -1,4 +1,3 @@
-// src/pages/CitasOwner.jsx
 import React, { useState, useEffect } from "react";
 import SearchBox from "../components/search-box";
 import Table from "../components/table";

@@ -1,10 +1,28 @@
-// src/pages/ProfileVet.jsx
-import React, { useState, useEffect } from 'react';
-import Layout from './layout';
-import { menuItemsVet, menuItemsOwner } from '../config/layout/sidebar';
-import '../assets/styles/main.scss';
-import Swal from 'sweetalert2';
+import React, { useState, useEffect } from "react";
+import Layout from "./layout";
+import { menuItemsVet, menuItemsOwner } from "../config/layout/sidebar";
+import "../assets/styles/main.scss";
+import Swal from "sweetalert2";
 import "sweetalert2/dist/sweetalert2.min.css";
+
+// IMPORTAR FOTOS DE PERFIL (3–8)
+import pf2 from "../assets/images/profile_photos/2.png";
+import pf3 from "../assets/images/profile_photos/3.png";
+import pf4 from "../assets/images/profile_photos/4.png";
+import pf5 from "../assets/images/profile_photos/5.png";
+import pf6 from "../assets/images/profile_photos/6.png";
+import pf7 from "../assets/images/profile_photos/7.png";
+import pf8 from "../assets/images/profile_photos/8.png";
+
+const profileImages = {
+  2: pf2,
+  3: pf3,
+  4: pf4,
+  5: pf5,
+  6: pf6,
+  7: pf7,
+  8: pf8,
+};
 
 const ProfileVet = () => {
   const token = localStorage.getItem("token");
@@ -12,6 +30,8 @@ const ProfileVet = () => {
   const API_URL = import.meta.env.VITE_API_URL;
 
   const [showEditModal, setShowEditModal] = useState(false);
+  const [showPhotoModal, setShowPhotoModal] = useState(false);
+
   const [mascotas, setMascotas] = useState([]);
 
   const [editedName, setEditedName] = useState("");
@@ -19,8 +39,19 @@ const ProfileVet = () => {
   const [editedDui, setEditedDui] = useState("");
   const [editedPhone, setEditedPhone] = useState("");
 
+  // pf actual del usuario y pf seleccionada en el modal
+  const initialPf = userFromLocal.pf || 2;
+  const [currentPf, setCurrentPf] = useState(initialPf);
+  const [selectedPf, setSelectedPf] = useState(initialPf);
+
   const openEditModal = () => setShowEditModal(true);
   const closeEditModal = () => setShowEditModal(false);
+
+  const openPhotoModal = () => setShowPhotoModal(true);
+  const closePhotoModal = () => {
+    setSelectedPf(currentPf); // reset a la actual si cierra sin guardar
+    setShowPhotoModal(false);
+  };
 
   const user = {
     id: userFromLocal["id"],
@@ -28,7 +59,7 @@ const ProfileVet = () => {
     email: userFromLocal["email"],
     telefono: userFromLocal["phone"],
     dui: userFromLocal["dui"],
-    role: userFromLocal["role_id"] === 2 ? 'vet' : 'owner',
+    role: userFromLocal["role_id"] === 2 ? "vet" : "owner",
   };
 
   // Cargar mascotas solo si es dueño
@@ -36,7 +67,7 @@ const ProfileVet = () => {
     const fetchPets = async () => {
       try {
         const userLocal = JSON.parse(localStorage.getItem("user") || "{}");
-        if (userLocal?.role_id === 1) { // Dueño
+        if (userLocal?.role_id === 1) {
           const result = await getPets(userLocal.id);
           setMascotas(result || []);
         }
@@ -47,25 +78,30 @@ const ProfileVet = () => {
     fetchPets();
   }, []);
 
+  // Inicializar campos de edición
   useEffect(() => {
     if (userFromLocal) {
       setEditedName(userFromLocal.full_name);
       setEditedEmail(userFromLocal.email);
       setEditedDui(userFromLocal.dui);
       setEditedPhone(userFromLocal.phone);
+      if (userFromLocal.pf) {
+        setCurrentPf(userFromLocal.pf);
+        setSelectedPf(userFromLocal.pf);
+      }
     }
   }, []);
 
   async function getPets(userId) {
     try {
       const response = await fetch(`${API_URL}/api/pets/owner/${userId}`, {
-        method: 'GET',
+        method: "GET",
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
       if (!response.ok) {
-        throw new Error('Network response was not ok');
+        throw new Error("Network response was not ok");
       }
       const data = await response.json();
       const filteredData = data.map((item) => ({
@@ -74,10 +110,11 @@ const ProfileVet = () => {
       }));
       return filteredData;
     } catch (error) {
-      console.error('Fetch error:', error);
+      console.error("Fetch error:", error);
     }
   }
 
+  // Guardar datos de perfil (nombre, email, etc.)
   const handleProfileUpdate = async (e) => {
     e.preventDefault();
     const payload = {
@@ -89,13 +126,13 @@ const ProfileVet = () => {
       const response = await fetch(`${API_URL}/api/users/${user.id}`, {
         method: "PUT",
         headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`,
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify(payload),
       });
       if (response.ok) {
-        const storedUser = JSON.parse(localStorage.getItem("user"));
+        const storedUser = JSON.parse(localStorage.getItem("user") || "{}");
         const updatedUser = {
           ...storedUser,
           full_name: editedName,
@@ -109,30 +146,95 @@ const ProfileVet = () => {
         closeEditModal();
         const errorText = await response.text();
         return Swal.fire({
-          icon: 'error',
-          title: 'Error',
+          icon: "error",
+          title: "Error",
           text: errorText,
         });
       }
     } catch (err) {
       closeEditModal();
       await Swal.fire({
-        icon: 'error',
-        title: 'Error',
-        text: err.message || 'No se pudo conectar con el servidor.',
+        icon: "error",
+        title: "Error",
+        text: err.message || "No se pudo conectar con el servidor.",
       });
     }
   };
 
+  // Guardar foto de perfil (campo pf)
+  const handleSaveProfilePhoto = async () => {
+    try {
+      const payload = { pf: selectedPf };
+
+      const response = await fetch(`${API_URL}/api/users/${user.id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(payload),
+      });
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        return Swal.fire({
+          icon: "error",
+          title: "Error al actualizar foto de perfil",
+          text: errorText,
+        });
+      }
+
+      // actualizar estado local
+      setCurrentPf(selectedPf);
+
+      // actualizar localStorage
+      const storedUser = JSON.parse(localStorage.getItem("user") || "{}");
+      const updatedUser = { ...storedUser, pf: selectedPf };
+      localStorage.setItem("user", JSON.stringify(updatedUser));
+
+      Swal.fire({
+        icon: "success",
+        title: "Foto de perfil actualizada",
+      });
+
+      closePhotoModal();
+    } catch (error) {
+      await Swal.fire({
+        icon: "error",
+        title: "Error inesperado",
+        text: error.message || "No se pudo conectar con el servidor.",
+      });
+    }
+  };
+
+  const currentProfileImage =
+    profileImages[currentPf] || profileImages[2]; // fallback a 2
+
   return (
     <>
-      <Layout menuItems={user.role === "owner" ? menuItemsOwner : menuItemsVet} userType="vet">
+      <Layout
+        menuItems={user.role === "owner" ? menuItemsOwner : menuItemsVet}
+        userType="vet"
+      >
         <div className="profile-container">
           <div className="profile-card">
             <div className="profile-header">
-              <div className="profile-avatar" />
+              <div className="profile-avatar-wrapper">
+                <img
+                  src={currentProfileImage}
+                  alt="Foto de perfil"
+                  className="profile-avatar"
+                />
+                <button
+                  type="button"
+                  className="btn-change-photo"
+                  onClick={openPhotoModal}
+                >
+                  Cambiar foto
+                </button>
+              </div>
               <h2>
-                {user.role === 'owner' ? (
+                {user.role === "owner" ? (
                   <span className="vet-name">{user.nombre}</span>
                 ) : (
                   <span className="vet-name">Dr. {user.nombre}</span>
@@ -168,11 +270,16 @@ const ProfileVet = () => {
         </div>
       </Layout>
 
+      {/* MODAL EDITAR PERFIL */}
       {showEditModal && (
         <div className="modal-overlay">
           <div className="edit-modal">
-            <button className="modal-close" onClick={closeEditModal}>×</button>
-            <h2><span className="vet-name">{userFromLocal["full_name"]}</span></h2>
+            <button className="modal-close" onClick={closeEditModal}>
+              ×
+            </button>
+            <h2>
+              <span className="vet-name">{userFromLocal["full_name"]}</span>
+            </h2>
 
             <form onSubmit={handleProfileUpdate}>
               <div className="edit-group">
@@ -213,18 +320,63 @@ const ProfileVet = () => {
                   <h3 className="related-title">Expedientes relacionados</h3>
                   <div className="pet-tags">
                     {mascotas.map((m) => (
-                      <div key={m.id} className="pet-tag">{m.name}</div>
+                      <div key={m.id} className="pet-tag">
+                        {m.name}
+                      </div>
                     ))}
                   </div>
                 </>
               )}
 
               <div className="button-container">
-                <button type="submit" className="btn-modal-submit" id="edit-profile-data">
+                <button
+                  type="submit"
+                  className="btn-modal-submit"
+                  id="edit-profile-data"
+                >
                   Guardar Cambios
                 </button>
               </div>
             </form>
+          </div>
+        </div>
+      )}
+
+      {/* MODAL SELECCIONAR FOTO DE PERFIL */}
+      {showPhotoModal && (
+        <div className="modal-overlay">
+          <div className="edit-modal">
+            <button className="modal-close" onClick={closePhotoModal}>
+              ×
+            </button>
+            <h2>Selecciona tu foto de perfil</h2>
+
+            <div className="profile-photo-grid">
+              {Object.entries(profileImages).map(([pfValue, src]) => (
+                <button
+                  key={pfValue}
+                  type="button"
+                  onClick={() => setSelectedPf(Number(pfValue))}
+                  className={
+                    Number(pfValue) === selectedPf
+                      ? "profile-photo-option selected"
+                      : "profile-photo-option"
+                  }
+                >
+                  <img src={src} alt={`Perfil ${pfValue}`} />
+                </button>
+              ))}
+            </div>
+
+            <div className="button-container" style={{ marginTop: "20px" }}>
+              <button
+                type="button"
+                className="btn-modal-submit"
+                onClick={handleSaveProfilePhoto}
+              >
+                Guardar foto
+              </button>
+            </div>
           </div>
         </div>
       )}
