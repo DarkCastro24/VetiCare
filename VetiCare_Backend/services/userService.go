@@ -14,6 +14,9 @@ func NewUserService(repo repositories.UserRepository) *UserService {
 }
 
 func (s *UserService) Register(user *entities.User) error {
+	if user.RoleID == 2 {
+		user.PF = 1
+	}
 	return s.Repo.Register(user)
 }
 
@@ -26,6 +29,9 @@ func (s *UserService) ChangePassword(email, currentPassword, newPassword string)
 }
 
 func (s *UserService) CreateUser(user *entities.User) error {
+	if user.RoleID == 2 {
+		user.PF = 1
+	}
 	return s.Repo.Create(user)
 }
 
