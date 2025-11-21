@@ -48,8 +48,9 @@ function Login() {
 
             localStorage.setItem('email', JSON.stringify(result.user.email));
 
-            //Manda a otra vista segun su rol del user
+            localStorage.setItem('pf', JSON.stringify(result.user.pf));
 
+            //Manda a otra vista segun su rol del user
             if (result.user.role_id === 1) {
                 navigate('/mis_citas', { replace: true });
             } else if (result.user.role_id === 2) {
