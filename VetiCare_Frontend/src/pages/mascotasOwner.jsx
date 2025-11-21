@@ -5,12 +5,20 @@ import "sweetalert2/dist/sweetalert2.min.css";
 import Layout from "./layout";
 import { menuItemsOwner } from "../config/layout/sidebar";
 import ActionComponents from "../components/action-components";
+import { FaPaw, FaNotesMedical } from "react-icons/fa";
 
 function MascotasOwner() {
   const token = localStorage.getItem("token");
   const API_URL = import.meta.env.VITE_API_URL;
 
-  const columns = ["#", "Nombre", "Especie", "Raza", "Icono"];
+  const columns = [
+    "#",
+    "Nombre",
+    "Especie",
+    "Raza",
+    "Icono",
+    "Historial médico",
+  ];
 
   const [pets, setPets] = useState([]);
   const [showEditModal, setShowEditModal] = useState(false);
@@ -25,6 +33,12 @@ function MascotasOwner() {
   const [birthDate, setBirthDate] = useState("");
   const [speciesId, setSpeciesId] = useState("1");
   const [breed, setBreed] = useState("");
+
+  // Modal historial médico
+  const [showHistoryModal, setShowHistoryModal] = useState(false);
+  const [historyData, setHistoryData] = useState([]);
+  const [historyLoading, setHistoryLoading] = useState(false);
+  const [historyPet, setHistoryPet] = useState(null);
 
   const userFromLocal = JSON.parse(localStorage.getItem("user") || "{}");
 
@@ -46,6 +60,12 @@ function MascotasOwner() {
 
   const openAddPetModal = () => setShowAddPetModal(true);
   const closeAddPetModal = () => setShowAddPetModal(false);
+
+  const closeHistoryModal = () => {
+    setShowHistoryModal(false);
+    setHistoryData([]);
+    setHistoryPet(null);
+  };
 
   // CARGAR MASCOTAS
   useEffect(() => {
@@ -235,6 +255,53 @@ function MascotasOwner() {
     }
   }
 
+  // ABRIR HISTORIAL MÉDICO
+  const handleOpenHistory = async (petId) => {
+    setShowHistoryModal(true);
+    setHistoryLoading(true);
+    setHistoryData([]);
+    setHistoryPet(null);
+
+    try {
+      const response = await fetch(
+        `${API_URL}/api/appointments/pet/${petId}/history`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        setShowHistoryModal(false);
+        return Swal.fire({
+          icon: "error",
+          title: "Error al cargar historial médico",
+          text: errorText || "Error en la petición.",
+        });
+      }
+
+      const data = await response.json();
+      const safeArray = Array.isArray(data) ? data : [];
+      setHistoryData(safeArray);
+
+      if (safeArray.length > 0) {
+        setHistoryPet(safeArray[0].pet);
+      }
+    } catch (error) {
+      setShowHistoryModal(false);
+      Swal.fire({
+        icon: "error",
+        title: "Error inesperado",
+        text: error.message,
+      });
+    } finally {
+      setHistoryLoading(false);
+    }
+  };
+
   // AGREGAR NUEVA MASCOTA
   const handleSubmitPet = async (e) => {
     e.preventDefault();
@@ -291,7 +358,7 @@ function MascotasOwner() {
     <>
       <Layout menuItems={menuItemsOwner} userType="vet">
         <div id="main-container-appointments">
-          {/* Encabezado corregido */}
+          {/* Encabezado*/}
           <div
             className="search-add-row"
             style={{
@@ -301,15 +368,35 @@ function MascotasOwner() {
               marginBottom: "20px",
             }}
           >
-            <p
+            <div
               style={{
-                fontSize: "20px",
-                fontWeight: "600",
-                margin: 0,
+                display: "flex",
+                alignItems: "center",
+                gap: "10px",
               }}
             >
-              Mis mascotas
-            </p>
+              <FaPaw size={28} style={{ color: "#a5b68d" }} />
+              <div>
+                <p
+                  style={{
+                    fontSize: "36px",
+                    fontWeight: "700",
+                    margin: 0,
+                  }}
+                >
+                  Mis mascotas
+                </p>
+                <span
+                  style={{
+                    fontSize: "18px",
+                    color: "#64748b",
+                  }}
+                >
+                  Revisa, agenda y consulta el historial médico de tus
+                  compañeros peludos.
+                </span>
+              </div>
+            </div>
 
             <button
               className="btn-main btn-normal"
@@ -349,6 +436,25 @@ function MascotasOwner() {
                       {pet.icon}
                     </td>
 
+                    {/* Historial médico */}
+                    <td style={{ textAlign: "center" }}>
+                      <button
+                        type="button"
+                        title="Ver historial médico"
+                        onClick={() => handleOpenHistory(pet.id)}
+                        style={{
+                          border: "none",
+                          background: "transparent",
+                          cursor: "pointer",
+                        }}
+                      >
+                        <FaNotesMedical
+                          size={20}
+                          style={{ color: "#2563eb" }}
+                        />
+                      </button>
+                    </td>
+
                     <td style={{ textAlign: "center" }}>
                       <ActionComponents
                         onEdit={handleEdit}
@@ -367,7 +473,7 @@ function MascotasOwner() {
                   marginTop: "20px",
                   padding: "15px",
                   backgroundColor: "#eef5ff",
-                  border: "1px solid #b3d1ff",
+                  border: "1px solid #b3d1ff", // 👈 CORREGIDO
                   borderRadius: "8px",
                   textAlign: "center",
                   color: "#1d4ed8",
@@ -474,7 +580,7 @@ function MascotasOwner() {
                 value={breed}
                 onChange={(e) => setBreed(e.target.value)}
                 required
-                style={{ marginBottom: "25px" }} // 👈 ESPACIO EXTRA
+                style={{ marginBottom: "25px" }}
               />
 
               <button
@@ -485,6 +591,135 @@ function MascotasOwner() {
                 Registrar
               </button>
             </form>
+          </div>
+        </div>
+      )}
+
+      {/* MODAL HISTORIAL MÉDICO */}
+      {showHistoryModal && (
+        <div className="modal-overlay">
+          <div className="password-modal" style={{ maxWidth: "700px" }}>
+            <button className="modal-close" onClick={closeHistoryModal}>
+              ×
+            </button>
+
+            <h2 style={{ marginBottom: "10px" }}>
+              Historial médico{" "}
+              {historyPet ? `de ${historyPet.name?.trim()}` : ""}
+            </h2>
+
+            {historyPet && (
+              <div
+                style={{
+                  marginBottom: "15px",
+                  padding: "10px 12px",
+                  borderRadius: "8px",
+                  backgroundColor: "#f3f4ff",
+                  fontSize: "14px",
+                }}
+              >
+                <p style={{ margin: 0 }}>
+                  <strong>Nombre:</strong> {historyPet.name}
+                </p>
+                <p style={{ margin: 0 }}>
+                  <strong>Especie:</strong> {historyPet.species?.name || "N/D"}{" "}
+                  · <strong>Raza:</strong> {historyPet.breed || "N/D"}
+                </p>
+              </div>
+            )}
+
+            {historyLoading && (
+              <div style={{ textAlign: "center", padding: "15px" }}>
+                Cargando historial...
+              </div>
+            )}
+
+            {!historyLoading && historyData.length === 0 && (
+              <div style={{ textAlign: "center", padding: "15px" }}>
+                Esta mascota aún no tiene historial médico registrado.
+              </div>
+            )}
+
+            {!historyLoading && historyData.length > 0 && (
+              <div
+                className="history-cards"
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: "12px",
+                  maxHeight: "420px",
+                  overflowY: "auto",
+                  paddingRight: "4px",
+                }}
+              >
+                {historyData.map((app) => (
+                  <div
+                    key={app.id}
+                    style={{
+                      borderRadius: "10px",
+                      border: "1px solid #e2e8f0",
+                      padding: "12px 14px",
+                      backgroundColor: "#ffffff",
+                      boxShadow:
+                        "0 1px 2px rgba(15, 23, 42, 0.04), 0 1px 3px rgba(15, 23, 42, 0.08)",
+                      fontSize: "14px",
+                    }}
+                  >
+                    <div
+                      style={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                        marginBottom: "6px",
+                      }}
+                    >
+                      <span style={{ fontWeight: 600 }}>
+                        Fecha de la cita: {app.date} a las {app.time} hrs
+                      </span>
+
+                      <span
+                        style={{
+                          fontSize: "12px",
+                          padding: "2px 8px",
+                          borderRadius: "999px",
+                          backgroundColor:
+                            app.status === "Finalizada" ? "#dcfce7" : "#fef9c3",
+                          color:
+                            app.status === "Finalizada" ? "#166534" : "#854d0e",
+                          fontWeight: 600,
+                        }}
+                      >
+                        {app.status}
+                      </span>
+                    </div>
+
+                    <p style={{ margin: "0 0 4px" }}>
+                      <strong>Motivo:</strong> {app.reason || "N/D"}
+                    </p>
+
+                    <p style={{ margin: "0 0 4px" }}>
+                      <strong>Veterinario:</strong>{" "}
+                      {app.vet?.full_name || "N/D"}
+                    </p>
+
+                    <p style={{ margin: "0 0 4px" }}>
+                      <strong>Peso:</strong> {app.weight_kg ?? "N/D"} kg ·{" "}
+                      <strong>Temperatura:</strong> {app.temperature ?? "N/D"}{" "}
+                      °C
+                    </p>
+
+                    <p style={{ margin: "0 0 4px" }}>
+                      <strong>Medicamentos:</strong>{" "}
+                      {app.medications_prescribed || "N/D"}
+                    </p>
+
+                    <p style={{ margin: 0 }}>
+                      <strong>Notas:</strong>{" "}
+                      {app.additional_notes || "Sin notas adicionales."}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
         </div>
       )}
