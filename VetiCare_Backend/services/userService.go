@@ -6,17 +6,19 @@ import (
 )
 
 type UserService struct {
-	Repo repositories.UserRepository
+	Repo         repositories.UserRepository
+	EmailService EmailService
 }
 
-func NewUserService(repo repositories.UserRepository) *UserService {
-	return &UserService{Repo: repo}
+func NewUserService(repo repositories.UserRepository, emailService EmailService) *UserService {
+	return &UserService{Repo: repo, EmailService: emailService}
 }
 
 func (s *UserService) Register(user *entities.User) error {
 	if user.RoleID == 2 {
 		user.PF = 1
 	}
+
 	return s.Repo.Register(user)
 }
 

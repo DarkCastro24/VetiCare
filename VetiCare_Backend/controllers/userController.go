@@ -13,11 +13,11 @@ import (
 )
 
 type UserController struct {
-	Service *services.UserService
+	UserService *services.UserService
 }
 
 func NewUserController(service *services.UserService) *UserController {
-	return &UserController{Service: service}
+	return &UserController{UserService: service}
 }
 
 func (uc *UserController) RegisterRoutes(r *mux.Router, authMiddleware func(http.Handler) http.Handler) {
@@ -52,7 +52,7 @@ func (uc *UserController) Register(w http.ResponseWriter, r *http.Request) {
 	}
 
 	hashedPassword, err := utils.HashPassword(passwordPlain)
-	
+
 	if err != nil {
 		http.Error(w, "Error al hashear contraseña", http.StatusInternalServerError)
 		return
@@ -68,12 +68,12 @@ func (uc *UserController) Register(w http.ResponseWriter, r *http.Request) {
 		PasswordHash: hashedPassword,
 	}
 
-	if err := uc.Service.Register(&user); err != nil {
+	if err := uc.UserService.Register(&user); err != nil {
 		http.Error(w, "El correo o dui ingresados ya estan en uso", http.StatusInternalServerError)
 		return
 	}
 
-	completeUser, err := uc.Service.GetUserByID(user.ID.String())
+	completeUser, err := uc.UserService.GetUserByID(user.ID.String())
 	if err != nil {
 		http.Error(w, "Error al obtener usuario creado: "+err.Error(), http.StatusInternalServerError)
 		return
@@ -125,7 +125,7 @@ func (uc *UserController) ChangePassword(w http.ResponseWriter, r *http.Request)
 		return
 	}
 
-	err := uc.Service.ChangePassword(input.Email, input.CurrentPassword, input.NewPassword)
+	err := uc.UserService.ChangePassword(input.Email, input.CurrentPassword, input.NewPassword)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
@@ -146,7 +146,7 @@ func (uc *UserController) Login(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "JSON inválido", http.StatusBadRequest)
 		return
 	}
-	user, err := uc.Service.Login(input.Email, input.Password)
+	user, err := uc.UserService.Login(input.Email, input.Password)
 	if err != nil {
 		http.Error(w, "Credenciales inválidas: "+err.Error(), http.StatusUnauthorized)
 		return
@@ -168,7 +168,7 @@ func (uc *UserController) Login(w http.ResponseWriter, r *http.Request) {
 }
 
 func (uc *UserController) GetAllUsers(w http.ResponseWriter, _ *http.Request) {
-	users, err := uc.Service.GetAllUsers()
+	users, err := uc.UserService.GetAllUsers()
 	if err != nil {
 		http.Error(w, "Error al obtener usuarios: "+err.Error(), http.StatusInternalServerError)
 		return
@@ -181,7 +181,7 @@ func (uc *UserController) GetAllUsers(w http.ResponseWriter, _ *http.Request) {
 }
 
 func (uc *UserController) GetOwners(w http.ResponseWriter, _ *http.Request) {
-	users, err := uc.Service.GetUsersByRole(1) // Dueños
+	users, err := uc.UserService.GetUsersByRole(1) // Dueños
 	if err != nil {
 		http.Error(w, "Error al obtener dueños: "+err.Error(), http.StatusInternalServerError)
 		return
@@ -194,7 +194,7 @@ func (uc *UserController) GetOwners(w http.ResponseWriter, _ *http.Request) {
 }
 
 func (uc *UserController) GetVets(w http.ResponseWriter, _ *http.Request) {
-	users, err := uc.Service.GetUsersByRole(2) // Veterinarios
+	users, err := uc.UserService.GetUsersByRole(2) // Veterinarios
 	if err != nil {
 		http.Error(w, "Error al obtener veterinarios: "+err.Error(), http.StatusInternalServerError)
 		return
@@ -208,7 +208,7 @@ func (uc *UserController) GetVets(w http.ResponseWriter, _ *http.Request) {
 
 func (uc *UserController) GetUserByID(w http.ResponseWriter, r *http.Request) {
 	id := mux.Vars(r)["id"]
-	user, err := uc.Service.GetUserByID(id)
+	user, err := uc.UserService.GetUserByID(id)
 	if err != nil {
 		http.Error(w, "Error al buscar usuario: "+err.Error(), http.StatusInternalServerError)
 		return
@@ -255,7 +255,7 @@ func (uc *UserController) UpdateUser(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 	}
-	if err := uc.Service.UpdateUser(id, data); err != nil {
+	if err := uc.UserService.UpdateUser(id, data); err != nil {
 		http.Error(w, "Error al actualizar usuario: "+err.Error(), http.StatusInternalServerError)
 		return
 	}
@@ -266,7 +266,7 @@ func (uc *UserController) UpdateUser(w http.ResponseWriter, r *http.Request) {
 
 func (uc *UserController) DeleteUser(w http.ResponseWriter, r *http.Request) {
 	id := mux.Vars(r)["id"]
-	msg, err := uc.Service.DeleteUser(id)
+	msg, err := uc.UserService.DeleteUser(id)
 	if err != nil {
 		if err.Error() == "usuario no encontrado" {
 			http.Error(w, err.Error(), http.StatusNotFound)
