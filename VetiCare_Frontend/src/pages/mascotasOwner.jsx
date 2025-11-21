@@ -88,7 +88,6 @@ function MascotasOwner() {
         }));
 
         setPets(filteredData);
-
       } catch (error) {
         Swal.fire({
           icon: "error",
@@ -256,8 +255,8 @@ function MascotasOwner() {
       const response = await fetch(`${API_URL}/api/pets`, {
         method: "POST",
         headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`,
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify(payload),
       });
@@ -268,22 +267,22 @@ function MascotasOwner() {
         setBirthDate("");
         setSpeciesId("1");
         setBreed("");
-        setActionWasDone(prev => !prev); // recargar tabla
+        setActionWasDone((prev) => !prev); // recargar tabla
       } else {
         closeAddPetModal();
         const errorText = await response.text();
         return Swal.fire({
-          icon: 'error',
-          title: 'Error',
+          icon: "error",
+          title: "Error",
           text: errorText,
         });
       }
     } catch (err) {
       closeAddPetModal();
       await Swal.fire({
-        icon: 'error',
-        title: 'Error',
-        text: err.message || 'No se pudo conectar con el servidor.',
+        icon: "error",
+        title: "Error",
+        text: err.message || "No se pudo conectar con el servidor.",
       });
     }
   };
@@ -292,22 +291,21 @@ function MascotasOwner() {
     <>
       <Layout menuItems={menuItemsOwner} userType="vet">
         <div id="main-container-appointments">
-
           {/* Encabezado corregido */}
-          <div 
-            className="search-add-row" 
+          <div
+            className="search-add-row"
             style={{
               display: "flex",
               justifyContent: "space-between",
               alignItems: "center",
-              marginBottom: "20px"
+              marginBottom: "20px",
             }}
           >
-            <p 
+            <p
               style={{
                 fontSize: "20px",
                 fontWeight: "600",
-                margin: 0
+                margin: 0,
               }}
             >
               Mis mascotas
@@ -324,30 +322,34 @@ function MascotasOwner() {
 
           {/* TABLA */}
           <div id="table-container">
-            <table
-              className="simple-table"
-              style={{ width: "100%", textAlign: "center" }}
-            >
+            <table className="simple-table" style={{ width: "100%" }}>
               <thead>
                 <tr>
                   {pets.length !== 0 &&
                     columns.map((column, i) => (
-                      <th key={i}>{column}</th>
+                      <th key={i} style={{ textAlign: "center" }}>
+                        {column}
+                      </th>
                     ))}
-                  {pets.length !== 0 && <th>Acciones</th>}
+                  {pets.length !== 0 && (
+                    <th style={{ textAlign: "center" }}>Acciones</th>
+                  )}
                 </tr>
               </thead>
 
               <tbody>
                 {pets.map((pet) => (
                   <tr key={pet.id}>
-                    <td>{pet.rowNumber}</td>
-                    <td>{pet.name}</td>
-                    <td>{pet.speciesName}</td>
-                    <td>{pet.breed}</td>
-                    <td style={{ fontSize: "28px" }}>{pet.icon}</td>
+                    <td style={{ textAlign: "center" }}>{pet.rowNumber}</td>
+                    <td style={{ textAlign: "center" }}>{pet.name}</td>
+                    <td style={{ textAlign: "center" }}>{pet.speciesName}</td>
+                    <td style={{ textAlign: "center" }}>{pet.breed}</td>
 
-                    <td>
+                    <td style={{ textAlign: "center", fontSize: "28px" }}>
+                      {pet.icon}
+                    </td>
+
+                    <td style={{ textAlign: "center" }}>
                       <ActionComponents
                         onEdit={handleEdit}
                         onDelete={handleDeleteClick}
@@ -377,7 +379,10 @@ function MascotasOwner() {
                   fontSize: "16px",
                 }}
               >
-                <i className="fa-regular fa-circle-info" style={{ fontSize: "20px" }}></i>
+                <i
+                  className="fa-regular fa-circle-info"
+                  style={{ fontSize: "20px" }}
+                ></i>
                 No tienes mascotas registradas.
               </div>
             )}
@@ -389,7 +394,9 @@ function MascotasOwner() {
       {showEditModal && (
         <div className="modal-overlay">
           <div className="edit-modal-app">
-            <button className="modal-close" onClick={closeEditModal}>×</button>
+            <button className="modal-close" onClick={closeEditModal}>
+              ×
+            </button>
             <form
               onSubmit={(e) => {
                 e.preventDefault();
@@ -429,10 +436,11 @@ function MascotasOwner() {
       {showAddPetModal && (
         <div className="modal-overlay">
           <div className="password-modal">
-            <button className="modal-close" onClick={closeAddPetModal}>×</button>
+            <button className="modal-close" onClick={closeAddPetModal}>
+              ×
+            </button>
             <h2>Registrar nueva mascota</h2>
             <form onSubmit={handleSubmitPet}>
-
               <label>Nombre</label>
               <input
                 type="text"
@@ -466,11 +474,11 @@ function MascotasOwner() {
                 value={breed}
                 onChange={(e) => setBreed(e.target.value)}
                 required
-                style={{ marginBottom: "25px" }}  // 👈 ESPACIO EXTRA
+                style={{ marginBottom: "25px" }} // 👈 ESPACIO EXTRA
               />
 
-              <button 
-                type="submit" 
+              <button
+                type="submit"
                 className="btn-modal-submit"
                 style={{ marginTop: "10px" }}
               >
