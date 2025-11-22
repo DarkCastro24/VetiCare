@@ -17,6 +17,7 @@ type UserDTO struct {
 	RoleID   int         `json:"role_id"`
 	StatusID int         `json:"status_id"`
 	Role     UserRoleDTO `json:"role"`
+	Pf       int         `json:"pf"`
 }
 
 type UserSummaryDTO struct {
@@ -24,6 +25,7 @@ type UserSummaryDTO struct {
 	FullName string `json:"full_name"`
 	DUI      string `json:"dui"`
 	Phone    string `json:"phone"`
+	Pf       int    `json:"pf"`
 }
 
 func ToUserDTO(u *entities.User) UserDTO {
@@ -43,5 +45,6 @@ func ToUserDTO(u *entities.User) UserDTO {
 			ID:   u.Role.ID,
 			Role: u.Role.Role,
 		},
+		Pf: u.Pf,
 	}
 }

@@ -8,17 +8,38 @@ import CambiarContra from '../components/cambiarContra';
 import "bootstrap/dist/css/bootstrap.min.css";
 import '../assets/styles/main.scss';
 
-const API_URL    = import.meta.env.VITE_API_URL;
+// Imports de fotos de perfil predefinidas
+import pf2 from '../assets/images/profile_photos/2.png';
+import pf3 from '../assets/images/profile_photos/3.png';
+import pf4 from '../assets/images/profile_photos/4.png';
+import pf5 from '../assets/images/profile_photos/5.png';
+import pf6 from '../assets/images/profile_photos/6.png';
+import pf7 from '../assets/images/profile_photos/7.png';
+import pf8 from '../assets/images/profile_photos/8.png';
+
+const pfMap = {
+  2: pf2,
+  3: pf3,
+  4: pf4,
+  5: pf5,
+  6: pf6,
+  7: pf7,
+  8: pf8,
+};
+
+const API_URL = import.meta.env.VITE_API_URL;
 const SECRET_KEY = import.meta.env.VITE_ADMIN_SECRET;
 
 const HeaderVet = ({ userName = 'Usuario', onToggleSidebar, userType }) => {
   const token = localStorage.getItem('token');
-  const [showLogoutModal, setShowLogoutModal]= useState(false);
-  const [showOptions, setShowOptions] =useState(false);
-  const [showCambioContra, setShowCambioContra]=useState(false);
-  const [form, setForm]= useState({ password: '', newPassword: '' });
-  const [loading, setLoading]=useState(false);
-  const navigate= useNavigate();
+
+  const [showLogoutModal, setShowLogoutModal]   = useState(false);
+  const [showOptions, setShowOptions]           = useState(false);
+  const [showCambioContra, setShowCambioContra] = useState(false);
+  const [form, setForm]                         = useState({ password: '', newPassword: '' });
+  const [loading, setLoading]                   = useState(false);
+
+  const navigate = useNavigate();
 
   const handleAvatarClick   = () => setShowOptions(o => !o);
   const handleLogoutConfirm = () => {
@@ -31,6 +52,29 @@ const HeaderVet = ({ userName = 'Usuario', onToggleSidebar, userType }) => {
     navigate(loginRoute, { replace: true });
   };
 
+  // Obtener foto de perfil desde localStorage
+  const getPfValue = () => {
+    try {
+      const userStr  = localStorage.getItem('user');
+      const adminStr = localStorage.getItem('admin');
+      const sessionStr = userStr || adminStr;
+
+      if (sessionStr) {
+        const sessionObj = JSON.parse(sessionStr);
+        const pf = sessionObj?.pf;
+        const parsed = parseInt(pf, 10);
+        if (!Number.isNaN(parsed)) return parsed;
+      }
+    } catch (e) {
+      console.warn('Error leyendo pf de localStorage:', e);
+    }
+    return 2; // default
+  };
+
+  const pfValue = getPfValue();
+  const profileAvatarSrc = pfMap[pfValue] || pf2;
+
+  // CAMBIO DE CONTRASEÑA
   const handlePasswordSubmit = async (formData) => {
     setLoading(true);
     try {
@@ -44,7 +88,9 @@ const HeaderVet = ({ userName = 'Usuario', onToggleSidebar, userType }) => {
       const email = sessionObj.email;
       if (!email) throw new Error('No se encontró el correo del usuario.');
 
-      const endpoint = isAdminRoute ? `${API_URL}/api/admins/change_password` : `${API_URL}/api/users/change_password`;
+      const endpoint = isAdminRoute
+        ? `${API_URL}/api/admins/change_password`
+        : `${API_URL}/api/users/change_password`;
 
       const headers = {
         'Authorization': `Bearer ${token}`,
@@ -95,17 +141,60 @@ const HeaderVet = ({ userName = 'Usuario', onToggleSidebar, userType }) => {
 
   return (
     <>
-      <header className={`app-header d-flex align-items-center justify-content-between px-4 ${userType === 'vet' ? 'vet-header' : 'admin-header'}`}>
-        <button className="menu-toggle d-md-none" onClick={onToggleSidebar} aria-label="Abrir menú">
+      <header
+        className={`app-header d-flex align-items-center justify-content-between px-4 ${
+          userType === 'vet' ? 'vet-header' : 'admin-header'
+        }`}
+      >
+        <button
+          className="menu-toggle d-md-none"
+          onClick={onToggleSidebar}
+          aria-label="Abrir menú"
+        >
           <FaBars size={24} />
         </button>
-        <img src={logoHeader} alt="Logo VetiCare" width="200" className="imagenLogoHeader" />
 
+        {/* Logo de la aplicación */}
+        <img
+          src={logoHeader}
+          alt="Logo VetiCare"
+          width="200"
+          className="imagenLogoHeader"
+        />
+
+        {/* Sección de usuario */}
         <div className="app-header__user d-flex align-items-center position-relative">
           <span className="app-header__username">{userName}</span>
-          <FaUserCircle size={28} className="cursor-pointer" onClick={handleAvatarClick} />
 
-          <Modal show={showCambioContra} onHide={() => setShowCambioContra(false)} centered>
+          {profileAvatarSrc ? (
+            <img
+              src={profileAvatarSrc}
+              alt="Foto de perfil"
+              className="header-user-avatar cursor-pointer"
+              onClick={handleAvatarClick}
+              style={{
+                width: 32,
+                height: 32,
+                borderRadius: '50%',
+                objectFit: 'cover',
+                marginLeft: '8px',
+                cursor: 'pointer'
+              }}
+            />
+          ) : (
+            <FaUserCircle
+              size={28}
+              className="cursor-pointer"
+              onClick={handleAvatarClick}
+            />
+          )}
+
+          {/* Modal cambiar contraseña */}
+          <Modal
+            show={showCambioContra}
+            onHide={() => setShowCambioContra(false)}
+            centered
+          >
             <Modal.Header closeButton>
               <Modal.Title>Cambiar contraseña</Modal.Title>
             </Modal.Header>
@@ -113,28 +202,50 @@ const HeaderVet = ({ userName = 'Usuario', onToggleSidebar, userType }) => {
               <CambiarContra
                 form={form}
                 setForm={setForm}
-                onSubmit={handlePasswordSubmit} 
+                onSubmit={handlePasswordSubmit}
               />
             </Modal.Body>
           </Modal>
 
-          <Modal show={showLogoutModal} onHide={() => setShowLogoutModal(false)} centered>
+          {/* Modal cerrar sesión */}
+          <Modal
+            show={showLogoutModal}
+            onHide={() => setShowLogoutModal(false)}
+            centered
+          >
             <Modal.Header closeButton>
               <Modal.Title>Cerrar sesión</Modal.Title>
             </Modal.Header>
             <Modal.Body>¿Estás seguro que deseas cerrar sesión?</Modal.Body>
             <Modal.Footer>
-              <Button variant="secondary" onClick={() => setShowLogoutModal(false)}>Cancelar</Button>
-              <Button variant="primary" onClick={handleLogout}>Cerrar sesión</Button>
+              <Button
+                variant="secondary"
+                onClick={() => setShowLogoutModal(false)}
+              >
+                Cancelar
+              </Button>
+              <Button variant="primary" onClick={handleLogout}>
+                Cerrar sesión
+              </Button>
             </Modal.Footer>
           </Modal>
 
+          {/* Menú de opciones */}
           {showOptions && (
-            <div className="list-group position-absolute end-0 mt-2" style={{ zIndex: 1000, top: '100%' }}>
-              <button className="list-group-item list-group-item-action" onClick={() => setShowCambioContra(true)}>
+            <div
+              className="list-group position-absolute end-0 mt-2"
+              style={{ zIndex: 1000, top: '100%' }}
+            >
+              <button
+                className="list-group-item list-group-item-action"
+                onClick={() => setShowCambioContra(true)}
+              >
                 Cambiar contraseña
               </button>
-              <button className="list-group-item list-group-item-action" onClick={handleLogoutConfirm}>
+              <button
+                className="list-group-item list-group-item-action"
+                onClick={handleLogoutConfirm}
+              >
                 Cerrar sesión
               </button>
             </div>

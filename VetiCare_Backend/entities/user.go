@@ -1,9 +1,10 @@
 package entities
 
 import (
+	"time"
+
 	"github.com/google/uuid"
 	"gorm.io/gorm"
-	"time"
 )
 
 type User struct {
@@ -21,6 +22,8 @@ type User struct {
 	PF           int       `gorm:"default:2" json:"pf"`
 
 	Role UserRole `gorm:"foreignKey:RoleID;references:ID" json:"role"`
+
+	Pf int `gorm:"column:pf;default:1" json:"pf"`
 }
 
 type VetAppointments struct {
