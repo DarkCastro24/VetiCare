@@ -27,6 +27,7 @@
   position: relative;
   width: auto;
   margin: 1.75rem auto;
+  max-height: calc(100vh - 40px);
   max-width: 90vw;
   &.modal-sm {
     max-width: 300px;
@@ -87,22 +88,40 @@
     font-size: xx-large;
   }
 
-  .btn-close {
-    background: none;
-    border: none;
-    font-size: 1.25rem;
-    opacity: 0.6;
-    &:hover {
-      opacity: 1;
-    }
+.btn-close {
+  width: 1.5rem;
+  height: 1.5rem;
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  opacity: 0.7;
+  position: absolute;
+  right: 1.5rem;  // antes 1rem
+  top: 1.2rem;  
+
+  /* Ícono de X negro estilo minimalista */
+  &::before {
+    content: "✖";
+    font-size: 1.5rem;
+    color: #000; // negro sólido
+    line-height: 1;
   }
+
+  &:hover {
+    opacity: 1;
+  }
+}
+
 }
 
 
 .modal-body {
   flex: 1 1 auto;
   padding: 1.5rem;
-  margin: 2rem;
+  max-height: calc(100vh - 180px);
+  overflow-y: auto;
+  overflow-x: hidden;
   background-color: #fff;
 
   .form-select{
@@ -113,16 +132,15 @@
   .btn-link{
     color: $cafe;
   }
-
 }
 
 
+
 .modal-footer {
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  padding: 1rem 1.5rem;
-  background-color: $primary-color;
+  padding-top: 8px; 
+  background: white; 
+  position: sticky;
+  bottom: 0; 
 
   .btn{
     margin-left: 0.5rem;
@@ -141,7 +159,8 @@
 
   .vaccination-history {
     &__table {
-
+width: 100%;
+  table-layout: fixed;
       th,
       td {
         border: 2px;
