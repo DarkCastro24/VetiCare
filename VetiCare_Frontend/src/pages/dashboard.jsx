@@ -179,7 +179,8 @@ export default function Dashboard() {
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                    {vets.slice(0, 5).map(v => (
+                                                     {/* Slice no funciona en null y por eso falla al cargar inicialmente el dashboard vacía */}
+                                                    {vets && vets.slice(0, 5).map(v => (
                                                         <tr key={v.vet_id}>
                                                             <td className="text-truncate" style={{ maxWidth: '200px' }} >
                                                                 {v.vet_name}
