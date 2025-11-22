@@ -147,19 +147,19 @@ export default function Dashboard() {
                                 <div className="col">
                                     <div className="card bg-white rounded-4 p-4 text-center">
                                         <h5 className="mb-2">Citas atendidas</h5>
-                                        <p className="fs-3 mb-0">{attended}</p>
+                                        <p className="fs-3 mb-0">{attended > 0 ? attended : <p className="fs-6 mb-0">Sin citas atendidas registradas</p>}</p>
                                     </div>
                                 </div>
                                 <div className="col">
                                     <div className="card bg-white rounded-4 p-4 text-center">
                                         <h5 className="mb-2">Citas pendientes</h5>
-                                        <p className="fs-3 mb-0">{pending}</p>
+                                        <p className="fs-3 mb-0">{attended > 0 ? attended : <p className="fs-6 mb-0">No hay citas pendientes</p>}</p>
                                     </div>
                                 </div>
                                 <div className="col">
                                     <div className="card bg-white rounded-4 p-4 text-center">
                                         <h5 className="mb-2">Total de veterinarios</h5>
-                                        <p className="fs-3 mb-0">{totalVets}</p>
+                                        <p className="fs-3 mb-0">{attended > 0 ? attended : <p className="fs-6 mb-0">Sin veterinarios registrados</p>}</p>
                                     </div>
                                 </div>
                             </div>
@@ -180,14 +180,20 @@ export default function Dashboard() {
                                                 </thead>
                                                 <tbody>
                                                      {/* Slice no funciona en null y por eso falla al cargar inicialmente el dashboard vacía */}
-                                                    {vets && vets.slice(0, 5).map(v => (
+                                                    {vets && vets.length > 0 ? (
+                                                    vets.slice(0, 5).map(v => (
                                                         <tr key={v.vet_id}>
                                                             <td className="text-truncate" style={{ maxWidth: '200px' }} >
                                                                 {v.vet_name}
                                                             </td>
                                                             <td className="text-end">{v.appointments}</td>
                                                         </tr>
-                                                    ))}
+                                                    )
+                                                    )) : (
+                                                        <tr>
+                                                            <td colSpan="2" className="text-center">No se encuentra ningún veterinario registrado</td>
+                                                        </tr>
+                                                    )}
                                                 </tbody>
                                             </table>
                                         </div>
@@ -199,7 +205,11 @@ export default function Dashboard() {
                                             Cantidad de citas por mes
                                         </h5>
                                         <div style={{ width: '100%', height: '300px' }}>
+                                            {chartData.labels && chartData.labels.length > 0 ? (
                                             <Bar data={chartData} className="w-100 h-100" />
+                                            ) : (
+                                                <p className="text-center">No hay datos de citas resgistradas por mostrar</p>
+                                            )}
                                         </div>
                                     </div>
                                 </div>
