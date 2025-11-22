@@ -19,6 +19,11 @@ type UserDTO struct {
 	Role     UserRoleDTO `json:"role"`
 }
 
+type LoginDTO struct {
+	Email    string `json:"email"`
+	Password string `json:"password"`
+}
+
 type WelcomeEmailUser struct {
 	FullName string `json:"full_name" validate:"required,alphabetic"`
 	Email    string `json:"email" validate:"required,emailFormat"`

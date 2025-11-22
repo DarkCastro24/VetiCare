@@ -51,8 +51,16 @@ func (s *UserService) Register(userDTO *dto.UserDTO) (*entities.User, error) {
 	return &user, nil
 }
 
-func (s *UserService) Login(email, password string) (*entities.User, error) {
-	return s.Repo.Login(email, password)
+func (s *UserService) Login(input dto.LoginDTO) (user *entities.User, token string, error error) {
+	user, err := s.Repo.Login(input.Email, input.Password)
+	if err != nil {
+		return nil, "", fmt.Errorf("error al login usuario: %v", err)
+	}
+	token, err = utils.GenerateJWT(user.ID.String(), user.Email)
+	if err != nil {
+		return nil, "", fmt.Errorf("No se pudo generar el token:  %v", err)
+	}
+	return user, token, nil
 }
 
 func (s *UserService) ChangePassword(email, currentPassword, newPassword string) error {

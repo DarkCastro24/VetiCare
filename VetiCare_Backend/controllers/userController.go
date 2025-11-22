@@ -3,7 +3,6 @@ package controllers
 import (
 	"VetiCare/entities/dto"
 	"VetiCare/services"
-	"VetiCare/utils"
 	"VetiCare/validators"
 	"encoding/json"
 	"fmt"
@@ -95,16 +94,12 @@ func (uc *UserController) ChangePassword(w http.ResponseWriter, r *http.Request)
 }
 
 func (uc *UserController) Login(w http.ResponseWriter, r *http.Request) {
-	type loginInput struct {
-		Email    string `json:"email"`
-		Password string `json:"password"`
-	}
-	var input loginInput
+	var input dto.LoginDTO
 	if err := json.NewDecoder(r.Body).Decode(&input); err != nil {
 		http.Error(w, "JSON inválido", http.StatusBadRequest)
 		return
 	}
-	user, err := uc.UserService.Login(input.Email, input.Password)
+	user, token, err := uc.UserService.Login(input)
 	if err != nil {
 		http.Error(w, "Credenciales inválidas: "+err.Error(), http.StatusUnauthorized)
 		return
@@ -113,11 +108,7 @@ func (uc *UserController) Login(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Su usuario esta desactivado, no puede iniciar sesión", http.StatusUnauthorized)
 		return
 	}
-	token, err := utils.GenerateJWT(user.ID.String(), user.Email)
-	if err != nil {
-		http.Error(w, "No se pudo generar el token: "+err.Error(), http.StatusInternalServerError)
-		return
-	}
+	
 	json.NewEncoder(w).Encode(map[string]interface{}{
 		"message": "Login exitoso",
 		"user":    dto.ToUserDTO(user),
