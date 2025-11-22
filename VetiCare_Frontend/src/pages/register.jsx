@@ -1,65 +1,75 @@
 import Image from 'react-bootstrap/Image';
 import registerImage from "../assets/images/register/registerDog.jpg";
 import logoImage from "../assets/images/logoHeader.png";
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+
+
 
 import Swal from 'sweetalert2';
 import "sweetalert2/dist/sweetalert2.min.css";
 
 import { useForm } from 'react-hook-form';
 
+
 function Register() {
 
+    const navigate = useNavigate();
     const {
         register,
         handleSubmit,
         formState: { errors },
     } = useForm({
-        mode: "onChange", // valida mientras escribes
+        mode: "onChange",
     });
 
     const API_URL = import.meta.env.VITE_API_URL;
 
     const onSubmit = async (data) => {
-        try {
-            const userData = { ...data, role_id: 1 };
+    try {
+        const userData = { ...data, role_id: 1 };
 
-            console.log("Enviando datos:", userData);
-            const response = await fetch(`${API_URL}/api/users/register`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(userData),
-            });
+        console.log("Enviando datos:", userData);
+        const response = await fetch(`${API_URL}/api/users/register`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(userData),
+        });
 
-            if (!response.ok) {
-                const errorText = await response.text();
-                return Swal.fire({
-                    icon: 'error',
-                    title: 'Registro fallido',
-                    text: errorText || 'Hubo un error en el registro.',
-                });
-            }
-
-            const result = await response.json();
-            console.log("The result is", result);
-
-            await Swal.fire({
-                icon: 'success',
-                title: 'Registro exitoso',
-                text: 'Tu cuenta ha sido creada correctamente.',
-            });
-
-        } catch (error) {
+        if (!response.ok) {
+            const errorText = await response.text();
             await Swal.fire({
                 icon: 'error',
-                title: 'Error',
-                text: error.message || 'No se pudo conectar con el servidor.',
+                title: 'Registro fallido',
+                text: errorText || 'Hubo un error en el registro.',
             });
+            return;
         }
-    };
 
+        const result = await response.json();
+        console.log("The result is", result);
+
+        const swalResult = await Swal.fire({
+            icon: 'success',
+            title: 'Registro exitoso',
+            text: 'Tu cuenta ha sido creada correctamente.',
+            confirmButtonText: "OK",
+        });
+
+        // 👇 Aquí ya es la respuesta del Swal, no la del backend
+        if (swalResult.isConfirmed) {
+            navigate("/"); // o "/login" si quieres ir al login
+        }
+
+    } catch (error) {
+        await Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: error.message || 'No se pudo conectar con el servidor.',
+        });
+    }
+};
     return (
         <div id="main-container-register">
             <div id='image-container-register'>
@@ -127,8 +137,8 @@ function Register() {
                             {...register("phone", {
                                 required: "El campo teléfono es requerido",
                                 pattern: {
-                                   value: /^[0-9]{4}-[0-9]{4}$/,
-                                   message: "El teléfono debe tener el formato 0000-0000",
+                                    value: /^[0-9]{4}-[0-9]{4}$/,
+                                    message: "El teléfono debe tener el formato 0000-0000",
                                 },
                             })}
                         />

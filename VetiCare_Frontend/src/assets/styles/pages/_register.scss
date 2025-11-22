@@ -7,7 +7,7 @@
   width: 100%;
   height: 100%;
   background-color: $primary-color;
-  overflow-x: hidden; // ✅ evita scroll lateral
+  overflow-x: hidden; 
 
   #image-container-register {
     height: 100%;
@@ -31,7 +31,7 @@
     img {
       height: 100%;
       width: 540px;
-      max-width: 100%; // ✅ que nunca sea más grande que el contenedor
+      max-width: 100%; 
 
       @include respond-to($tablet) {
         max-width: 395px;
@@ -44,7 +44,6 @@
       }
 
       @include respond-to($mobile) {
-        // min-width: none;  <-- esto no es válido, mejor quitarlo
         width: 100%;
       }
     }
@@ -56,10 +55,10 @@
 }
 
 .error-message {
-  color: #e63946; // o tu variable de error
+  color: #e63946; 
   font-size: 1rem;
   margin-top: 0.35rem;
-  min-height: 1.2rem; // espacio fijo para que no “salte”
+  min-height: 1.2rem; 
 }
 
   #fields-container-register {
@@ -144,7 +143,7 @@
         padding-top: 1.5rem;
         padding-bottom: 1.5rem;
         padding-left: 1rem;
-        box-sizing: border-box; // ✅ clave para que padding + border no sumen ancho extra
+        box-sizing: border-box;
         align-self: center;
         border: 1px solid $cafe;
         color: black;
@@ -169,16 +168,16 @@
         background-image: none !important;
       }
 
-      // ✅ Mensajes de error
+      
       .error-message {
-        color: #e63946; // rojo bonito, puedes usar una variable si tienes ($error-color)
+        color: #e63946; 
         font-size: 1rem;
         margin: 0.2rem 0 0.8rem;
         padding-left: 0.5rem;
         width: 100%;
         max-width: 100%;
         box-sizing: border-box;
-        word-wrap: break-word; // por si un texto es muy largo
+        word-wrap: break-word;
       }
 
       button {
