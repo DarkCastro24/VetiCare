@@ -25,51 +25,51 @@ function Register() {
     const API_URL = import.meta.env.VITE_API_URL;
 
     const onSubmit = async (data) => {
-    try {
-        const userData = { ...data, role_id: 1 };
+        try {
+            const userData = { ...data, role_id: 1 };
 
-        console.log("Enviando datos:", userData);
-        const response = await fetch(`${API_URL}/api/users/register`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(userData),
-        });
+            console.log("Enviando datos:", userData);
+            const response = await fetch(`${API_URL}/api/users/register`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(userData),
+            });
 
-        if (!response.ok) {
-            const errorText = await response.text();
+            if (!response.ok) {
+                const errorText = await response.text();
+                await Swal.fire({
+                    icon: 'error',
+                    title: 'Registro fallido',
+                    text: errorText || 'Hubo un error en el registro.',
+                });
+                return;
+            }
+
+            const result = await response.json();
+            console.log("The result is", result);
+
+            const swalResult = await Swal.fire({
+                icon: 'success',
+                title: 'Registro exitoso',
+                text: 'Tu cuenta ha sido creada correctamente.',
+                confirmButtonText: "OK",
+            });
+
+            // 👇 Aquí ya es la respuesta del Swal, no la del backend
+            if (swalResult.isConfirmed) {
+                navigate("/"); // o "/login" si quieres ir al login
+            }
+
+        } catch (error) {
             await Swal.fire({
                 icon: 'error',
-                title: 'Registro fallido',
-                text: errorText || 'Hubo un error en el registro.',
+                title: 'Error',
+                text: error.message || 'No se pudo conectar con el servidor.',
             });
-            return;
         }
-
-        const result = await response.json();
-        console.log("The result is", result);
-
-        const swalResult = await Swal.fire({
-            icon: 'success',
-            title: 'Registro exitoso',
-            text: 'Tu cuenta ha sido creada correctamente.',
-            confirmButtonText: "OK",
-        });
-
-        // 👇 Aquí ya es la respuesta del Swal, no la del backend
-        if (swalResult.isConfirmed) {
-            navigate("/"); // o "/login" si quieres ir al login
-        }
-
-    } catch (error) {
-        await Swal.fire({
-            icon: 'error',
-            title: 'Error',
-            text: error.message || 'No se pudo conectar con el servidor.',
-        });
-    }
-};
+    };
     return (
         <div id="main-container-register">
             <div id='image-container-register'>
@@ -103,8 +103,8 @@ function Register() {
                                 },
                             })}
                         />
-                        <p className="error-message">
-                            {errors.full_name?.message || "\u00A0"}
+                        <p className={`error-message ${errors.full_name ? "" : "hidden"}`}>
+                            {errors.full_name?.message}
                         </p>
                     </div>
 
@@ -123,8 +123,8 @@ function Register() {
                                 },
                             })}
                         />
-                        <p className="error-message">
-                            {errors.dui?.message || "\u00A0"}
+                        <p className={`error-message ${errors.dui ? "" : "hidden"}`}>
+                            {errors.dui?.message}
                         </p>
                     </div>
 
@@ -142,8 +142,8 @@ function Register() {
                                 },
                             })}
                         />
-                        <p className="error-message">
-                            {errors.phone?.message || "\u00A0"}
+                        <p className={`error-message ${errors.phone ? "" : "hidden"}`}>
+                            {errors.phone?.message}
                         </p>
                     </div>
 
@@ -161,8 +161,8 @@ function Register() {
                                 },
                             })}
                         />
-                        <p className="error-message">
-                            {errors.email?.message || "\u00A0"}
+                        <p className={`error-message ${errors.email ? "" : "hidden"}`}>
+                            {errors.email?.message}
                         </p>
                     </div>
 
@@ -180,8 +180,8 @@ function Register() {
                                 },
                             })}
                         />
-                        <p className="error-message">
-                            {errors.password_hash?.message || "\u00A0"}
+                        <p className={`error-message ${errors.password_hash ? "" : "hidden"}`}>
+                            {errors.password_hash?.message}
                         </p>
                     </div>
 

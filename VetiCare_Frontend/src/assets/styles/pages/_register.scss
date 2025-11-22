@@ -7,7 +7,7 @@
   width: 100%;
   height: 100%;
   background-color: $primary-color;
-  overflow-x: hidden; 
+  overflow-x: hidden;
 
   #image-container-register {
     height: 100%;
@@ -31,7 +31,7 @@
     img {
       height: 100%;
       width: 540px;
-      max-width: 100%; 
+      max-width: 100%;
 
       @include respond-to($tablet) {
         max-width: 395px;
@@ -49,17 +49,21 @@
     }
   }
 
-.field-group {
-  width: 100%;
-  margin-bottom: 1rem;
-}
+  .hidden {
+    display: none;
+  }
 
-.error-message {
-  color: #e63946; 
-  font-size: 1rem;
-  margin-top: 0.35rem;
-  min-height: 1.2rem; 
-}
+  .field-group {
+    width: 100%;
+    margin-bottom: 1rem;
+  }
+
+  .error-message {
+    color: #e63946;
+    font-size: 1rem;
+    margin-top: 0.35rem;
+    min-height: 1.2rem;
+  }
 
   #fields-container-register {
     @include respond-to($tablet) {
@@ -69,11 +73,14 @@
 
     @include respond-to($desktop) {
       width: 72vw;
+
+
     }
 
     @include respond-to($mobile) {
       width: 100vw;
       padding-right: 2rem;
+
     }
 
     flex: content;
@@ -85,13 +92,20 @@
     padding-top: 1vh;
 
     h4 {
-      font-size: 2.7rem;
+      font-size: 2rem;
       margin-top: 0.5rem;
       font-family: "The Seasons";
       font-style: normal;
       font-weight: 300;
       text-align: left;
       padding-left: 4.5rem;
+
+      @include respond-to($mobile) {
+        padding-left: 1rem;
+        text-align: center;
+        font-size: 1.5rem;
+
+      }
     }
 
     #logo-container-register {
@@ -168,9 +182,9 @@
         background-image: none !important;
       }
 
-      
+
       .error-message {
-        color: #e63946; 
+        color: #e63946;
         font-size: 1rem;
         margin: 0.2rem 0 0.8rem;
         padding-left: 0.5rem;
@@ -192,17 +206,28 @@
     }
 
     #signin-link-register {
-      width: 100%;
-      margin-top: 1.1rem;
-      flex: content;
-      flex-direction: row;
-      text-align: center;
+  width: 100%;
+  margin-top: 1.1rem;
+  flex: content;
+  flex-direction: row;
+  text-align: center;
 
-      a {
-        color: $cafe;
-        font-size: 1.4rem;
-        text-decoration: none;
-      }
+  a {
+    color: $cafe;
+    font-size: 1.4rem;
+    text-decoration: none;
+    transition: text-decoration 0.2s ease; // opcional, más suave
+
+    &:hover {
+      text-decoration: underline;
     }
+  }
+
+  @include respond-to($mobile) {
+    padding-left: 1rem;
+    text-align: center;
+    font-size: 1.5rem;
+  }
+}
   }
 }
