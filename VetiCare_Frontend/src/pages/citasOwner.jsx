@@ -9,12 +9,13 @@ import AddButton from "../components/add-button";
 const API_URL = import.meta.env.VITE_API_URL;
 
 function CitasOwner() {
+  // Token del usuario almacenado en localStorage
   const token = localStorage.getItem("token");
 
-  // Obtener usuario de localStorage
+  // Usuario autenticado obtenido de localStorage
   const userFromLocal = JSON.parse(localStorage.getItem("user"));
 
-  // Si no hay usuario, se expulsa a login
+  // Validación de sesión y redirección a login
   if (!userFromLocal || !userFromLocal.id) {
     Swal.fire({
       icon: "error",
@@ -26,23 +27,33 @@ function CitasOwner() {
     return null;
   }
 
+  // Objeto de usuario mínimo necesario
   const user = { id: userFromLocal.id };
 
+  // Estados de formulario para crear cita
   const [selectedPetId, setSelectedPetId] = useState("");
   const [date, setDate] = useState("");
   const [hour, setHour] = useState("");
+
+  // Listados de mascotas y citas
   const [pets, setPets] = useState([]);
   const [appointments, setAppointments] = useState([]);
+
+  // Disparador de recarga de citas
   const [appAdded, setAppAdded] = useState(false);
+
+  // Control del modal para crear cita
   const [showEditModal, setShowEditModal] = useState(false);
 
-  // Modal de detalles
+  // Control del modal de detalles de cita
   const [showDetailsModal, setShowDetailsModal] = useState(false);
   const [detailsAppointment, setDetailsAppointment] = useState(null);
 
+  // Funciones para abrir y cerrar modal de creación
   const openEditModal = () => setShowEditModal(true);
   const closeEditModal = () => setShowEditModal(false);
 
+  // Funciones para abrir y cerrar modal de detalles
   const openDetailsModal = (app) => {
     setDetailsAppointment(app);
     setShowDetailsModal(true);
@@ -53,7 +64,7 @@ function CitasOwner() {
     setDetailsAppointment(null);
   };
 
-  // CARGAR MASCOTAS DEL USUARIO
+  // Carga inicial de mascotas del dueño
   useEffect(() => {
     async function getPets(userId) {
       try {
@@ -87,7 +98,7 @@ function CitasOwner() {
     getPets(user.id);
   }, []);
 
-  // HELPERS
+  // Traduce el id del estado a etiqueta legible
   function mapStatus(statusId) {
     switch (statusId) {
       case 1:
@@ -101,21 +112,22 @@ function CitasOwner() {
     }
   }
 
+  // Renderiza el chip visual del estado de la cita
   function renderStatus(statusId) {
     const label = mapStatus(statusId);
     let icon = "●";
     let bg = "#ccc";
 
     switch (statusId) {
-      case 1: // Agendada
+      case 1:
         icon = "⏰";
         bg = "#f1c40f33";
         break;
-      case 2: // Finalizada
+      case 2:
         icon = "✔";
         bg = "#2ecc7133";
         break;
-      case 3: // Cancelada
+      case 3:
         icon = "✖";
         bg = "#e74c3c33";
         break;
@@ -142,13 +154,14 @@ function CitasOwner() {
     );
   }
 
+  // Verifica que un valor no esté vacío o nulo
   function hasValue(v) {
     if (v === null || v === undefined) return false;
     if (typeof v === "string") return v.trim() !== "";
-    return true; // para números como peso, temperatura, etc.
+    return true;
   }
 
-  // CARGAR CITAS DEL USUARIO
+  // Carga y mapeo de citas del usuario
   useEffect(() => {
     async function getData(userId) {
       try {
@@ -186,8 +199,17 @@ function CitasOwner() {
                 : item.time || "Sin hora";
 
               return {
+                // Identificador de la cita
                 id: item.id,
+                // Número de fila calculado para la tabla
                 rowNumber: (currentPage - 1) * itemsPerPage + i + 1,
+                // Id de la mascota para validaciones
+                petId: item.pet_id,
+                // Fecha cruda recibida desde la API
+                rawDate: item.date,
+                // Hora cruda recibida desde la API
+                rawTime: item.time,
+                // Datos mostrados en la tabla
                 petName: item.pet?.name ?? "Sin nombre",
                 vetName: item.vet?.full_name ?? "No asignado",
                 speciesName: item.pet?.species?.name ?? "Desconocida",
@@ -195,7 +217,7 @@ function CitasOwner() {
                 timeFormatted: horaFormateada,
                 statusId: item.status_id,
                 statusLabel: mapStatus(item.status_id),
-                // Detalles de la cita
+                // Detalles adicionales de la cita
                 reason: item.reason,
                 weightKg: item.weight_kg,
                 temperature: item.temperature,
@@ -229,19 +251,52 @@ function CitasOwner() {
     getData(user.id);
   }, [appAdded]);
 
-  // CREAR NUEVA CITA
+  // Maneja la creación de una nueva cita con validaciones
   const handleAddAppointment = async () => {
     if (!selectedPetId || !date || !hour) {
+      closeEditModal();
       return Swal.fire({
-        icon: "error",
+        icon: "info",
         title: "Campos vacíos",
-        text: "Por favor completa todos los campos",
+        text: "Por favor completa todos los campos para crear la cita.",
       });
     }
 
+    // Fecha convertida al formato esperado por la API
+    const apiDate = formatForAPI(date);
+
+    // Valida que el usuario no tenga otra cita el mismo día y hora
+    const sameDateTime = appointments.some(
+      (app) => app.rawDate === apiDate && app.rawTime === hour
+    );
+
+    if (sameDateTime) {
+      closeEditModal();
+      return Swal.fire({
+        icon: "info",
+        title: "Horario no disponible",
+        text: "Ya tienes una cita registrada en ese mismo día y a esa misma hora.",
+      });
+    }
+
+    // Valida que la mascota no tenga una cita agendada (estado 1)
+    const petHasPending = appointments.some(
+      (app) => app.petId === selectedPetId && app.statusId === 1
+    );
+
+    if (petHasPending) {
+      closeEditModal();
+      return Swal.fire({
+        icon: "info",
+        title: "Mascota con cita pendiente",
+        text: "Esta mascota ya tiene una cita agendada. Finaliza o cancela esa cita antes de crear una nueva.",
+      });
+    }
+
+    // Payload de la nueva cita
     const newAppointment = {
       pet_id: selectedPetId,
-      date: formatForAPI(date),
+      date: apiDate,
       time: hour,
     };
 
@@ -281,13 +336,13 @@ function CitasOwner() {
     }
   };
 
-  // FORMATEAR FECHA PARA API
+  // Convierte fecha desde input (yyyy-mm-dd) a formato API (dd-mm-yyyy)
   function formatForAPI(dateStr) {
     const [year, month, day] = dateStr.split("-");
     return `${day}-${month}-${year}`;
   }
 
-  // RENDER
+  // Render principal de la pantalla de citas
   return (
     <>
       <Layout menuItems={menuItemsOwner} userType="vet">
@@ -297,7 +352,6 @@ function CitasOwner() {
             marginTop: "10px",
           }}
         >
-          {/* CONTENEDOR PARA ALINEAR LOS TEXTOS */}
           <div
             style={{
               display: "flex",
@@ -338,6 +392,7 @@ function CitasOwner() {
             </div>
           </div>
 
+          {/* Tabla principal de historial de citas */}
           <div
             id="table-container"
             style={{ width: "100%", overflowX: "auto" }}
@@ -401,7 +456,7 @@ function CitasOwner() {
         </div>
       </Layout>
 
-      {/* =================== MODAL CREAR CITA =================== */}
+      {/* Modal para crear una nueva cita */}
       {showEditModal && (
         <div className="modal-overlay">
           <div className="edit-modal-app">
@@ -463,7 +518,7 @@ function CitasOwner() {
         </div>
       )}
 
-      {/* =================== MODAL DETALLES CITA =================== */}
+      {/* Modal para ver los detalles de una cita */}
       {showDetailsModal && detailsAppointment && (
         <div className="modal-overlay">
           <div className="edit-modal-app">

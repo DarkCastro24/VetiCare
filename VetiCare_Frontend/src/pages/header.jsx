@@ -5,13 +5,17 @@ import "../assets/styles/main.scss";
 import { Link } from "react-router-dom";
 import SobreNosotros from "./sobreNosotros";
 
+// Componente de encabezado principal del sitio público
 const Header = () => {
+  // Estado para controlar la apertura/cierre del menú responsive
   const [isOpen, setIsOpen] = useState(false);
 
+  // Alterna la visibilidad del menú de navegación
   const toggleMenu = () => {
     setIsOpen(!isOpen);
   };
 
+  // Render del encabezado con logo y navegación
   return (
     <div className="container-header">
       <a className="navbar-brand" href="#">
@@ -23,6 +27,8 @@ const Header = () => {
           className="imagenLogoHeader"
         />
       </a>
+
+      {/* Botón hamburguesa para pantallas pequeñas */}
       <button className="navbar-toggler" onClick={toggleMenu}>
         <svg width="24" height="24" viewBox="0 0 24 24">
           <path
@@ -34,6 +40,7 @@ const Header = () => {
         </svg>
       </button>
 
+      {/* Menú de navegación principal */}
       <div className={`navbar-menu ${isOpen ? "open" : ""}`}>
         <ul className="navbar-nav">
           <li className="nav-item">

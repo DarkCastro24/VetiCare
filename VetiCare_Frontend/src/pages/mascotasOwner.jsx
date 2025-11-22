@@ -8,9 +8,12 @@ import ActionComponents from "../components/action-components";
 import { FaPaw, FaNotesMedical } from "react-icons/fa";
 
 function MascotasOwner() {
+  // Token del usuario actual
   const token = localStorage.getItem("token");
+  // URL base de la API
   const API_URL = import.meta.env.VITE_API_URL;
 
+  // Columnas mostradas en la tabla de mascotas
   const columns = [
     "#",
     "Nombre",
@@ -20,28 +23,43 @@ function MascotasOwner() {
     "Historial médico",
   ];
 
+  // Listado de mascotas activas
   const [pets, setPets] = useState([]);
+  // Control del modal de edición
   const [showEditModal, setShowEditModal] = useState(false);
+  // Mascota seleccionada para edición
   const [selectedPetId, setSelectedPetId] = useState("");
+  // Nombre editado de la mascota
   const [editedName, setEditedName] = useState("");
+  // Raza editada de la mascota
   const [editedBreed, setEditedBreed] = useState("");
+  // Flag para recargar datos tras una acción
   const [actionWasDone, setActionWasDone] = useState(false);
 
-  // Modal agregar mascota
+  // Control del modal para agregar mascota
   const [showAddPetModal, setShowAddPetModal] = useState(false);
+  // Nombre de la nueva mascota
   const [name, setName] = useState("");
+  // Fecha de nacimiento de la nueva mascota
   const [birthDate, setBirthDate] = useState("");
+  // Especie seleccionada de la nueva mascota
   const [speciesId, setSpeciesId] = useState("1");
+  // Raza de la nueva mascota
   const [breed, setBreed] = useState("");
 
-  // Modal historial médico
+  // Control del modal de historial médico
   const [showHistoryModal, setShowHistoryModal] = useState(false);
+  // Citas encontradas en el historial
   const [historyData, setHistoryData] = useState([]);
+  // Estado de carga del historial
   const [historyLoading, setHistoryLoading] = useState(false);
+  // Mascota a la que pertenece el historial
   const [historyPet, setHistoryPet] = useState(null);
 
+  // Usuario actual obtenido de localStorage
   const userFromLocal = JSON.parse(localStorage.getItem("user") || "{}");
 
+  // Validación de sesión y redirección si no hay usuario
   if (!userFromLocal || !userFromLocal.id) {
     Swal.fire({
       icon: "info",
@@ -53,21 +71,27 @@ function MascotasOwner() {
     return null;
   }
 
+  // Objeto de usuario mínimo requerido
   const user = { id: userFromLocal.id };
 
+  // Abre el modal de edición
   const openEditModal = () => setShowEditModal(true);
+  // Cierra el modal de edición
   const closeEditModal = () => setShowEditModal(false);
 
+  // Abre el modal para agregar mascota
   const openAddPetModal = () => setShowAddPetModal(true);
+  // Cierra el modal para agregar mascota
   const closeAddPetModal = () => setShowAddPetModal(false);
 
+  // Cierra modal de historial médico y limpia datos
   const closeHistoryModal = () => {
     setShowHistoryModal(false);
     setHistoryData([]);
     setHistoryPet(null);
   };
 
-  // CARGAR MASCOTAS
+  // Carga las mascotas activas del dueño
   useEffect(() => {
     async function getPets(userId) {
       try {
@@ -88,11 +112,14 @@ function MascotasOwner() {
         const data = await response.json();
         const safeData = Array.isArray(data) ? data : [];
 
+        // Filtra solo mascotas activas
         const activePets = safeData.filter((item) => item.status === "Activa");
 
+        // Valores fijos para numeración en tabla
         const currentPage = 1;
         const itemsPerPage = 7;
 
+        // Mapea las mascotas a la estructura usada por la tabla
         const filteredData = activePets.map((item, index) => ({
           id: item.id,
           rowNumber: (currentPage - 1) * itemsPerPage + index + 1,
@@ -121,7 +148,7 @@ function MascotasOwner() {
     getPets(user.id);
   }, [API_URL, token, user.id, actionWasDone]);
 
-  // OBTENER POR ID
+  // Obtiene el detalle de una mascota por id
   async function getById(id) {
     try {
       const response = await fetch(`${API_URL}/api/pets/${id}`, {
@@ -151,7 +178,7 @@ function MascotasOwner() {
     }
   }
 
-  // EDITAR MASCOTA
+  // Maneja la selección de mascota para editar
   const handleEdit = async (petId) => {
     try {
       const pet = await getById(petId);
@@ -169,6 +196,7 @@ function MascotasOwner() {
     }
   };
 
+  // Envía la actualización de datos de la mascota
   const handleUpdatePet = async () => {
     try {
       const response = await fetch(`${API_URL}/api/pets/${selectedPetId}`, {
@@ -208,7 +236,7 @@ function MascotasOwner() {
     }
   };
 
-  // ELIMINAR CON CONFIRMACIÓN
+  // Confirmación antes de desactivar una mascota
   const handleDeleteClick = (id) => {
     Swal.fire({
       title: "¿Deseas desactivar esta mascota?",
@@ -224,6 +252,7 @@ function MascotasOwner() {
     });
   };
 
+  // Desactiva una mascota en el sistema
   async function deletePet(id) {
     try {
       const response = await fetch(`${API_URL}/api/pets/${id}`, {
@@ -255,7 +284,7 @@ function MascotasOwner() {
     }
   }
 
-  // ABRIR HISTORIAL MÉDICO
+  // Carga el historial médico de una mascota
   const handleOpenHistory = async (petId) => {
     setShowHistoryModal(true);
     setHistoryLoading(true);
@@ -302,14 +331,41 @@ function MascotasOwner() {
     }
   };
 
-  // AGREGAR NUEVA MASCOTA
+  // Maneja el registro de una nueva mascota con validaciones
   const handleSubmitPet = async (e) => {
     e.preventDefault();
 
+    // Nombre normalizado para validación
+    const nombreLimpio = name.trim().toLowerCase();
+
+    // Valida nombre no vacío
+    if (!nombreLimpio) {
+      return Swal.fire({
+        icon: "error",
+        title: "Nombre inválido",
+        text: "El nombre de la mascota no puede estar vacío.",
+      });
+    }
+
+    // Valida que no exista otra mascota con el mismo nombre
+    const nombreYaExiste = pets.some(
+      (pet) => pet.name.trim().toLowerCase() === nombreLimpio
+    );
+
+    if (nombreYaExiste) {
+      return Swal.fire({
+        icon: "error",
+        title: "Nombre duplicado",
+        text: "Ya tienes una mascota registrada con ese nombre. Por favor usa un nombre diferente.",
+      });
+    }
+
+    // Fecha de nacimiento convertida a ISO simplificado
     const parsed = new Date(`${birthDate}T00:00:00Z`)
       .toISOString()
       .replace(".000Z", "Z");
 
+    // Payload de la nueva mascota
     const payload = {
       owner_id: user.id,
       name: name,
@@ -354,11 +410,11 @@ function MascotasOwner() {
     }
   };
 
+  // Render principal de la pantalla de mascotas
   return (
     <>
       <Layout menuItems={menuItemsOwner} userType="vet">
         <div id="main-container-appointments">
-          {/* Encabezado*/}
           <div
             className="search-add-row"
             style={{
@@ -407,7 +463,6 @@ function MascotasOwner() {
             </button>
           </div>
 
-          {/* TABLA */}
           <div id="table-container">
             <table className="simple-table" style={{ width: "100%" }}>
               <thead>
@@ -436,7 +491,6 @@ function MascotasOwner() {
                       {pet.icon}
                     </td>
 
-                    {/* Historial médico */}
                     <td style={{ textAlign: "center" }}>
                       <button
                         type="button"
@@ -473,7 +527,7 @@ function MascotasOwner() {
                   marginTop: "20px",
                   padding: "15px",
                   backgroundColor: "#eef5ff",
-                  border: "1px solid #b3d1ff", // 👈 CORREGIDO
+                  border: "1px solid #b3d1ff",
                   borderRadius: "8px",
                   textAlign: "center",
                   color: "#1d4ed8",
@@ -496,7 +550,6 @@ function MascotasOwner() {
         </div>
       </Layout>
 
-      {/* MODAL EDITAR */}
       {showEditModal && (
         <div className="modal-overlay">
           <div className="edit-modal-app">
@@ -538,7 +591,6 @@ function MascotasOwner() {
         </div>
       )}
 
-      {/* MODAL AGREGAR MASCOTA */}
       {showAddPetModal && (
         <div className="modal-overlay">
           <div className="password-modal">
@@ -595,7 +647,6 @@ function MascotasOwner() {
         </div>
       )}
 
-      {/* MODAL HISTORIAL MÉDICO */}
       {showHistoryModal && (
         <div className="modal-overlay">
           <div className="password-modal" style={{ maxWidth: "700px" }}>
