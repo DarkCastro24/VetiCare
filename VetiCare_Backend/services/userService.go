@@ -2,7 +2,10 @@ package services
 
 import (
 	"VetiCare/entities"
+	"VetiCare/entities/dto"
 	"VetiCare/repositories"
+	"VetiCare/utils"
+	"fmt"
 )
 
 type UserService struct {
@@ -14,12 +17,38 @@ func NewUserService(repo repositories.UserRepository, emailService EmailService)
 	return &UserService{Repo: repo, EmailService: emailService}
 }
 
-func (s *UserService) Register(user *entities.User) error {
+func (s *UserService) Register(userDTO *dto.UserDTO) (*entities.User, error) {
+	passwordPlain := userDTO.Password
+	if passwordPlain == "" {
+		passwordPlain = utils.GenerateRandomPassword(8)
+	}
+
+	hashedPassword, err := utils.HashPassword(passwordPlain)
+	if err != nil {
+		return nil, fmt.Errorf("error al hashear la contraseña: %v", err)
+	}
+
+	user := entities.User{
+		FullName:     userDTO.FullName,
+		DUI:          userDTO.DUI,
+		Phone:        userDTO.Phone,
+		Email:        userDTO.Email,
+		RoleID:       userDTO.RoleID,
+		StatusID:     userDTO.StatusID,
+		PasswordHash: hashedPassword,
+	}
 	if user.RoleID == 2 {
 		user.PF = 1
 	}
-
-	return s.Repo.Register(user)
+	err = s.Repo.Register(&user)
+	if err != nil {
+		return nil, fmt.Errorf("error al registrar al usuario: %v", err)
+	}
+	if err := s.EmailService.SendWelcomeEmail(user.Email, "Bienvenido"+
+		"a VetiCare", dto.WelcomeEmailUser{Email: user.Email, FullName: user.FullName, Password: passwordPlain}); err != nil {
+		return nil, fmt.Errorf("error al email al usuario: %v", err)
+	}
+	return &user, nil
 }
 
 func (s *UserService) Login(email, password string) (*entities.User, error) {

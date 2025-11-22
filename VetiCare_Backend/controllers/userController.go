@@ -1,7 +1,6 @@
 package controllers
 
 import (
-	"VetiCare/entities"
 	"VetiCare/entities/dto"
 	"VetiCare/services"
 	"VetiCare/utils"
@@ -45,58 +44,17 @@ func (uc *UserController) Register(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
-
-	passwordPlain := userDTO.Password
-	if passwordPlain == "" {
-		passwordPlain = utils.GenerateRandomPassword(8)
-	}
-
-	hashedPassword, err := utils.HashPassword(passwordPlain)
-
+	// 	Only calls the service to do business logic
+	user, err := uc.UserService.Register(&userDTO)
 	if err != nil {
-		http.Error(w, "Error al hashear contraseña", http.StatusInternalServerError)
-		return
-	}
-
-	user := entities.User{
-		FullName:     userDTO.FullName,
-		DUI:          userDTO.DUI,
-		Phone:        userDTO.Phone,
-		Email:        userDTO.Email,
-		RoleID:       userDTO.RoleID,
-		StatusID:     userDTO.StatusID,
-		PasswordHash: hashedPassword,
-	}
-
-	if err := uc.UserService.Register(&user); err != nil {
 		http.Error(w, "El correo o dui ingresados ya estan en uso", http.StatusInternalServerError)
 		return
 	}
 
-	completeUser, err := uc.UserService.GetUserByID(user.ID.String())
-	if err != nil {
-		http.Error(w, "Error al obtener usuario creado: "+err.Error(), http.StatusInternalServerError)
-		return
-	}
-
-	body := fmt.Sprintf(
-		"Hola %s,\n\nTe informamos que has sido registrado correctamente en el sistema, "+
-			"tus credenciales asignadas son las siguientes, tienes la opción de cambiar tu contraseña en el sistema si así lo deseas.\n\nUsuario: %s\nContraseña: %s\n\nSaludos.",
-		completeUser.FullName,
-		completeUser.Email,
-		passwordPlain,
-	)
-
-	go func() {
-		if err := utils.SendMail(completeUser.Email, "Registro exitoso en PetVet - Usuario", body); err != nil {
-			fmt.Println("Error enviando correo al usuario:", err)
-		}
-	}()
-
 	w.WriteHeader(http.StatusCreated)
 	json.NewEncoder(w).Encode(map[string]interface{}{
 		"message": "Usuario registrado correctamente",
-		"user":    dto.ToUserDTO(completeUser),
+		"user":    dto.ToUserDTO(user),
 	})
 }
 
