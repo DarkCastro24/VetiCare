@@ -1,7 +1,4 @@
 import React, { useState, useEffect } from "react";
-import SearchBox from "../components/search-box";
-import Table from "../components/table";
-import Checkbox from "../components/checkbox";
 import Swal from "sweetalert2";
 import "sweetalert2/dist/sweetalert2.min.css";
 
@@ -31,7 +28,6 @@ function CitasOwner() {
 
   const user = { id: userFromLocal.id };
 
-  const columns = ["#", "Mascota", "Horario", "Asistencia"];
   const [selectedPetId, setSelectedPetId] = useState("");
   const [date, setDate] = useState("");
   const [hour, setHour] = useState("");
@@ -40,10 +36,24 @@ function CitasOwner() {
   const [appAdded, setAppAdded] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
 
+  // Modal de detalles
+  const [showDetailsModal, setShowDetailsModal] = useState(false);
+  const [detailsAppointment, setDetailsAppointment] = useState(null);
+
   const openEditModal = () => setShowEditModal(true);
   const closeEditModal = () => setShowEditModal(false);
 
-  // CARGAR MASCOTAS
+  const openDetailsModal = (app) => {
+    setDetailsAppointment(app);
+    setShowDetailsModal(true);
+  };
+
+  const closeDetailsModal = () => {
+    setShowDetailsModal(false);
+    setDetailsAppointment(null);
+  };
+
+  // CARGAR MASCOTAS DEL USUARIO
   useEffect(() => {
     async function getPets(userId) {
       try {
@@ -60,7 +70,6 @@ function CitasOwner() {
 
         const data = await response.json();
 
-        // Validar que data sea un array
         const safePets = Array.isArray(data)
           ? data.map((item) => ({
               id: item.id,
@@ -78,7 +87,68 @@ function CitasOwner() {
     getPets(user.id);
   }, []);
 
-  // CARGAR CITAS
+  // HELPERS
+  function mapStatus(statusId) {
+    switch (statusId) {
+      case 1:
+        return "Agendada";
+      case 2:
+        return "Finalizada";
+      case 3:
+        return "Cancelada";
+      default:
+        return "Desconocido";
+    }
+  }
+
+  function renderStatus(statusId) {
+    const label = mapStatus(statusId);
+    let icon = "●";
+    let bg = "#ccc";
+
+    switch (statusId) {
+      case 1: // Agendada
+        icon = "⏰";
+        bg = "#f1c40f33";
+        break;
+      case 2: // Finalizada
+        icon = "✔";
+        bg = "#2ecc7133";
+        break;
+      case 3: // Cancelada
+        icon = "✖";
+        bg = "#e74c3c33";
+        break;
+      default:
+        icon = "●";
+        bg = "#95a5a633";
+    }
+
+    return (
+      <span
+        style={{
+          display: "inline-flex",
+          alignItems: "center",
+          gap: "4px",
+          padding: "2px 8px",
+          borderRadius: "999px",
+          fontSize: "0.85rem",
+          backgroundColor: bg,
+        }}
+      >
+        <span>{icon}</span>
+        <span>{label}</span>
+      </span>
+    );
+  }
+
+  function hasValue(v) {
+    if (v === null || v === undefined) return false;
+    if (typeof v === "string") return v.trim() !== "";
+    return true; // para números como peso, temperatura, etc.
+  }
+
+  // CARGAR CITAS DEL USUARIO
   useEffect(() => {
     async function getData(userId) {
       try {
@@ -97,20 +167,42 @@ function CitasOwner() {
           return;
         }
 
-        const currentPage = 1,
-          itemsPerPage = 7;
+        const currentPage = 1;
+        const itemsPerPage = 7;
         const data = await response.json();
 
         const safeAppointments = Array.isArray(data)
-          ? data.map((item, i) => ({
-              id: item.id,
-              rowNumber: (currentPage - 1) * itemsPerPage + i + 1,
-              Mascota: item.pet?.name ?? "Sin nombre",
-              Horario: item.date?.startsWith("0000")
-                ? "Sin cita"
-                : `${item.date} a las: ${item.time}`,
-              Asistencia: item.status_id == 2 ? "Si" : "No",
-            }))
+          ? data.map((item, i) => {
+              const fechaOriginal = item.date || "";
+              const esSinCita =
+                !fechaOriginal || fechaOriginal.startsWith("0000");
+
+              const fechaFormateada = esSinCita
+                ? "Sin fecha"
+                : fechaOriginal.replace(/-/g, "/");
+
+              const horaFormateada = esSinCita
+                ? "Sin hora"
+                : item.time || "Sin hora";
+
+              return {
+                id: item.id,
+                rowNumber: (currentPage - 1) * itemsPerPage + i + 1,
+                petName: item.pet?.name ?? "Sin nombre",
+                vetName: item.vet?.full_name ?? "No asignado",
+                speciesName: item.pet?.species?.name ?? "Desconocida",
+                dateFormatted: fechaFormateada,
+                timeFormatted: horaFormateada,
+                statusId: item.status_id,
+                statusLabel: mapStatus(item.status_id),
+                // Detalles de la cita
+                reason: item.reason,
+                weightKg: item.weight_kg,
+                temperature: item.temperature,
+                medicationsPrescribed: item.medications_prescribed,
+                additionalNotes: item.additional_notes,
+              };
+            })
           : [];
 
         setAppointments(safeAppointments);
@@ -195,43 +287,108 @@ function CitasOwner() {
     return `${day}-${month}-${year}`;
   }
 
-  const col = columns.slice(1);
-
   // RENDER
   return (
     <>
       <Layout menuItems={menuItemsOwner} userType="vet">
-        <div id="main-container-appointments">
-          <p id="title">¡Bienvenido!</p>
+        <div
+          id="main-container-appointments"
+          style={{
+            marginTop: "10px",
+          }}
+        >
+          {/* CONTENEDOR PARA ALINEAR LOS TEXTOS */}
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "flex-start",
+              gap: "4px",
+              marginBottom: "8px",
+            }}
+          >
+            <p
+              id="title"
+              style={{
+                margin: 0,
+                textAlign: "left",
+                paddingLeft: "36px",
+              }}
+            >
+              ¡Bienvenido!
+            </p>
 
-          <div className="search-add-row">
-            <p>Tu historial de citas:</p>
-            <AddButton
-              type="button"
-              onClick={openEditModal}
-              style={{ backgroundColor: "#a5b68d" }}
-            />
+            <div
+              className="search-add-row"
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                width: "100%",
+              }}
+            >
+              <p style={{ margin: 0, paddingLeft: "36px" }}>
+                Tu historial de citas:
+              </p>
+              <AddButton
+                type="button"
+                onClick={openEditModal}
+                style={{ backgroundColor: "#a5b68d" }}
+              />
+            </div>
           </div>
 
           <div
             id="table-container"
             style={{ width: "100%", overflowX: "auto" }}
           >
-            <table className="simple-table">
+            <table
+              className="simple-table"
+              style={{
+                width: "100%",
+                textAlign: "center",
+              }}
+            >
               <thead>
-                <tr>
-                  {appointments.length !== 0 &&
-                    columns.map((col, i) => <th key={i}>{col}</th>)}
-                </tr>
+                {appointments.length !== 0 && (
+                  <tr>
+                    <th>#</th>
+                    <th>Mascota</th>
+                    <th>Veterinario</th>
+                    <th>Especie</th>
+                    <th>Fecha</th>
+                    <th>Hora</th>
+                    <th>Estado</th>
+                    <th>Detalles</th>
+                  </tr>
+                )}
               </thead>
 
               <tbody>
                 {appointments.map((app, i) => (
-                  <tr key={i}>
+                  <tr key={app.id || i}>
                     <td>{app.rowNumber}</td>
-                    {col.map((c, j) => (
-                      <td key={j}>{app[c]}</td>
-                    ))}
+                    <td>{app.petName}</td>
+                    <td>{app.vetName}</td>
+                    <td>{app.speciesName}</td>
+                    <td>{app.dateFormatted}</td>
+                    <td>{app.timeFormatted}</td>
+                    <td>{renderStatus(app.statusId)}</td>
+                    <td>
+                      <button
+                        type="button"
+                        onClick={() => openDetailsModal(app)}
+                        style={{
+                          border: "none",
+                          background: "transparent",
+                          cursor: "pointer",
+                          fontSize: "1rem",
+                        }}
+                        title="Ver detalles"
+                      >
+                        🔍
+                      </button>
+                    </td>
                   </tr>
                 ))}
               </tbody>
@@ -244,7 +401,7 @@ function CitasOwner() {
         </div>
       </Layout>
 
-      {/* =================== MODAL =================== */}
+      {/* =================== MODAL CREAR CITA =================== */}
       {showEditModal && (
         <div className="modal-overlay">
           <div className="edit-modal-app">
@@ -302,6 +459,74 @@ function CitasOwner() {
                 </button>
               </div>
             </form>
+          </div>
+        </div>
+      )}
+
+      {/* =================== MODAL DETALLES CITA =================== */}
+      {showDetailsModal && detailsAppointment && (
+        <div className="modal-overlay">
+          <div className="edit-modal-app">
+            <button className="modal-close" onClick={closeDetailsModal}>
+              ×
+            </button>
+
+            <h2>Detalles de la cita</h2>
+
+            <div className="details-group">
+              <p>
+                <strong>Mascota:</strong> {detailsAppointment.petName}
+              </p>
+              <p>
+                <strong>Veterinario:</strong> {detailsAppointment.vetName}
+              </p>
+              <p>
+                <strong>Especie:</strong> {detailsAppointment.speciesName}
+              </p>
+              <p>
+                <strong>Fecha:</strong> {detailsAppointment.dateFormatted}
+              </p>
+              <p>
+                <strong>Hora:</strong> {detailsAppointment.timeFormatted}
+              </p>
+              <p>
+                <strong>Estado:</strong>{" "}
+                {mapStatus(detailsAppointment.statusId)}
+              </p>
+
+              {hasValue(detailsAppointment.reason) && (
+                <p>
+                  <strong>Motivo:</strong> {detailsAppointment.reason}
+                </p>
+              )}
+
+              {hasValue(detailsAppointment.weightKg) && (
+                <p>
+                  <strong>Peso:</strong> {detailsAppointment.weightKg} kg
+                </p>
+              )}
+
+              {hasValue(detailsAppointment.temperature) && (
+                <p>
+                  <strong>Temperatura:</strong> {detailsAppointment.temperature}{" "}
+                  °C
+                </p>
+              )}
+
+              {hasValue(detailsAppointment.medicationsPrescribed) && (
+                <p>
+                  <strong>Medicamentos recetados:</strong>{" "}
+                  {detailsAppointment.medicationsPrescribed}
+                </p>
+              )}
+
+              {hasValue(detailsAppointment.additionalNotes) && (
+                <p>
+                  <strong>Notas adicionales:</strong>{" "}
+                  {detailsAppointment.additionalNotes}
+                </p>
+              )}
+            </div>
           </div>
         </div>
       )}

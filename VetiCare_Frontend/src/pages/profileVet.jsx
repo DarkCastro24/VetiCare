@@ -5,7 +5,7 @@ import "../assets/styles/main.scss";
 import Swal from "sweetalert2";
 import "sweetalert2/dist/sweetalert2.min.css";
 
-// IMPORTAR FOTOS DE PERFIL (3–8)
+// IMPORTAR FOTOS DE PERFIL
 import pf2 from "../assets/images/profile_photos/2.png";
 import pf3 from "../assets/images/profile_photos/3.png";
 import pf4 from "../assets/images/profile_photos/4.png";
@@ -49,7 +49,7 @@ const ProfileVet = () => {
 
   const openPhotoModal = () => setShowPhotoModal(true);
   const closePhotoModal = () => {
-    setSelectedPf(currentPf); // reset a la actual si cierra sin guardar
+    setSelectedPf(currentPf); 
     setShowPhotoModal(false);
   };
 
@@ -161,7 +161,7 @@ const ProfileVet = () => {
     }
   };
 
-  // Guardar foto de perfil (campo pf)
+  // Guardar foto de perfil 
   const handleSaveProfilePhoto = async () => {
     try {
       const payload = { pf: selectedPf };
@@ -207,8 +207,7 @@ const ProfileVet = () => {
     }
   };
 
-  const currentProfileImage =
-    profileImages[currentPf] || profileImages[2]; // fallback a 2
+  const currentProfileImage = profileImages[currentPf] || profileImages[2]; // fallback a 2
 
   return (
     <>

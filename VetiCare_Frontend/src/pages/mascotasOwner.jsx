@@ -334,7 +334,7 @@ function MascotasOwner() {
         setBirthDate("");
         setSpeciesId("1");
         setBreed("");
-        setActionWasDone((prev) => !prev); // recargar tabla
+        setActionWasDone((prev) => !prev);
       } else {
         closeAddPetModal();
         const errorText = await response.text();
@@ -375,7 +375,7 @@ function MascotasOwner() {
                 gap: "10px",
               }}
             >
-              <FaPaw size={28} style={{ color: "#a5b68d" }} />
+              <FaPaw size={48} style={{ color: "#a5b68d", paddingRight: 10 }} />
               <div>
                 <p
                   style={{
