@@ -53,13 +53,12 @@ function Register() {
             const swalResult = await Swal.fire({
                 icon: 'success',
                 title: 'Registro exitoso',
-                text: 'Tu cuenta ha sido creada correctamente.',
+                text: 'Tu cuenta ha sido creada correctamente. \n Por favor inicia sesión',
                 confirmButtonText: "OK",
             });
 
-            // 👇 Aquí ya es la respuesta del Swal, no la del backend
             if (swalResult.isConfirmed) {
-                navigate("/"); // o "/login" si quieres ir al login
+                navigate("/login"); 
             }
 
         } catch (error) {
