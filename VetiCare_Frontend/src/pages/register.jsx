@@ -70,7 +70,7 @@ function Register() {
     return (
         <div id="main-container-register">
 
-            {/* ✅ Botón flotante arriba izquierda */}
+           
             <button
                 type="button"
                 className="back-top-button"

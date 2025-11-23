@@ -13,7 +13,6 @@ import pf6 from "../assets/images/profile_photos/6.png";
 import pf7 from "../assets/images/profile_photos/7.png";
 import pf8 from "../assets/images/profile_photos/8.png";
 
-// Mapa de imágenes de perfil por id
 const profileImages = {
   2: pf2,
   3: pf3,
@@ -25,41 +24,37 @@ const profileImages = {
 };
 
 const ProfileVet = () => {
-  // Datos base del entorno y usuario autenticado
   const token = localStorage.getItem("token");
   const userFromLocal = JSON.parse(localStorage.getItem("user") || "{}");
   const API_URL = import.meta.env.VITE_API_URL;
 
-  // Estados para abrir/cerrar modales
   const [showEditModal, setShowEditModal] = useState(false);
   const [showPhotoModal, setShowPhotoModal] = useState(false);
 
-  // Lista de mascotas relacionadas al usuario (si es dueño)
   const [mascotas, setMascotas] = useState([]);
 
-  // Campos editables del perfil
   const [editedName, setEditedName] = useState("");
   const [editedEmail, setEditedEmail] = useState("");
   const [editedDui, setEditedDui] = useState("");
   const [editedPhone, setEditedPhone] = useState("");
+  const [isFormDirty, setIsFormDirty] = useState(false);
 
-  // Estado para manejar foto de perfil actual y seleccionada
   const initialPf = userFromLocal.pf || 2;
   const [currentPf, setCurrentPf] = useState(initialPf);
   const [selectedPf, setSelectedPf] = useState(initialPf);
 
-  // Handlers para modal de edición de perfil
   const openEditModal = () => setShowEditModal(true);
-  const closeEditModal = () => setShowEditModal(false);
+  const closeEditModal = () => {
+    setShowEditModal(false);
+    setIsFormDirty(false);
+  };
 
-  // Handlers para modal de selección de foto
   const openPhotoModal = () => setShowPhotoModal(true);
   const closePhotoModal = () => {
     setSelectedPf(currentPf);
     setShowPhotoModal(false);
   };
 
-  // Objeto de usuario normalizado para la vista
   const user = {
     id: userFromLocal["id"],
     nombre: userFromLocal["full_name"],
@@ -69,7 +64,6 @@ const ProfileVet = () => {
     role: userFromLocal["role_id"] === 2 ? "vet" : "owner",
   };
 
-  // Carga de mascotas relacionadas solo si el usuario es dueño
   useEffect(() => {
     const fetchPets = async () => {
       try {
@@ -85,7 +79,6 @@ const ProfileVet = () => {
     fetchPets();
   }, []);
 
-  // Inicializa campos editables con los datos actuales del usuario
   useEffect(() => {
     if (userFromLocal) {
       setEditedName(userFromLocal.full_name);
@@ -99,7 +92,19 @@ const ProfileVet = () => {
     }
   }, []);
 
-  // Consulta de mascotas por id de dueño
+  useEffect(() => {
+    const handleBeforeUnload = (e) => {
+      if (!isFormDirty) return;
+      e.preventDefault();
+      e.returnValue = "";
+    };
+
+    window.addEventListener("beforeunload", handleBeforeUnload);
+    return () => {
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+    };
+  }, [isFormDirty]);
+
   async function getPets(userId) {
     try {
       const response = await fetch(`${API_URL}/api/pets/owner/${userId}`, {
@@ -122,7 +127,6 @@ const ProfileVet = () => {
     }
   }
 
-  // Actualiza datos básicos de perfil en API y localStorage
   const handleProfileUpdate = async (e) => {
     e.preventDefault();
     const payload = {
@@ -149,6 +153,7 @@ const ProfileVet = () => {
         };
 
         localStorage.setItem("user", JSON.stringify(updatedUser));
+        setIsFormDirty(false);
         closeEditModal();
       } else {
         closeEditModal();
@@ -169,7 +174,6 @@ const ProfileVet = () => {
     }
   };
 
-  // Actualiza la foto de perfil en API y localStorage
   const handleSaveProfilePhoto = async () => {
     try {
       const payload = { pf: selectedPf };
@@ -192,10 +196,8 @@ const ProfileVet = () => {
         });
       }
 
-      // Actualiza estado local con la nueva foto
       setCurrentPf(selectedPf);
 
-      // Actualiza usuario en localStorage
       const storedUser = JSON.parse(localStorage.getItem("user") || "{}");
       const updatedUser = { ...storedUser, pf: selectedPf };
       localStorage.setItem("user", JSON.stringify(updatedUser));
@@ -215,10 +217,8 @@ const ProfileVet = () => {
     }
   };
 
-  // Determina qué imagen de perfil mostrar
   const currentProfileImage = profileImages[currentPf] || profileImages[2];
 
-  // Render principal del perfil de usuario
   return (
     <>
       <Layout
@@ -279,7 +279,6 @@ const ProfileVet = () => {
         </div>
       </Layout>
 
-      {/* Modal de edición de datos de perfil */}
       {showEditModal && (
         <div className="modal-overlay">
           <div className="edit-modal">
@@ -296,7 +295,10 @@ const ProfileVet = () => {
                 <input
                   type="text"
                   value={editedName}
-                  onChange={(e) => setEditedName(e.target.value)}
+                  onChange={(e) => {
+                    setEditedName(e.target.value);
+                    setIsFormDirty(true);
+                  }}
                   required
                 />
               </div>
@@ -305,7 +307,10 @@ const ProfileVet = () => {
                 <input
                   type="email"
                   value={editedEmail}
-                  onChange={(e) => setEditedEmail(e.target.value)}
+                  onChange={(e) => {
+                    setEditedEmail(e.target.value);
+                    setIsFormDirty(true);
+                  }}
                   required
                 />
                 <label>DUI</label>
@@ -319,7 +324,10 @@ const ProfileVet = () => {
                 <input
                   type="text"
                   value={editedPhone}
-                  onChange={(e) => setEditedPhone(e.target.value)}
+                  onChange={(e) => {
+                    setEditedPhone(e.target.value);
+                    setIsFormDirty(true);
+                  }}
                   required
                 />
               </div>
@@ -351,7 +359,6 @@ const ProfileVet = () => {
         </div>
       )}
 
-      {/* Modal de selección de foto de perfil */}
       {showPhotoModal && (
         <div className="modal-overlay">
           <div className="edit-modal">
