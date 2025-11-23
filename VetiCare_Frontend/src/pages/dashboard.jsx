@@ -24,7 +24,7 @@ ChartJS.register(
 // Para que los ejes vayan de 1 en 1
 ChartJS.defaults.scales.linear.ticks.stepSize = 1;
 
-//Para arreglar el responsive
+//Para arreglar el responsive de la gráfica
 ChartJS.defaults.maintainAspectRatio = false;
 
 export default function Dashboard() {
@@ -42,7 +42,9 @@ export default function Dashboard() {
     const [totalVets, setTotalVets] = useState(0);
 
     useEffect(() => {
+        //API envía los veterinarios con mayor citas atendidas 
         fetch(`${API_URL}/api/dashboard/vets/top`, {
+            //Que se muestren los valores solo cuando se ha iniciado sesión
             headers: { Authorization: token ? `Bearer ${token}` : '' }
         })
             .then(r => { if (!r.ok) throw r; return r.json(); })
@@ -57,11 +59,14 @@ export default function Dashboard() {
         })
             .then(r => { if (!r.ok) throw r; return r.json(); })
             .then(DATA => {
+                
                 const monthNames = [
                     "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"
                 ];
-
+                
+                //API regresa los meses de 1 a 12, asi que se mapea a -1 por el array de los nombres
                 const labels = DATA.map(i => monthNames[i.month - 1]);
+
                 const counts = DATA.map(i => i.count);
                 setChartData({
                     labels,
@@ -122,13 +127,8 @@ export default function Dashboard() {
         <Layout menuItems={menuItemsAdmin} userType="admin">
             <div id="admin-main-container">
                 <h2 className="records-header__title mb-0 me-3" style={{
-                    //backgroundColor: '#374f59',
                     height: '3rem',
-                    //width: '400px',
                     color: '#374f59',
-                    //padding: arriba derecha abajo izquierda;
-                    //padding: '1rem 1rem 2rem 3rem',
-                    //margin: '1rem 1.2rem 0.5rem 5rem',
                     margin: '1rem 9rem 1rem 2rem',
                     border: 'none',
                     borderRadius: '50px',
