@@ -37,6 +37,12 @@ type UpdateUserDTO struct {
 	Email    *string `json:"email" validate:"omitempty,emailFormat"`
 }
 
+type ChangePasswordDTO struct {
+	Email           string `json:"email"`
+	CurrentPassword string `json:"current_password"`
+	NewPassword     string `json:"new_password"`
+}
+
 type UserSummaryDTO struct {
 	ID       string `json:"id"`
 	FullName string `json:"full_name"`

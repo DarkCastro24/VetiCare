@@ -15,7 +15,7 @@ type UserRepository interface {
 	GetAll() ([]entities.User, error)
 	Update(id string, fields map[string]interface{}) error
 	Delete(id string) (int, error)
-	ChangePassword(email, currentPassword, newPassword string) error
+	ChangePassword(user *entities.User, hashedPassword string) error
 	// new function
 	GetByDUI(dui string) (*entities.User, error)
 }

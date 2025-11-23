@@ -65,7 +65,24 @@ func (s *UserService) Login(input dto.LoginDTO) (user *entities.User, token stri
 }
 
 func (s *UserService) ChangePassword(email, currentPassword, newPassword string) error {
-	return s.Repo.ChangePassword(email, currentPassword, newPassword)
+	user, err := s.GetUserByEmail(email)
+	if user == nil && err == nil {
+		return errors.New("no se encontró el usuario")
+	}
+	if err != nil {
+		return errors.New("error al leer el usuario" + err.Error())
+	}
+
+	if !utils.CheckPasswordHash(currentPassword, user.PasswordHash) {
+		return fmt.Errorf("la contraseña actual es incorrecta")
+	}
+
+	hashedPassword, err := utils.HashPassword(newPassword)
+	if err != nil {
+		return fmt.Errorf("error al hashear la nueva contraseña: %v", err)
+	}
+
+	return s.Repo.ChangePassword(user, hashedPassword)
 }
 
 func (s *UserService) CreateUser(user *entities.User) error {

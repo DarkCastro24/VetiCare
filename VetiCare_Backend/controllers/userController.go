@@ -58,25 +58,39 @@ func (uc *UserController) Register(w http.ResponseWriter, r *http.Request) {
 }
 
 func (uc *UserController) ChangePassword(w http.ResponseWriter, r *http.Request) {
-	type ChangePasswordInput struct {
-		Email           string `json:"email"`
-		CurrentPassword string `json:"current_password"`
-		NewPassword     string `json:"new_password"`
-	}
-	var input ChangePasswordInput
+	//type ChangePasswordInput struct {
+	//	Email           string `json:"email"`
+	//	CurrentPassword string `json:"current_password"`
+	//	NewPassword     string `json:"new_password"`
+	//}
+	var input dto.ChangePasswordDTO
 	if err := json.NewDecoder(r.Body).Decode(&input); err != nil {
 		http.Error(w, "JSON inválido", http.StatusBadRequest)
 		return
+	}
+
+	if input.Email == "" {
+		http.Error(w, "Email es obligatorio", http.StatusBadRequest)
 	}
 
 	if err := validators.ValidateEmail(input.Email); err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
+
+	if input.NewPassword == "" {
+		http.Error(w, "Nueva contraseña es obligatorio", http.StatusBadRequest)
+	}
+
 	if input.CurrentPassword == "" {
 		http.Error(w, "Contraseña actual es obligatoria", http.StatusBadRequest)
 		return
 	}
+
+	if input.NewPassword == input.CurrentPassword {
+		http.Error(w, "La nueva contraseña no puede ser igual a la actual", http.StatusBadRequest)
+	}
+
 	if err := validators.ValidatePassword(input.NewPassword); err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return

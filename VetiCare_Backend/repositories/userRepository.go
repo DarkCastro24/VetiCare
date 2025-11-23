@@ -112,22 +112,7 @@ func (r *userRepositoryGORM) Login(email, password string) (*entities.User, erro
 	return &user, nil
 }
 
-func (r *userRepositoryGORM) ChangePassword(email, currentPassword, newPassword string) error {
-	var user entities.User
-	err := r.db.Where("email = ?", email).First(&user).Error
-	if err != nil {
-		return fmt.Errorf("usuario no encontrado")
-	}
-
-	if !utils.CheckPasswordHash(currentPassword, user.PasswordHash) {
-		return fmt.Errorf("la contraseña actual es incorrecta")
-	}
-
-	hashedPassword, err := utils.HashPassword(newPassword)
-	if err != nil {
-		return fmt.Errorf("error al hashear la nueva contraseña: %v", err)
-	}
-
+func (r *userRepositoryGORM) ChangePassword(user *entities.User, hashedPassword string) error {
 	user.PasswordHash = hashedPassword
 	return r.db.Save(&user).Error
 }
