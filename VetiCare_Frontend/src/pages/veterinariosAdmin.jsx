@@ -185,15 +185,15 @@ function VeterinariansAdmin() {
     }
 
     if (errorText.includes("duiformat")) {
-      return "El DUI ingresado no tiene el formato correcto. Ejemplo: 12345678-9";
+      return "El DUI ingresado no tiene el formato correcto, por favor agregar guion. Ejemplo: 12345678-9";
     }
 
     if (errorText.includes("email")) {
-      return "El correo electrónico no es válido. Verifique el formato.";
+      return "Correo electrónico ingresado no es válido";
     }
 
     if (errorText.includes("phone") || errorText.includes("telefono")) {
-      return "El teléfono debe tener el formato ####-####.";
+      return "El teléfono debe tener el formato ####-####, incluyendo el guion.";
     }
 
     if (errorText.includes("full_name") || errorText.includes("name")) {
@@ -301,6 +301,24 @@ function VeterinariansAdmin() {
 
   async function deleteVeterinarian(id) {
     try {
+
+      // Pregunta antes de eliminar
+        const confirm = await Swal.fire({
+          title: "¿Está seguro?",
+          text: "Esta acción no se puede revertir. El veterinario será eliminado permanentemente.",
+          icon: "warning",
+          showCancelButton: true,
+          confirmButtonColor: "rgba(161, 19, 19, 1)",
+          cancelButtonColor: "#374f59",
+          confirmButtonText: "Sí, eliminar",
+          cancelButtonText: "Cancelar",
+        });
+
+        //Se cancela la acción así que no pasa nada
+        if (!confirm.isConfirmed) {
+          return;
+        }
+
       const response = await fetch(`${API_URL}/api/users/${id}`, {
         method: 'DELETE',
         headers: {
