@@ -1,27 +1,31 @@
 @use "./variables" as *;
 @use "./mixins" as *;
 @use "./base" as *;
+
 @use "./pages/login" as *;
 @use "./pages/register" as *;
 @use "./pages/appointments" as *;
+@use "./pages/adminHome" as *;
+@use "./pages/adminOwners" as *;
+@use "./pages/adminPet";
+@use "./pages/profileVet" as *;
+
 @use "./components/searchbox" as *;
 @use "./components/table" as *;
 @use "./components/checkbox" as *;
-@use "./header";
-@use "./home";
-@use "./sobreNosotros";
-@use "./expedienteVet";
-@use "./pages/adminHome" as *;
 @use "./components/adminTable" as *;
 @use "./components/actionButtons" as *;
 @use "./components/editModal" as *;
 @use "./components/editAppoint" as *;
 @use "./components/editForm" as *;
-@use "./pages/adminOwners" as *;
 @use "./components/userAppointment" as *;
 @use "./components/modalExpVet" as *;
-@use "./pages/adminPet";
-@use "./pages/profileVet" as *;
+
+@use "./header";
+@use "./home";
+@use "./sobreNosotros";
+@use "./expedienteVet";
+
 body,
 html,
 #root {
