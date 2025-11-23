@@ -6,6 +6,7 @@ import { useState, useEffect } from "react"
 import Modal from "../components/admin-edit-modal"
 import EditVetForm from "../components/edit-veterinarians"
 import AddButton from "../components/add-button"
+import CreateVetForm from "../components/add-admin-vet-form"
 
 import Swal from 'sweetalert2';
 import "sweetalert2/dist/sweetalert2.min.css";
@@ -16,6 +17,8 @@ function VeterinariansAdmin() {
   const API_URL = import.meta.env.VITE_API_URL;
   const [isModalOpen, setModalOpen] = useState(false);
   const [veterinarianToEdit, setVeterinarianToEdit] = useState(null);
+  const [isCreating, setIsCreating] = useState(false);
+
 
 
 
@@ -142,8 +145,15 @@ function VeterinariansAdmin() {
     }
   }
 
+  function handleCreate() {
+    setIsCreating(true);
+    setVeterinarianToEdit(null);
+    setModalOpen(true);
+  }
+
 
   const handleEdit = async (vetId) => {
+    setIsCreating(false);
     if (!vetId) {
       setVeterinarianToEdit(null);
       setModalOpen(true);
@@ -158,7 +168,7 @@ function VeterinariansAdmin() {
       await Swal.fire({
         icon: 'error',
         title: 'Error',
-        text: error.message || 'No se pudo conectar con el servidor.',
+        text: 'No se pudo conectar con el servidor.',
       });
     }
   };
@@ -177,7 +187,7 @@ function VeterinariansAdmin() {
     };
   }, []);
 
-  function parseFriendlyError(errorText) {
+  function mensajeErrorForm(errorText) {
     errorText = errorText.toLowerCase();
 
     if (errorText.includes("duplicate") || errorText.includes("already in use")) {
@@ -202,6 +212,8 @@ function VeterinariansAdmin() {
 
     return "Ocurrió un error al procesar la solicitud. Verifique los datos ingresados.";
   }
+
+
 
 
 
@@ -262,7 +274,7 @@ function VeterinariansAdmin() {
 
         if (!response.ok) {
           const rawError = await response.text();
-          const friendlyMessage = parseFriendlyError(rawError);
+          const friendlyMessage = mensajeErrorForm(rawError);
 
           Swal.fire({
             icon: "error",
@@ -303,21 +315,21 @@ function VeterinariansAdmin() {
     try {
 
       // Pregunta antes de eliminar
-        const confirm = await Swal.fire({
-          title: "¿Está seguro?",
-          text: "Esta acción no se puede revertir. El veterinario será eliminado permanentemente.",
-          icon: "warning",
-          showCancelButton: true,
-          confirmButtonColor: "rgba(161, 19, 19, 1)",
-          cancelButtonColor: "#374f59",
-          confirmButtonText: "Sí, eliminar",
-          cancelButtonText: "Cancelar",
-        });
+      const confirm = await Swal.fire({
+        icon: "warning",
+        title: "¿Está seguro?",
+        text: "Esta acción no se puede revertir. El veterinario será eliminado permanentemente.",
+        showCancelButton: true,
+        confirmButtonColor: "rgba(161, 19, 19, 1)",
+        cancelButtonColor: "#374f59",
+        confirmButtonText: "Sí, eliminar",
+        cancelButtonText: "Cancelar",
+      });
 
-        //Se cancela la acción así que no pasa nada
-        if (!confirm.isConfirmed) {
-          return;
-        }
+      //Se cancela la acción así que no pasa nada
+      if (!confirm.isConfirmed) {
+        return;
+      }
 
       const response = await fetch(`${API_URL}/api/users/${id}`, {
         method: 'DELETE',
@@ -339,6 +351,56 @@ function VeterinariansAdmin() {
     }
   }
 
+  async function createVet(newVet) {
+    try {
+      const response = await fetch(`${API_URL}/api/users/register`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          full_name: newVet.full_name,
+          dui: newVet.dui,
+          phone: newVet.phone,
+          email: newVet.email,
+          password_hash: newVet.password_hash,
+          role_id: 2,
+          status_id: 1
+        }),
+      });
+
+      if (!response.ok) {
+        const rawError = await response.text();
+        const friendly = mensajeErrorForm(rawError);
+
+        Swal.fire({
+          icon: "error",
+          title: "No se pudo crear el veterinario",
+          text: rawError,
+        });
+
+        return;
+      }
+
+      Swal.fire({
+        icon: "success",
+        title: "Veterinario creado",
+        text: "El registro se completó con éxito",
+        timer: 2500,
+        showConfirmButton: false,
+      });
+
+      getData();   // Actualiza tabla
+      setModalOpen(false);
+
+    } catch (error) {
+      console.error("Create Vet Error:", error);
+      Swal.fire("Error", "No se pudo conectar con el servidor", "error");
+    }
+  }
+
+
 
 
 
@@ -352,16 +414,19 @@ function VeterinariansAdmin() {
       <div id="admin-main-container">
         <div className="search-add-row">
           <SearchBox onSearch={handleSearch} placeholder="Busque por nombre" />
-          <AddButton onClick={handleEdit} />
+          <AddButton onClick={handleCreate} />
         </div>
         <AdminTable rows={filteredVets} columns={admminVeterinarianColumns} onEdit={handleEdit} onDelete={deleteVeterinarian} />
 
 
         <Modal isOpen={isModalOpen} onClose={() => setModalOpen(false)}>
-          <EditVetForm initialData={veterinarianToEdit} onSubmit={updateVeterinarian} />
-
-
+          {isCreating ? (
+            <CreateVetForm onSubmit={createVet} />
+          ) : (
+            <EditVetForm initialData={veterinarianToEdit} onSubmit={updateVeterinarian} />
+          )}
         </Modal>
+
 
 
       </div>
