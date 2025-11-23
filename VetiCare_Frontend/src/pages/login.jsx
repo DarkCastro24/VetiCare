@@ -16,7 +16,7 @@ function Login() {
     handleSubmit,
     formState: { errors },
   } = useForm({
-    mode: "onChange", 
+    mode: "onChange",
   });
 
   const navigate = useNavigate();
@@ -46,7 +46,6 @@ function Login() {
       localStorage.setItem("email", JSON.stringify(result.user.email));
       localStorage.setItem("pf", JSON.stringify(result.user.pf));
 
-      //Manda a otra vista segun su rol del user
       if (result.user.role_id === 1) {
         navigate("/mis_citas", { replace: true });
       } else if (result.user.role_id === 2) {
@@ -65,6 +64,15 @@ function Login() {
 
   return (
     <div id="main-container">
+      {/* ✅ Botón flotante arriba a la izquierda */}
+      <button
+        type="button"
+        className="back-top-button"
+        onClick={() => navigate("/")}
+      >
+        ← Regresar
+      </button>
+
       <div id="image-container">
         <Image src={loginImage} fluid width={250} height={100} />
       </div>
@@ -77,7 +85,6 @@ function Login() {
         <h4>¡Bienvenido!</h4>
 
         <form onSubmit={handleSubmit(onSubmit)} noValidate>
-          {/* CORREO ELECTRÓNICO */}
           <div className="field-group">
             <label htmlFor="correo">Correo electrónico</label>
             <input
@@ -96,7 +103,6 @@ function Login() {
             </p>
           </div>
 
-          {/* CONTRASEÑA */}
           <div className="field-group">
             <label htmlFor="password">Contraseña</label>
             <input

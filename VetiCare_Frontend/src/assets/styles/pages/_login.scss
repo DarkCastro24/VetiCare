@@ -7,12 +7,47 @@
     flex-direction: row;
     width: 100%;
     height: 100%;
+    position: relative;
 
 .error-message {
   color: #e63946; 
   font-size: 0.95rem;
   margin-top: 0.1rem;
   text-align: left;
+}
+
+.back-top-button {
+  position: absolute;
+  top: 1.5rem;
+  left: 1.5rem;
+  z-index: 10;
+
+  background: $cafe;
+  border-radius: 999px;
+  border: 1px solid black;
+  padding: 0.5rem 1rem;
+  font-family: "The Seasons";
+  font-size: 1.2rem;
+  color: black;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background-color: $cafe;
+    color: white;
+    filter: brightness(0.95);
+    text-decoration: underline;
+  }
+
+  @include respond-to($mobile) {
+    top: 1rem;
+    left: 1rem;
+    font-size: 1.1rem;
+    padding: 0.25rem 0.9rem;
+  }
 }
 
 .hidden {
@@ -93,16 +128,19 @@
 
        @include respond-to($desktop) {
       width: 72vw;
-       
+             padding-top: 10vh;
+
         
       }
+      
       
 
        @include respond-to($mobile) {
         width: 100vw;
         padding-right: 2rem;
       
-       
+             padding-top: 10vh;
+
         
       }
       
@@ -113,7 +151,7 @@
       justify-content: center;
       
       height: 100%;
-      padding-top: 5vh;
+      padding-top: 2vh;
 
 
       h4 {
@@ -130,26 +168,26 @@
       }
 
       #logo-container {
-        flex: content;
+        flex:content;
         flex-direction: row;
         justify-content: left;
         padding-left: 2rem;
         width: 100%;
+
+        @include respond-to($tablet) {
+        margin-top: 5rem;
+        }
 
         img {
           justify-content: left;
           
           @include respond-to($desktop) {
           padding-left: 1.5em;
-       
-        
-
           
         }
-
- 
-
         }
+
+        
       }
 
 
