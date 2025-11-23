@@ -45,6 +45,8 @@ function VeterinariansAdmin() {
         });
       }
 
+      
+
       let index = 0;
       const currentPage = 1;
       const itemsPerPage = 7;
@@ -75,9 +77,9 @@ function VeterinariansAdmin() {
       setFilteredVets(filteredData);
     } catch (error) {
       await Swal.fire({
-        icon: 'error',
-        title: 'Error',
-        text: error.message || 'No se pudo conectar con el servidor.',
+        icon: 'info',
+        title: 'Sin veterinarios',
+        text:'No encuentra ningún veterinario registrado' ,
       });
     }
   }
