@@ -99,6 +99,7 @@ export default function Dashboard() {
                 <div className="d-flex justify-content-between align-items-start mb-2">
                     <h5 className="mb-2">{title}</h5>
                 </div>
+                {/*Error de hidratación arreglado con div para no tener p anidado*/}
                 <div className="fs-3 mb-0">
                     {hasData ? value : <p className="fs-6 mb-0">{emptyMessage}</p>}
                 </div>
