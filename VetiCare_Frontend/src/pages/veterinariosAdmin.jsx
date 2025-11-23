@@ -45,7 +45,7 @@ function VeterinariansAdmin() {
         });
       }
 
-      
+
 
       let index = 0;
       const currentPage = 1;
@@ -79,7 +79,7 @@ function VeterinariansAdmin() {
       await Swal.fire({
         icon: 'info',
         title: 'Sin veterinarios',
-        text:'No encuentra ningún veterinario registrado' ,
+        text: 'No encuentra ningún veterinario registrado',
       });
     }
   }
@@ -163,6 +163,47 @@ function VeterinariansAdmin() {
     }
   };
 
+  useEffect(() => {
+    // Modal con error siempre se muestra encima de otros elementos
+    const style = document.createElement('style');
+    style.textContent = `
+    .swal2-container {
+      z-index: 10000 !important;
+    }
+  `;
+    document.head.appendChild(style);
+    return () => {
+      document.head.removeChild(style);
+    };
+  }, []);
+
+  function parseFriendlyError(errorText) {
+    errorText = errorText.toLowerCase();
+
+    if (errorText.includes("duplicate") || errorText.includes("already in use")) {
+      return "El correo o DUI ingresado ya están en uso.";
+    }
+
+    if (errorText.includes("duiformat")) {
+      return "El DUI ingresado no tiene el formato correcto. Ejemplo: 12345678-9";
+    }
+
+    if (errorText.includes("email")) {
+      return "El correo electrónico no es válido. Verifique el formato.";
+    }
+
+    if (errorText.includes("phone") || errorText.includes("telefono")) {
+      return "El teléfono debe tener el formato ####-####.";
+    }
+
+    if (errorText.includes("full_name") || errorText.includes("name")) {
+      return "El nombre no puede contener caracteres especiales ni estar vacío.";
+    }
+
+    return "Ocurrió un error al procesar la solicitud. Verifique los datos ingresados.";
+  }
+
+
 
   async function updateVeterinarian(id, updatedData) {
     if (id == null) {
@@ -220,11 +261,31 @@ function VeterinariansAdmin() {
 
 
         if (!response.ok) {
-          throw new Error(`Error ${response.status}: Failed to update appointment`);
+          const rawError = await response.text();
+          const friendlyMessage = parseFriendlyError(rawError);
+
+          Swal.fire({
+            icon: "error",
+            title: "Error al actualizar",
+            text: friendlyMessage,
+            confirmButtonText: "Entendido"
+          });
+
+          return;
         }
 
 
+
         const result = await response.json();
+
+        Swal.fire({
+          icon: 'success',
+          title: 'Veterinario actualizado',
+          text: 'Los cambios se guardaron con éxito',
+          timer: 1800,
+          showConfirmButton: false
+        });
+
         console.log('Veterinarian updated:', result);
         setModalOpen(false);
         getData();
