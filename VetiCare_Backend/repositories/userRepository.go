@@ -38,6 +38,15 @@ func (r *userRepositoryGORM) GetByEmail(email string) (*entities.User, error) {
 	return &u, result.Error
 }
 
+func (r *userRepositoryGORM) GetByDUI(dui string) (*entities.User, error) {
+	var u entities.User
+	result := r.db.Preload("Role").Where("dui = ?", dui).First(&u)
+	if errors.Is(result.Error, gorm.ErrRecordNotFound) {
+		return nil, nil
+	}
+	return &u, result.Error
+}
+
 func (r *userRepositoryGORM) GetByRole(roleID int) ([]entities.User, error) {
 	var users []entities.User
 	result := r.db.Preload("Role").Where("role_id = ? AND status_id = ?", roleID, 1).Find(&users)

@@ -30,6 +30,13 @@ type WelcomeEmailUser struct {
 	Password string `json:"password" validate:"required"`
 }
 
+type UpdateUserDTO struct {
+	FullName *string `json:"full_name" validate:"omitempty, alphabetic"`
+	DUI      *string `json:"dui" validate:"omitempty,duiFormat"`
+	Phone    *string `json:"phone" validate:"omitempty,phoneFormat"`
+	Email    *string `json:"email" validate:"omitempty,emailFormat"`
+}
+
 type UserSummaryDTO struct {
 	ID       string `json:"id"`
 	FullName string `json:"full_name"`

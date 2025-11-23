@@ -16,6 +16,8 @@ type UserRepository interface {
 	Update(id string, fields map[string]interface{}) error
 	Delete(id string) (int, error)
 	ChangePassword(email, currentPassword, newPassword string) error
+	// new function
+	GetByDUI(dui string) (*entities.User, error)
 }
 
 type AdminRepository interface {

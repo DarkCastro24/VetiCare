@@ -108,7 +108,7 @@ func (uc *UserController) Login(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Su usuario esta desactivado, no puede iniciar sesión", http.StatusUnauthorized)
 		return
 	}
-	
+
 	json.NewEncoder(w).Encode(map[string]interface{}{
 		"message": "Login exitoso",
 		"user":    dto.ToUserDTO(user),
@@ -171,40 +171,24 @@ func (uc *UserController) GetUserByID(w http.ResponseWriter, r *http.Request) {
 
 func (uc *UserController) UpdateUser(w http.ResponseWriter, r *http.Request) {
 	id := mux.Vars(r)["id"]
-	var data map[string]interface{}
-	if err := json.NewDecoder(r.Body).Decode(&data); err != nil {
+	//var data map[string]interface{}
+	var updateInput dto.UpdateUserDTO
+	if err := json.NewDecoder(r.Body).Decode(&updateInput); err != nil {
 		http.Error(w, "JSON inválido", http.StatusBadRequest)
 		return
 	}
-	if len(data) == 0 {
+
+	if updateInput.FullName == nil && updateInput.Email == nil && updateInput.Phone == nil && updateInput.DUI == nil {
 		http.Error(w, "No se enviaron campos para actualizar", http.StatusBadRequest)
 		return
 	}
-	if fullName, ok := data["full_name"].(string); ok {
-		if err := validators.ValidateFullName(fullName); err != nil {
-			http.Error(w, err.Error(), http.StatusBadRequest)
-			return
-		}
+
+	err := validators.ValidateUpdatedUserDTO(updateInput)
+	if err != nil {
+		http.Error(w, "Error en el formato: "+err.Error(), http.StatusBadRequest)
 	}
-	if dui, ok := data["dui"].(string); ok {
-		if err := validators.ValidateDUI(dui); err != nil {
-			http.Error(w, err.Error(), http.StatusBadRequest)
-			return
-		}
-	}
-	if phone, ok := data["phone"].(string); ok {
-		if err := validators.ValidatePhone(phone); err != nil {
-			http.Error(w, err.Error(), http.StatusBadRequest)
-			return
-		}
-	}
-	if email, ok := data["email"].(string); ok {
-		if err := validators.ValidateEmail(email); err != nil {
-			http.Error(w, err.Error(), http.StatusBadRequest)
-			return
-		}
-	}
-	if err := uc.UserService.UpdateUser(id, data); err != nil {
+
+	if err := uc.UserService.UpdateUser(id, updateInput); err != nil {
 		http.Error(w, "Error al actualizar usuario: "+err.Error(), http.StatusInternalServerError)
 		return
 	}

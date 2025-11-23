@@ -5,6 +5,7 @@ import (
 	"VetiCare/entities/dto"
 	"VetiCare/repositories"
 	"VetiCare/utils"
+	"errors"
 	"fmt"
 )
 
@@ -90,8 +91,31 @@ func (s *UserService) GetAllUsers() ([]entities.User, error) {
 	return s.Repo.GetAll()
 }
 
-func (s *UserService) UpdateUser(id string, data map[string]interface{}) error {
-	return s.Repo.Update(id, data)
+func (s *UserService) UpdateUser(id string, input dto.UpdateUserDTO) error {
+	updateFields := make(map[string]interface{})
+	if input.FullName != nil {
+		updateFields["full_name"] = *input.FullName
+	}
+	if input.DUI != nil {
+		err := s.DUINotTaken(*input.DUI)
+		if err != nil {
+			return err
+		}
+		updateFields["dui"] = *input.DUI
+	}
+
+	if input.Phone != nil {
+		updateFields["phone"] = *input.Phone
+	}
+
+	if input.Email != nil {
+		err := s.EmailNotTaken(*input.Email)
+		if err != nil {
+			return err
+		}
+		updateFields["email"] = *input.Email
+	}
+	return s.Repo.Update(id, updateFields)
 }
 
 func (s *UserService) DeleteUser(id string) (string, error) {
@@ -103,4 +127,27 @@ func (s *UserService) DeleteUser(id string) (string, error) {
 		return "Usuario activado correctamente", nil
 	}
 	return "Usuario desactivado correctamente", nil
+}
+
+// validators
+func (s *UserService) EmailNotTaken(email string) error {
+	user, err := s.Repo.GetByEmail(email)
+	if user == nil && err == nil {
+		return nil
+	}
+	if err == nil {
+		return errors.New("el email ya es utilizado")
+	}
+	return nil
+}
+
+func (s *UserService) DUINotTaken(DUI string) error {
+	user, err := s.Repo.GetByDUI(DUI)
+	if user == nil && err == nil {
+		return nil
+	}
+	if err == nil {
+		return errors.New("el dui ya es utilizado")
+	}
+	return nil
 }
