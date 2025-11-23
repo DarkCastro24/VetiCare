@@ -11,12 +11,25 @@ import Layout from './layout';
 
 import { menuItemsVet } from "../config/layout/sidebar";
 const API_URL = import.meta.env.VITE_API_URL;
+
+/**
+ * Vista principal encargada de mostrar las citas activas del día actual.
+ * Permite buscar citas por nombre del dueño y marca de asistencia.
+ */
+
+
 function Dayappoint() {
   const placeholder = "Buscar por nombre del dueño";
+  // Token de autenticación obtenido desde localStorage
   const token = localStorage.getItem("token");
 
+
+    // Columnas visibles en la tabla
   const columns = ["#", "DUI", "Nombre Completo", "Telefóno", "Horario"];
 
+  /**
+   * Obtención y formato de la fecha actual en DD-MM-YYYY.
+   */
   const date = new Date();
   let day = date.getDate();
   let month = date.getMonth() + 1;
@@ -28,9 +41,20 @@ function Dayappoint() {
     today = `${day}-${month}-${year}`;
   }
 
+  // Estado global de citas
   const [appointments, setAppointments] = useState([]);
+
+   // Estado filtrado utilizado por la tabla
   const [filteredAppointments, setFilteredAppointments] = useState([]);
 
+
+  /**
+   * useEffect — carga inicial de citas del día.
+   * Llama al endpoint /api/appointments/active y valida múltiples casos:
+   *   - Respuesta no válida
+   *   - Arreglo vacío
+   *   - Error de conexión
+   */
   useEffect(() => {
   async function getData() {
     try {
@@ -41,6 +65,7 @@ function Dayappoint() {
         },
       });
 
+           // Manejo de error HTTP
       if (!response.ok) {
         return Swal.fire({
           icon: 'error',
@@ -52,7 +77,7 @@ function Dayappoint() {
       const data = await response.json();
       console.log("Respuesta API:", data);
 
-      
+          // Caso: no hay citas
       if (!Array.isArray(data) || data.length === 0) {
         setAppointments([]);
         setFilteredAppointments([]);
@@ -67,6 +92,11 @@ function Dayappoint() {
       let index = 0;
       const currentPage = 1;
       const itemsPerPage = 7;
+
+      /**
+         * Transformación de datos recibidos desde la API
+         * para integrarlos de forma amigable en la tabla del frontend.
+         */
 
       const filteredData = data.map((item) => ({
         id: item.id,
@@ -84,6 +114,7 @@ function Dayappoint() {
       setAppointments(filteredData);
       setFilteredAppointments(filteredData);
     } catch (error) {
+      // Error de conexión u otro error inesperado
       Swal.fire({
         icon: 'error',
         title: 'Error al cargar citas',
@@ -97,6 +128,13 @@ function Dayappoint() {
 
 
   const col = columns.slice(1, columns.length)
+
+  /**
+   * handleSearch
+   * ------------
+   * Filtra las citas por nombre del dueño.
+   * Ignora mayúsculas/minúsculas.
+   */
   const handleSearch = (search) => {
     if (search.trim() === '') {
       setFilteredAppointments(appointments);
