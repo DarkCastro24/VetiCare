@@ -70,6 +70,19 @@ function DuenosAdmin() {
 
       const ownersOnly = data.filter(u => u.role_id === 1);
 
+      //Cuando no hay dueños por mostrar
+      if (ownersOnly.length === 0) {
+      await Swal.fire({
+        icon: "info",
+        title: "Sin dueños registrados",
+        text: "No se encontró ningún dueño registrado en el sistema.",
+      });
+
+      setOwners([]);
+      setFilteredOwners([]);
+      return;
+    }
+
       const filteredData = ownersOnly.map((item) => ({
         id: item.id,
         rowNumber: (currentPage - 1) * itemsPerPage + index + 1,
@@ -239,7 +252,7 @@ function DuenosAdmin() {
 
   async function updateOwner(id, updatedData) {
     if (id == null) {
-      console.log("updateOwner called with id:", id);
+      //     console.log("updateOwner called with id:", id);
 
       try {
         const response = await fetch(`${API_URL}/api/users`, {
