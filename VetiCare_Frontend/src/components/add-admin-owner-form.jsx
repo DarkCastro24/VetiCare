@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-function CreateVetForm({ onSubmit }) {
+function AddOwnerForm({ onSubmit }) {
 
     // form para crear veterinario desde la vista de admin
   const [fullName, setFullName] = useState("");
@@ -13,27 +13,27 @@ function CreateVetForm({ onSubmit }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const newVet = {
+    const newOwner = {
       full_name: fullName,
       dui: dui,
       phone: phone,
       email: email,
       password_hash: password,
-      role_id: 2,
+      role_id: 1,
       status_id: 1
     };
 
     try {
-      await onSubmit(newVet);
+      await onSubmit(newOwner);
     } catch (err) {
-      setError("Ocurrió un error al crear el veterinario.");
+      setError("Ocurrió un error al crear el dueño de mascota");
     }
   };
 
   return (
     <form className="edit-form" onSubmit={handleSubmit}>
 
-      <h2 className="mb-3">Registro de Veterinario</h2>
+      <h2 className="mb-3">Registro de dueño</h2>
 
      <label htmlFor="name">Nombre completo:</label>
       <input type="text" 
@@ -66,7 +66,7 @@ function CreateVetForm({ onSubmit }) {
 
       {error && <p className="error-message">{error}</p>}
 
-      <button type="submit" className="edit-submit">Crear Veterinario</button>
+      <button type="submit" className="edit-submit">Crear dueño</button>
 
     </form>
 
@@ -74,4 +74,4 @@ function CreateVetForm({ onSubmit }) {
   );
 }
 
-export default CreateVetForm;
+export default AddOwnerForm;
