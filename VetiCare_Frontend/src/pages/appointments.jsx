@@ -32,53 +32,69 @@ function Dayappoint() {
   const [filteredAppointments, setFilteredAppointments] = useState([]);
 
   useEffect(() => {
-    async function getData() {
-      try {
-        const response = await fetch(`${API_URL}/api/appointments/active?date=${today}`, {
-          method: 'GET',
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-        if (!response.ok) {
-          const errorText = await response.text();
-          return Swal.fire({
-            icon: 'error',
-            title: 'Error',
-            text: errorText,
-          });
-        }
-        let index = 0;
-        const currentPage = 1;
-        const itemsPerPage = 7;
-        const data = await response.json();
-        console.log(data)
-        const filteredData = data.map((item) => ({
-          id: item.id,
-          rowNumber: (currentPage - 1) * itemsPerPage + index + 1,
-          DUI: item.pet.owner.dui,
-          "Nombre Completo": item.pet.owner.full_name,
-          Telefóno: item.pet.owner.phone,
+  async function getData() {
+    try {
+      const response = await fetch(`${API_URL}/api/appointments/active?date=${today}`, {
+        method: 'GET',
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
 
-          "Horario":
-            item.date.startsWith("0000")
-              ? "Sin cita"
-              : item.date.toString().concat(" a las: ", item.time),
-          Asistencia: item.status_id == 2 ? 'Si' : 'No',
-        }));
-        console.log('Filtered data:', filteredData);
-        setAppointments(filteredData);
-        setFilteredAppointments(filteredData);
-      } catch (error) {
-        Swal.fire({
+      if (!response.ok) {
+        return Swal.fire({
           icon: 'error',
-          title: 'Error al cargar citas',
-          text: error.message
+          title: 'Error',
+          text: 'Hubo un problema al cargar las citas.',
         });
       }
+
+      const data = await response.json();
+      console.log("Respuesta API:", data);
+
+      
+      if (!Array.isArray(data) || data.length === 0) {
+        setAppointments([]);
+        setFilteredAppointments([]);
+
+        return Swal.fire({
+          icon: 'info',
+          title: 'Sin citas',
+          text: 'No hay citas programadas para el día de hoy.',
+        });
+      }
+
+      let index = 0;
+      const currentPage = 1;
+      const itemsPerPage = 7;
+
+      const filteredData = data.map((item) => ({
+        id: item.id,
+        rowNumber: (currentPage - 1) * itemsPerPage + index + 1,
+        DUI: item.pet.owner.dui,
+        "Nombre Completo": item.pet.owner.full_name,
+        Telefóno: item.pet.owner.phone,
+        "Horario":
+          item.date.startsWith("0000")
+            ? "Sin cita"
+            : item.date.toString().concat(" a las: ", item.time),
+        Asistencia: item.status_id == 2 ? "Sí" : "No",
+      }));
+
+      setAppointments(filteredData);
+      setFilteredAppointments(filteredData);
+    } catch (error) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Error al cargar citas',
+        text: 'Hubo un problema con la conexión al servidor.',
+      });
     }
-    getData();
-  }, []);
+  }
+
+  getData();
+}, []);
+
 
   const col = columns.slice(1, columns.length)
   const handleSearch = (search) => {
