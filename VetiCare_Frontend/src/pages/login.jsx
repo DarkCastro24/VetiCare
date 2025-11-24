@@ -126,7 +126,12 @@ function Login() {
         <div id="register-link">
           <Link to="/register">¿No tienes una cuenta? Regístrate</Link>
         </div>
+        <div id="forgot-password-link">
+  <Link to="/forgot-password">¿Olvidaste tu contraseña?</Link>
+</div>
       </div>
+      
+
     </div>
   );
 }

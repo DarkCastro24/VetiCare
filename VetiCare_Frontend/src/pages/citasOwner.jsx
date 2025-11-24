@@ -10,7 +10,10 @@ const API_URL = import.meta.env.VITE_API_URL;
 
 function CitasOwner() {
 
-  const today = new Date().toISOString().split("T")[0];
+  const today = new Date();
+today.setHours(0, 0, 0, 0); // evita errores de zona horaria
+const localToday = today.toLocaleDateString("en-CA"); // formato YYYY-MM-DD
+
 
   // Token del usuario almacenado en localStorage
   const token = localStorage.getItem("token");
@@ -488,7 +491,7 @@ function CitasOwner() {
                 <input
                   type="date"
                   value={date}
-                  min={today}
+                  min={localToday}
                   onChange={(e) => setDate(e.target.value)}
                   required
                 />
