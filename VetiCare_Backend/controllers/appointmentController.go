@@ -42,6 +42,8 @@ func (ac *AppointmentController) RegisterRoutes(r *mux.Router, authMiddleware fu
 
 func (ac *AppointmentController) CreateAppointment(w http.ResponseWriter, r *http.Request) {
 	var app dto.AppointmentDTO
+	var vetUUID *uuid.UUID
+
 	if err := json.NewDecoder(r.Body).Decode(&app); err != nil {
 		http.Error(w, "JSON inválido", http.StatusBadRequest)
 		return
@@ -56,10 +58,21 @@ func (ac *AppointmentController) CreateAppointment(w http.ResponseWriter, r *htt
 		http.Error(w, "Ya existe una cita registrada para esa fecha y hora", http.StatusBadRequest)
 		return
 	}
+
+	if app.VetID != nil && *app.VetID != "" {
+		parsedUUID, err := uuid.Parse(*app.VetID)
+		if err != nil {
+			http.Error(w, "Error al parsear veterinario", http.StatusBadRequest)
+			return
+		}
+		vetUUID = &parsedUUID
+	}
+
 	appointment := entities.Appointment{
 		PetID: uuid.MustParse(app.PetID),
 		Date:  app.Date,
 		Time:  app.Time,
+		VetID: vetUUID,
 	}
 	if err := ac.Service.CreateAppointment(&appointment); err != nil {
 		http.Error(w, "Error creando cita: "+err.Error(), http.StatusInternalServerError)

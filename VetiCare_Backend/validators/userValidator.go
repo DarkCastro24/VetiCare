@@ -30,3 +30,19 @@ func ValidateUserDTO(user dto.UserDTO) error {
 	}
 	return nil
 }
+
+func ValidateUpdatedUserDTO(user dto.UpdateUserDTO) error {
+	if err := ValidateUpdatedName(user.FullName); err != nil {
+		return ErrInvalidFullNameUser
+	}
+	if err := ValidateUpdatedDUI(user.DUI); err != nil {
+		return ErrInvalidDUIUser
+	}
+	if err := ValidateUpdatedPhone(user.Phone); err != nil {
+		return ErrInvalidPhoneUser
+	}
+	if err := ValidateUpdatedEmail(user.Email); err != nil {
+		return ErrInvalidEmailUser
+	}
+	return nil
+}

@@ -77,6 +77,50 @@ func ValidateEmail(email string) error {
 	return nil
 }
 
+func ValidateUpdatedName(fullName *string) error {
+	if fullName == nil {
+		return nil
+	}
+	err := GetValidator().Var(fullName, "alphabetic")
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func ValidateUpdatedEmail(email *string) error {
+	if email == nil {
+		return nil
+	}
+	err := GetValidator().Var(email, "emailFormat")
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func ValidateUpdatedDUI(dui *string) error {
+	if dui == nil {
+		return nil
+	}
+	err := GetValidator().Var(dui, "duiFormat")
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func ValidateUpdatedPhone(phone *string) error {
+	if phone == nil {
+		return nil
+	}
+	err := GetValidator().Var(phone, "required,phoneFormat")
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
 var (
 	reUpper  = regexp.MustCompile(`[A-Z]`)
 	reNumber = regexp.MustCompile(`[0-9]`)

@@ -1,9 +1,10 @@
 package entities
 
 import (
+	"time"
+
 	"github.com/google/uuid"
 	"gorm.io/gorm"
-	"time"
 )
 
 type User struct {
@@ -18,8 +19,11 @@ type User struct {
 	Token        string    `gorm:"size:175" json:"token,omitempty"`
 	CreatedAt    time.Time `gorm:"autoCreateTime" json:"created_at"`
 	UpdatedAt    time.Time `gorm:"autoUpdateTime" json:"updated_at"`
+	PF           int       `gorm:"default:2" json:"pf"`
 
 	Role UserRole `gorm:"foreignKey:RoleID;references:ID" json:"role"`
+
+	Pf int `gorm:"column:pf;default:1" json:"pf"`
 }
 
 type VetAppointments struct {
