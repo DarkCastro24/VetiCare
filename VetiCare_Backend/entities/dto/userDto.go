@@ -37,6 +37,7 @@ type UpdateUserDTO struct {
 	Phone    *string `json:"phone" validate:"omitempty,phoneFormat"`
 	Email    *string `json:"email" validate:"omitempty,emailFormat"`
 	Pf       *int    `json:"pf,omitempty"`
+
 }
 
 type ChangePasswordDTO struct {
