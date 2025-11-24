@@ -30,6 +30,7 @@ import Dashboard from './pages/dashboard';
 import CitasOwner from './pages/citasOwner';
 import MascotasOwner from './pages/mascotasOwner';
 import NotFound from './pages/notFound';
+import RequestResetPassword from './pages/forgetPassword';
 
 function App() {
   return (
@@ -42,6 +43,7 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/admin/login" element={< LoginAdmin />} />
+        <Route path="/forgetPassword" element={< RequestResetPassword />} />
 
         {/* Para dueños */}
         <Route element={<RouteProtectedUser allowedRoles={[1]} />}>
