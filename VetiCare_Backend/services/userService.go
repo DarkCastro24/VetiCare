@@ -232,6 +232,9 @@ func (s *UserService) ResetPassword(token, newPassword string) error {
 	if err != nil {
 		return err
 	}
+	err = s.TokenRepo.MarkTokenUsed(t.ID)
+	if err != nil {
+		return err
+	}
 	return nil
-
 }
