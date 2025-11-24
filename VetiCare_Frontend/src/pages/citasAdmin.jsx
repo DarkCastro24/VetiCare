@@ -15,9 +15,8 @@ function CitasAdmin() {
   const API_URL = import.meta.env.VITE_API_URL;
   const [isModalOpen, setModalOpen] = useState(false);
   const [appointmentToEdit, setAppointmentToEdit] = useState(null);
-
-
-
+  const [isLoading, setIsLoading] = useState(false);
+  const [globalError, setGlobalError] = useState(null);
 
   const adminAppointmentColumns = [
     'id',
@@ -31,12 +30,22 @@ function CitasAdmin() {
   ];
 
 
-
   const [appointments, setAppointments] = useState([]);
   const [filteredAppointments, setFilteredAppointments] = useState([]);
 
+  // Para mostrar errores bomnitos
+  const showError = (message = 'Ocurrió un error inesperado') => {
+    Swal.fire({
+      icon: 'error',
+      title: 'Error',
+      text: message,
+      confirmButtonText: 'Entendido'
+    });
+  };
+
   async function getData() {
     try {
+      setIsLoading(true);
       const response = await fetch(`${API_URL}/api/appointments`, {
         method: 'GET',
         headers: {
@@ -45,12 +54,13 @@ function CitasAdmin() {
       });
 
       if (!response.ok) {
-        const errorText = await response.text();
-        return Swal.fire({
-          icon: 'error',
-          title: 'Error',
-          text: errorText,
-        });
+        if (response.status === 401) {
+          throw new Error('No tiene permisos para ver esta información');
+        } else if (response.status === 404) {
+          throw new Error('No se encontraron citas');
+        } else {
+          throw new Error('Error al cargar las citas');
+        }
       }
 
       let index = 0;
@@ -58,12 +68,9 @@ function CitasAdmin() {
       const itemsPerPage = 7;
       const data = await response.json();
 
+
       console.log(data)
       const filteredData = data.map((item) => ({
-
-
-
-
         rowNumber: (currentPage - 1) * itemsPerPage + index + 1,
         id: item.id,
         "horario":
@@ -76,12 +83,9 @@ function CitasAdmin() {
         Estado: item.status,
         Creado: item.created_at
 
-
-
-
       }));
 
-      console.log('Filtered data:', filteredData);
+      //console.log('Filtered data:', filteredData);
       setAppointments(filteredData);
       setFilteredAppointments(filteredData);
     } catch (error) {
@@ -121,10 +125,6 @@ function CitasAdmin() {
 
         console.log(data)
         const filteredData = data.map((item) => ({
-
-
-
-
           rowNumber: (currentPage - 1) * itemsPerPage + index + 1,
           id: item.id,
           "horario":
@@ -137,24 +137,35 @@ function CitasAdmin() {
           Estado: item.status,
           Creado: item.created_at
 
-
-
-
         }));
 
-        console.log('Filtered data:', filteredData);
+        //console.log('Filtered data:', filteredData);
         setAppointments(filteredData);
         setFilteredAppointments(filteredData);
       } catch (error) {
         await Swal.fire({
-          icon: 'error',
-          title: 'Error',
-          text: error.message || 'No se pudo conectar con el servidor.',
+          icon: 'info',
+          title: 'Sin citas',
+          text: 'No se encontró ningún registro de citas',
         });
       }
     }
 
     getData();
+  }, []);
+
+  useEffect(() => {
+    // Modal con error siempre se muestra encima de otros elementos
+    const style = document.createElement('style');
+    style.textContent = `
+    .swal2-container {
+      z-index: 10000 !important;
+    }
+  `;
+    document.head.appendChild(style);
+    return () => {
+      document.head.removeChild(style);
+    };
   }, []);
 
 
@@ -228,15 +239,23 @@ function CitasAdmin() {
 
   async function updateAppointment(id, updatedData) {
     try {
+      setIsLoading(true);
 
       const outdatedData = getById(id);
+      
+      //Campos que actualiza en la cita
+      const updatePayload = {
+      status_id: updatedData.status_id
+    };
+
       const response = await fetch(`${API_URL}/api/appointments/${id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`,
         },
-        body: JSON.stringify({ ...outdatedData, date: updatedData.date, time: updatedData.time, status_id: updatedData.status_id }),
+        //body: JSON.stringify({ ...outdatedData, date: updatedData.date, time: updatedData.time, status_id: updatedData.status_id }),
+        body: JSON.stringify(updatePayload),
       });
 
 
@@ -253,10 +272,10 @@ function CitasAdmin() {
 
       const result = await response.json();
       Swal.fire({
-              icon: 'success',
-              title: 'Cita actualizada',
-              text: 'Información actualizada con éxito'
-            });
+        icon: 'success',
+        title: 'Cita actualizada',
+        text: 'Información actualizada con éxito'
+      });
       setModalOpen(false);
       getData();
 
@@ -291,10 +310,10 @@ function CitasAdmin() {
       console.log(response.status);
 
       Swal.fire({
-              icon: 'success',
-              title: 'Cita eliminada',
-              text: 'Cita cancelada con éxito'
-            });
+        icon: 'success',
+        title: 'Cita eliminada',
+        text: 'Cita cancelada con éxito'
+      });
       getData();
 
     } catch (error) {
@@ -307,38 +326,31 @@ function CitasAdmin() {
   }
 
 
-
-
-
-
-
-
-
-
-
   return (
     <Layout userName="Meli lol" menuItems={menuItemsAdmin} userType="admin" >
       <div id="admin-main-container" className="vh-100 overflow-auto pb-5">
-         <h2 className="records-header__title mb-0 me-3" style={{
-        //backgroundColor: '#374f59',
-        height: '3rem',
-        width: '400px',
-        color: '#374f59',
-        //padding: arriba derecha abajo izquierda;
-        //padding: '1rem 1rem 2rem 3rem',
-       //margin: '1rem 1.2rem 0.5rem 5rem',
-       margin: '1rem 9rem 0.5rem 1rem',
-        border: 'none',
-        borderRadius: '50px',
-        fontSize: '3rem',
-        fontWeight: 600,
-        alignItems: 'center',
-       justifyContent: 'center',
-      }}>Citas</h2>
-     
-        <SearchBox onSearch={handleSearch} placeholder="Busque cita por dueño" />
+
+        <h2 className="records-header__title mb-0 me-3" style={{
+          //backgroundColor: '#374f59',
+          height: '3rem',
+          width: '400px',
+          color: '#374f59',
+          //padding: arriba derecha abajo izquierda;
+          //padding: '1rem 1rem 2rem 3rem',
+          //margin: '1rem 1.2rem 0.5rem 5rem',
+          margin: '1rem 9rem 0.5rem 1rem',
+          border: 'none',
+          borderRadius: '50px',
+          fontSize: '3rem',
+          fontWeight: 600,
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}>Citas</h2>
+
+        <SearchBox onSearch={handleSearch} placeholder="Búsqueda por dueño" />
         <div className="mb-5">
-          <AdminTable rows={filteredAppointments} columns={adminAppointmentColumns} onEdit={handleEdit} onDelete={deleteAppointment} />
+          <AdminTable rows={filteredAppointments} columns={adminAppointmentColumns} onEdit={handleEdit} onDelete={deleteAppointment} 
+          hideEdit={true}  />
         </div>
 
         <Modal isOpen={isModalOpen} onClose={() => setModalOpen(false)}>

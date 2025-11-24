@@ -7,6 +7,58 @@
     flex-direction: row;
     width: 100%;
     height: 100%;
+    position: relative;
+
+.error-message {
+  color: #e63946; 
+  font-size: 0.95rem;
+  margin-top: 0.1rem;
+  text-align: left;
+}
+
+.back-top-button {
+  position: absolute;
+  top: 1.5rem;
+  left: 1.5rem;
+  z-index: 10;
+
+  background: $cafe;
+  border-radius: 999px;
+  border: 1px solid black;
+  padding: 0.5rem 1rem;
+  font-family: "The Seasons";
+  font-size: 1.2rem;
+  color: black;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background-color: $cafe;
+    color: white;
+    filter: brightness(0.95);
+    text-decoration: underline;
+  }
+
+  @include respond-to($mobile) {
+    top: 1rem;
+    left: 1rem;
+    font-size: 1.1rem;
+    padding: 0.25rem 0.9rem;
+  }
+}
+
+.hidden {
+  display: none;
+}
+
+.field-group {
+  width: 100%;
+ // margin-bottom: 1.2rem;
+}
+
 
     #image-container {
 
@@ -68,23 +120,27 @@
       @include respond-to($tablet) {
         padding-right: 3rem;
         width: 72vw;
-       
+       overflow-y: scroll;
+       padding-bottom: 3rem;
         
       }
 
 
        @include respond-to($desktop) {
       width: 72vw;
-       
+             padding-top: 10vh;
+
         
       }
+      
       
 
        @include respond-to($mobile) {
         width: 100vw;
         padding-right: 2rem;
       
-       
+             padding-top: 10vh;
+
         
       }
       
@@ -95,7 +151,7 @@
       justify-content: center;
       
       height: 100%;
-      padding-top: 12vh;
+      padding-top: 2vh;
 
 
       h4 {
@@ -112,26 +168,26 @@
       }
 
       #logo-container {
-        flex: content;
+        flex:content;
         flex-direction: row;
         justify-content: left;
         padding-left: 2rem;
         width: 100%;
+
+        @include respond-to($tablet) {
+        margin-top: 5rem;
+        }
 
         img {
           justify-content: left;
           
           @include respond-to($desktop) {
           padding-left: 1.5em;
-       
-        
-
           
         }
-
- 
-
         }
+
+        
       }
 
 
@@ -162,9 +218,7 @@
           font-size: 1.7rem;
           box-sizing: border-box;
           text-align: left;
-          padding-top: 2rem;
-
-          padding-bottom: 1rem;
+          padding-top: 0.5rem;
         }
 
 
@@ -223,34 +277,41 @@
         }
 
         button {
-          width: 100%;
-          border-radius: 8rem;
-          margin-top: 3rem;
-          background-color: $cafe;
-          font-family: "The Seasons";;
-          font-size: 1.6rem;
-          padding: 0.4rem;
+        width: 100%;
+        border-radius: 8rem;
+        margin-top: 2rem;
+        background-color: $cafe;
+        font-family: "The Seasons";
+        font-size: 1.5rem;
+        padding: 0.4rem;
+        transition: filter 0.2s ease; 
+
+        &:hover {
+          filter: brightness(0.9);
+          cursor: pointer;
         }
+      }
 
 
 
       }
 
 
-      #register-link {
-        width: 100%;
-        margin-top: 2rem;
-        flex: content;
-        flex-direction: row;
-        text-align: center;
+    #register-link {
+      width: 100%;
+      margin-top: 1.1rem;
+      flex: content;
+      flex-direction: row;
+      text-align: center;
 
+      a {
+        color: $cafe;
+        font-size: 1.4rem;
+        text-decoration: none;
+        transition: text-decoration 0.2s ease; 
 
-
-        a {
-          color: $cafe;
-          font-size: 1.4rem;
-          text-decoration: none;
-
+        &:hover {
+          text-decoration: underline;
         }
       }
 
@@ -259,3 +320,4 @@
 
 
   }
+}

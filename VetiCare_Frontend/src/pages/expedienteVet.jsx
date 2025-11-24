@@ -28,7 +28,10 @@ const ExpedienteVet = () => {
   const [detailData, setDetailData] = useState(null);
   const [showDetailModal, setShowDetailModal] = useState(false);
 
+  
+
   useEffect(() => {
+    // Cargar expedientes de mascotas activas
     fetch(`${API_URL}/api/pets/active`, {
       headers: { Authorization: token ? `Bearer ${token}` : '' }
     })
@@ -36,6 +39,7 @@ const ExpedienteVet = () => {
       .then(data => setExpedientes(Array.isArray(data) ? data : []))
       .catch(err => console.error('Error al cargar expedientes:', err));
 
+      // Cargar dueños
     fetch(`${API_URL}/api/users`, {
       headers: { Authorization: token ? `Bearer ${token}` : '' }
     })
@@ -43,6 +47,7 @@ const ExpedienteVet = () => {
       .then(data => setOwners(data.filter(u => u.role_id === 1)))
       .catch(err => console.error('Error al cargar dueños:', err));
 
+      // Cargar especies
     fetch(`${API_URL}/api/species`, {
       headers: { Authorization: token ? `Bearer ${token}` : '' }
     })
@@ -55,7 +60,7 @@ const ExpedienteVet = () => {
       return;
     }
     const timeout = setTimeout(() => {
-      // Si parece un DUI completo (ej: '01234567-8'), busca por DUI exacto
+      // Si parece un DUI completo, busca por DUI exacto
       const duiRegex = /^\d{8}-\d$/;
       const url = duiRegex.test(ownerSearch)
         ? `/api/users?dui=${ownerSearch}`
@@ -75,9 +80,21 @@ const ExpedienteVet = () => {
 
   }, [ownerSearch, token]);
 
+  /**
+ * filteredExpedientes
+ * -------------------
+ * Filtra los resultados por nombre de mascota en tiempo real.
+ */
   const filteredExpedientes = expedientes.filter(e =>
     e.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
+
+  /**
+ * handleDelete
+ * -------------
+ * Solicita confirmación y envía DELETE /api/pets/:id
+ * Actualiza el estado local al eliminar.
+ */
 
   const handleDelete = async id => {
     if (!window.confirm('¿Eliminar este expediente?')) return;
@@ -95,6 +112,14 @@ const ExpedienteVet = () => {
       });
     }
   };
+
+  /**
+ * handleSubmit
+ * ------------
+ * Envía el formulario de creación:
+ * POST /api/pets
+ * Convierte fecha a ISO, peso a float, IDs a enteros.
+ */
 
   const handleSubmit = async e => {
     e.preventDefault();
@@ -130,10 +155,31 @@ const ExpedienteVet = () => {
     }
   };
 
+  /**
+ * handleOpenUpdate
+ * ----------------
+ * Abre modal de edición e inicializa el formulario.
+ */
+
+ /**
+  * handleUpdateSubmit
+  * -------------------
+  * PUT /api/pets/:id
+  * Actualiza lista de expedientes sin recargar página.
+  */
+
+
   const handleOpenUpdate = exp => {
     setUpdateForm({ id: exp.id, name: exp.name, breed: exp.breed });
     setShowUpdateModal(true);
   };
+
+  /**
+ * handleOpenDetail
+ * -----------------
+ * GET /api/pets/:id
+ * Muestra datos completos en modal.
+ */
 
   const handleOpenDetail = async (id) => {
     try {
@@ -183,6 +229,12 @@ const ExpedienteVet = () => {
   const handleVacunaChange = (idx, field, value) => {
     setForm(f => { const cvs = [...f.vacunas]; cvs[idx][field] = value; return { ...f, vacunas: cvs }; });
   };
+
+  /**
+ * Historial de vacunación
+ * -----------------------
+ * Permite agregar/remover n elementos de forma dinámica.
+ */
   const handleAddVacuna = () => setForm(f => ({ ...f, vacunas: [...f.vacunas, { nombre: '', fecha: '' }] }));
   const handleRemoveVacuna = idx => setForm(f => ({ ...f, vacunas: f.vacunas.filter((_, i) => i !== idx) }));
   const handleUpdateChange = (field, value) => setUpdateForm(f => ({ ...f, [field]: value }));
@@ -351,7 +403,7 @@ const ExpedienteVet = () => {
                           />
                         </div>
                       </div>
-                      <section className="vaccination-history mt-4">
+                      <section className="vaccination-history">
                         <h5 className="vaccination-history__title">Historial de vacunación</h5>
                         <table className="table vaccination-history__table mb-2">
                           <thead>

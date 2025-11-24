@@ -58,12 +58,27 @@ function AdminPet() {
       }
     })
       .then(res => res.json())
-      .then(data => setExpedientes(Array.isArray(data) ? data : []))
-      .catch(err => Swal.fire({
-        icon: 'error',
-        title: 'Error al cargar expedientes',
-        text: err.message || 'No se pudieron cargar los expedientes.',
-      }));
+      .then(data => {
+        const petsArray = Array.isArray(data) ? data : [];
+        setExpedientes(petsArray);
+
+        // Mostrar mensaje si no hay mascotas
+        if (petsArray.length === 0) {
+          Swal.fire({
+            icon: 'info',
+            title: 'Sin mascotas',
+            text: 'No se encontraron mascotas registradas.',
+          });
+        }
+      })
+      .catch(err => {
+        Swal.fire({
+          icon: 'error',
+          title: 'Error al cargar mascotas',
+          text: 'No se pudieron cargar las mascotas.',
+        });
+        setExpedientes([]);
+      });
 
     fetch(`${API_URL}/api/users`, {
       headers: {
@@ -73,9 +88,9 @@ function AdminPet() {
       .then(res => res.json())
       .then(data => setOwners(data.filter(u => u.role_id === 1)))
       .catch(err => Swal.fire({
-        icon: 'error',
-        title: 'Error al cargar dueños',
-        text: err.message || 'No se pudieron cargar los dueños.',
+        icon: 'info',
+        title: 'Sin mascotas',
+        text: 'No encuentra ninguna mascota registrada',
       }));
     fetch(`${API_URL}/api/species`, {
       headers: {
@@ -349,7 +364,7 @@ function AdminPet() {
 
         <SearchBox
           onSearch={handleSearch}
-          placeholder="Buscar"
+          placeholder="Búsqueda por nombre"
         />
         <button
           className="btn btn-open-new"

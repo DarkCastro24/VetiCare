@@ -1,6 +1,6 @@
 import ActionComponents from "../components/action-components";
 
-function AdminTable({ rows, columns, onEdit, onDelete }) {
+function AdminTable({ rows, columns, onEdit, onDelete, hideEdit = false }) {
 
 
 
@@ -76,7 +76,7 @@ function AdminTable({ rows, columns, onEdit, onDelete }) {
 
                             {newRows.length !== 0 && (
                                 <td id="action-buttons">
-                                    <ActionComponents onDelete={onDelete} onEdit={onEdit} elementId={newRow["id"]} />
+                                    <ActionComponents onDelete={onDelete} onEdit={onEdit} elementId={newRow["id"]}  hideEdit={hideEdit}  />
                                 </td>
                             )}
 

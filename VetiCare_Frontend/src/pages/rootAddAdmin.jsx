@@ -28,6 +28,18 @@ export default function RootAddAdmin() {
   const [showDetailModal, setShowDetailModal] = useState(false);
   const [detailData, setDetailData] = useState(null);
 
+  // SweetAlert arriba
+  useEffect(() => {
+    const style = document.createElement("style");
+    style.textContent = `
+      .swal2-container, .swal2-popup {
+        z-index: 999999 !important;
+      }
+    `;
+    document.head.appendChild(style);
+    return () => document.head.removeChild(style);
+  }, []);
+
   const [createForm, setCreateForm] = useState({
     full_name: '',
     username: '',
@@ -51,6 +63,39 @@ export default function RootAddAdmin() {
     { id: 2, name: 'Admin' }
   ];
 
+  function mensajeErrorForm(errorText) {
+    if (!errorText) return "Ocurrió un error inesperado.";
+
+    const lower = errorText.toLowerCase();
+
+    if (lower.includes("phoneformat") || lower.includes("failed on the 'phoneformat' tag")) {
+      return "El teléfono debe tener el formato ####-####, incluyendo el guion.";
+    }
+
+    if (lower.includes("duplicate") || lower.includes("already in use")) {
+      return "El correo o DUI ingresado ya están en uso.";
+    }
+
+    if (lower.includes("duiformat")) {
+      return "El DUI ingresado no tiene el formato correcto. Ejemplo: 12345678-9";
+    }
+
+    if (lower.includes("email")) {
+      return "El correo electrónico ingresado no es válido.";
+    }
+
+    if (lower.includes("phone") || lower.includes("telefono")) {
+      return "El teléfono debe tener el formato ####-####.";
+    }
+
+    if (lower.includes("full_name") || lower.includes("name")) {
+      return "El nombre no puede contener caracteres especiales ni estar vacío.";
+    }
+
+    return "Ocurrió un error al procesar la solicitud. Verifique los datos ingresados.";
+  }
+
+
   const fetchAdmins = useCallback(async () => {
     setLoading(true);
     setError(null);
@@ -63,20 +108,32 @@ export default function RootAddAdmin() {
       });
       if (!res.ok) {
         const errorText = await response.text();
+        const friendlyMessage = mensajeErrorForm(errorText);
         return Swal.fire({
           icon: 'error',
           title: 'Error',
-          text: errorText,
+          text: friendlyMessage,
         });
       }
       const data = await res.json();
       setAdmins(Array.isArray(data) ? data : []);
+
+      if (lista.length === 0) {
+      Swal.fire({
+        icon: 'info',
+        title: 'Sin registros',
+        text: 'No hay administradores registrados.',
+      });
+    }
+
     } catch (err) {
+      /*
       await Swal.fire({
         icon: 'error',
         title: 'Error',
-        text: error.message || 'No se pudo conectar con el servidor.',
+        text:'Nwerwerwer.',
       });
+     */
     } finally {
       setLoading(false);
     }
@@ -150,13 +207,15 @@ export default function RootAddAdmin() {
         })
       });
       if (!res.ok) {
-        const errorText = await res.text();
+        const rawError = await res.text(); 
+        const friendlyMessage = mensajeErrorForm(rawError);
         return Swal.fire({
           icon: 'error',
-          title: 'Error',
-          text: errorText,
+          title: 'Error al actualizar',
+          text: friendlyMessage,
         });
       }
+
       setShowUpdateModal(false);
       await fetchAdmins();
       Swal.fire({
@@ -312,7 +371,7 @@ export default function RootAddAdmin() {
           justifyContent: 'center',
         }}>Administradores</h2>
 
-        <SearchBox onSearch={setSearchTerm} placeholder="Buscar" />
+        <SearchBox onSearch={setSearchTerm} placeholder="Búsqueda por nombre" />
 
         <button
           onClick={() => setShowCreateModal(true)}

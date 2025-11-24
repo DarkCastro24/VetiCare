@@ -24,7 +24,7 @@ ChartJS.register(
 // Para que los ejes vayan de 1 en 1
 ChartJS.defaults.scales.linear.ticks.stepSize = 1;
 
-//Para rreglar el responsive
+//Para arreglar el responsive de la gráfica
 ChartJS.defaults.maintainAspectRatio = false;
 
 export default function Dashboard() {
@@ -36,20 +36,90 @@ export default function Dashboard() {
     const [error, setError] = useState(null);
     const [chartData, setChartData] = useState({ labels: [], datasets: [] });
 
-
     const [attended, setAttended] = useState(0);
     const [pending, setPending] = useState(0);
     const [totalVets, setTotalVets] = useState(0);
 
+    //Función para transformar los datos recibidos de la API a un formato compatible con Chart.js
+    const transformChartData = (DATA) => {
+        if (!DATA || !Array.isArray(DATA) || DATA.length === 0) {
+            return { labels: [], datasets: [] };
+        }
+
+        const monthNames = [
+            "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"
+        ];
+
+        //API regresa los meses de 1 a 12, asi que se mapea a -1 por el array de los nombres
+        const labels = DATA.map(i => monthNames[i.month - 1]);
+
+        const counts = DATA.map(i => i.count);
+        return{
+            labels,
+            datasets: [{
+                data: counts,
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.2)',
+                    'rgba(255, 159, 64, 0.2)',
+                    'rgba(255, 205, 86, 0.2)',
+                    'rgba(75, 192, 192, 0.2)',
+                    'rgba(54, 162, 235, 0.2)',
+                    'rgba(153, 102, 255, 0.2)',
+                    'rgba(201, 203, 207, 0.2)'
+                ],
+                borderColor: [
+                    'rgb(255, 99, 132)',
+                    'rgb(255, 159, 64)',
+                    'rgb(255, 205, 86)',
+                    'rgb(75, 192, 192)',
+                    'rgb(54, 162, 235)',
+                    'rgb(153, 102, 255)',
+                    'rgb(201, 203, 207)'
+                ],
+                borderWidth: 1
+            }]
+        };
+    };
+
+    //Componente para no repetir mensaje de falta de datos en el dashboard
+    const emptyMessages = {
+        atendidas: "Sin citas atendidas registradas",
+        pendientes: "No hay citas pendientes",
+        totalVets: "Sin veterinarios registrados",
+        desempenioVets: "No se encuentra ningún veterinario registrado",
+        citasxmes: "No hay datos de citas registradas por mostrar"
+    };
+
+    //Componente reutilizable para las tarjetas con los datos del dashboard
+    const DashboardCard = ({ title, value, emptyMessage }) => {
+        const hasData = value > 0;
+        return (
+            <div className="card bg-white rounded-4 p-4 text-center">
+                <div className="d-flex justify-content-between align-items-start mb-2">
+                    <h5 className="mb-2">{title}</h5>
+                </div>
+                {/*Error de hidratación arreglado con div para no tener p anidado*/}
+                <div className="fs-3 mb-0">
+                    {hasData ? value : <p className="fs-6 mb-0">{emptyMessage}</p>}
+                </div>
+            </div>
+        );
+    };
+
     useEffect(() => {
+        //API envía los veterinarios con mayor citas atendidas 
         fetch(`${API_URL}/api/dashboard/vets/top`, {
+            //Que se muestren los valores solo cuando se ha iniciado sesión
             headers: { Authorization: token ? `Bearer ${token}` : '' }
         })
             .then(r => { if (!r.ok) throw r; return r.json(); })
-            .then(data => setVets(data))
-            .catch(e => setError(e.message))
+            .then(data => {
+                const safeData = Array.isArray(data) ? data : [];
+                setVets(safeData);
+            })
+            .catch(e => setError(e.message || 'Error al cargar veterinarios'))
             .finally(() => setLoading(false));
-    }, [token]);
+    }, [token, API_URL]);
 
     useEffect(() => {
         fetch(`${API_URL}/api/dashboard/appointments/monthly_last6months`, {
@@ -57,78 +127,51 @@ export default function Dashboard() {
         })
             .then(r => { if (!r.ok) throw r; return r.json(); })
             .then(DATA => {
-                const monthNames = [
-                    "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"
-                ];
+                //Llamado a la función que transforma los datos para la gráfica
+                const transformedData = transformChartData(DATA);
+                setChartData(transformedData);
 
-                const labels = DATA.map(i => monthNames[i.month - 1]);
-                const counts = DATA.map(i => i.count);
-                setChartData({
-                    labels,
-                    datasets: [{
-                        data: counts,
-                        backgroundColor: [
-                            'rgba(255, 99, 132, 0.2)',
-                            'rgba(255, 159, 64, 0.2)',
-                            'rgba(255, 205, 86, 0.2)',
-                            'rgba(75, 192, 192, 0.2)',
-                            'rgba(54, 162, 235, 0.2)',
-                            'rgba(153, 102, 255, 0.2)',
-                            'rgba(201, 203, 207, 0.2)'
-                        ],
-                        borderColor: [
-                            'rgb(255, 99, 132)',
-                            'rgb(255, 159, 64)',
-                            'rgb(255, 205, 86)',
-                            'rgb(75, 192, 192)',
-                            'rgb(54, 162, 235)',
-                            'rgb(153, 102, 255)',
-                            'rgb(201, 203, 207)'
-                        ],
-                        borderWidth: 1
-                    }]
-                });
             })
-            .catch(console.error);
-    }, [token]);
+            .catch(err => {
+                console.error(err);
+                setChartData({ labels: [], datasets: [] });
+            });
+    }, [token, API_URL]);
 
     useEffect(() => {
         fetch(`${API_URL}/api/dashboard/appointments/attended`, {
             headers: { Authorization: token ? `Bearer ${token}` : '' }
         })
             .then(r => { if (!r.ok) throw r; return r.json(); })
-            .then(d => setAttended(d.attended_appointments ?? d.count))
+            .then(d => setAttended(d.attended_appointments ?? d.count ?? 0))
             .catch(console.error);
 
         fetch(`${API_URL}/api/dashboard/appointments/pending`, {
             headers: { Authorization: token ? `Bearer ${token}` : '' }
         })
             .then(r => { if (!r.ok) throw r; return r.json(); })
-            .then(d => setPending(d.pending_appointments ?? d.count))
+            .then(d => setPending(d.pending_appointments ?? d.count ?? 0))
             .catch(console.error);
 
         fetch(`${API_URL}/api/dashboard/vets/total`, {
             headers: { Authorization: token ? `Bearer ${token}` : '' }
         })
             .then(r => { if (!r.ok) throw r; return r.json(); })
-            .then(d => setTotalVets(d.total_vets ?? d.count))
+            .then(d => setTotalVets(d.total_vets ?? d.count ?? 0))
             .catch(console.error);
-    }, [token]);
+    }, [token, API_URL]);
 
     if (loading) return <p className="text-center my-5">Cargando datos…</p>;
     if (error) return <p className="text-danger text-center my-5">Error: {error}</p>;
+
+    const safeVets = Array.isArray(vets) ? vets : [];
 
     return (
         <Layout menuItems={menuItemsAdmin} userType="admin">
             <div id="admin-main-container">
                 <h2 className="records-header__title mb-0 me-3" style={{
-                    //backgroundColor: '#374f59',
                     height: '3rem',
-                    //width: '400px',
                     color: '#374f59',
-                    //padding: arriba derecha abajo izquierda;
-                    //padding: '1rem 1rem 2rem 3rem',
-                    //margin: '1rem 1.2rem 0.5rem 5rem',
                     margin: '1rem 9rem 1rem 2rem',
                     border: 'none',
                     borderRadius: '50px',
@@ -139,36 +182,43 @@ export default function Dashboard() {
                 }}>Dashboard</h2>
 
                 <div className="container-fluid px-4 py-4">
-
-
                     <div className="row g-4">
                         <div className="col-12 col-md-4 col-lg-3">
-                            <div className="row row-cols-1 g-2">
+                            <div className="row row-cols-1 g-2 h-100">
                                 <div className="col">
-                                    <div className="card bg-white rounded-4 p-4 text-center">
-                                        <h5 className="mb-2">Citas atendidas</h5>
-                                        <p className="fs-3 mb-0">{attended}</p>
-                                    </div>
+                                    <DashboardCard
+                                        title="Citas atendidas"
+                                        value={attended}
+                                        emptyMessage={emptyMessages.atendidas}
+                                        icon="fas fa-calendar-check"
+                                        color="primary"
+                                    />
                                 </div>
                                 <div className="col">
-                                    <div className="card bg-white rounded-4 p-4 text-center">
-                                        <h5 className="mb-2">Citas pendientes</h5>
-                                        <p className="fs-3 mb-0">{pending}</p>
-                                    </div>
+                                    <DashboardCard
+                                        title="Citas pendientes"
+                                        value={pending}
+                                        emptyMessage={emptyMessages.pendientes}
+                                        icon="fas fa-calendar-clock"
+                                        color="warning"
+                                    />
                                 </div>
                                 <div className="col">
-                                    <div className="card bg-white rounded-4 p-4 text-center">
-                                        <h5 className="mb-2">Total de veterinarios</h5>
-                                        <p className="fs-3 mb-0">{totalVets}</p>
-                                    </div>
+                                    <DashboardCard
+                                        title="Total de veterinarios"
+                                        value={totalVets}
+                                        emptyMessage={emptyMessages.totalVets}
+                                        icon="fas fa-user-md"
+                                        color="success"
+                                    />
                                 </div>
                             </div>
                         </div>
 
                         <div className="col-12 col-md-8 col-lg-9">
-                            <div className="row g-4">
-                                <div className="col-12 col-lg-6">
-                                    <div className="card bg-white rounded-4 p-4 h-100">
+                            <div className="row g-4 h-100">
+                                <div className="col-12 col-lg-6 d-flex">
+                                    <div className="card bg-white rounded-4 p-4 h-100 w-100">
                                         <h5 className="mb-3">Desempeño de veterinarios</h5>
                                         <div className="table-responsive">
                                             <table className="table mb-0">
@@ -179,14 +229,21 @@ export default function Dashboard() {
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                    {vets.slice(0, 5).map(v => (
-                                                        <tr key={v.vet_id}>
-                                                            <td className="text-truncate" style={{ maxWidth: '200px' }} >
-                                                                {v.vet_name}
-                                                            </td>
-                                                            <td className="text-end">{v.appointments}</td>
+                                                    {/* Slice no funciona en null y por eso falla al cargar inicialmente el dashboard vacía */}
+                                                    {vets && vets.length > 0 ? (
+                                                        vets.slice(0, 5).map(v => (
+                                                            <tr key={v.vet_id}>
+                                                                <td className="text-truncate" style={{ maxWidth: '200px' }} >
+                                                                    {v.vet_name}
+                                                                </td>
+                                                                <td className="text-end">{v.appointments}</td>
+                                                            </tr>
+                                                        )
+                                                        )) : (
+                                                        <tr>
+                                                            <td colSpan="2" className="text-center">No se encuentra ningún veterinario registrado</td>
                                                         </tr>
-                                                    ))}
+                                                    )}
                                                 </tbody>
                                             </table>
                                         </div>
@@ -194,11 +251,13 @@ export default function Dashboard() {
                                 </div>
                                 <div className="col-12 col-lg-6">
                                     <div className="card bg-white rounded-4 p-4 h-100">
-                                        <h5 className="mb-3">
-                                            Cantidad de citas por mes
-                                        </h5>
+                                        <h5 className="mb-3"> Cantidad de citas por mes</h5>
                                         <div style={{ width: '100%', height: '300px' }}>
-                                            <Bar data={chartData} className="w-100 h-100" />
+                                            {chartData.labels && chartData.labels.length > 0 ? (
+                                                <Bar data={chartData} className="w-100 h-100" />
+                                            ) : (
+                                                <p className="text-center">No hay datos de citas resgistradas por mostrar</p>
+                                            )}
                                         </div>
                                     </div>
                                 </div>

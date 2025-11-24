@@ -8,6 +8,7 @@ function UpdateAdminForm({ form, setForm, onSubmit }) {
 
   return (
     <form className="formPetAdmin" onSubmit={e => { e.preventDefault(); onSubmit(form); }}>
+      <h2 className="mb-3">Actualizar datos de administrador</h2>
         <div className="divPetAdminNombre">
         <label>Nombre</label>
         <input

@@ -15,7 +15,8 @@ import VeterinariansAdmin from './pages/veterinariosAdmin';
 import AdminPet from './pages/adminPet';
 import ProfileVet from './pages/profileVet';
 
-
+import ForgotPassword from "./pages/forgotPassword";
+import ResetPassword from "./pages/resetPassword";
 import EditModal from './components/admin-edit-modal';
 import DuenosAdmin from './pages/duenosAdmin';
 
@@ -29,19 +30,24 @@ import RouteProtectedAdmin from './utils/routeProtectedAdmin';
 import Dashboard from './pages/dashboard';
 import CitasOwner from './pages/citasOwner';
 import MascotasOwner from './pages/mascotasOwner';
+import NotFound from './pages/notFound';
+import RequestResetPassword from './pages/forgetPassword';
 
 function App() {
   return (
 
     <Router>
       <Routes>
-
+        <Route path="*" element={<NotFound />} />
         {/* las generales para todos */}
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/admin/login" element={< LoginAdmin />} />
+        <Route path="/forgetPassword" element={< RequestResetPassword />} />
 
+        <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/reset-password" element={<ResetPassword />} />
         {/* Para dueños */}
         <Route element={<RouteProtectedUser allowedRoles={[1]} />}>
           <Route path="/profile" element={< ProfileVet />} />
