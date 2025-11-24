@@ -72,16 +72,16 @@ function DuenosAdmin() {
 
       //Cuando no hay dueños por mostrar
       if (ownersOnly.length === 0) {
-      await Swal.fire({
-        icon: "info",
-        title: "Sin dueños registrados",
-        text: "No se encontró ningún dueño registrado en el sistema.",
-      });
+        await Swal.fire({
+          icon: "info",
+          title: "Sin dueños registrados",
+          text: "No se encontró ningún dueño registrado en el sistema.",
+        });
 
-      setOwners([]);
-      setFilteredOwners([]);
-      return;
-    }
+        setOwners([]);
+        setFilteredOwners([]);
+        return;
+      }
 
       const filteredData = ownersOnly.map((item) => ({
         id: item.id,
@@ -410,7 +410,7 @@ function DuenosAdmin() {
           justifyContent: 'center',
         }}>Dueños</h2>
         <div className="search-add-row">
-          <SearchBox onSearch={handleSearch} placeholder="Busque dueño por nombre" />
+          <SearchBox onSearch={handleSearch} placeholder="Búsqueda por nombre" />
           <AddButton onClick={handleCreate} />
         </div>
         <AdminTable rows={filteredOwners} columns={adminOwnerColumns} onEdit={handleEdit} onDelete={deleteOwner} />

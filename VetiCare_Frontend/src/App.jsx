@@ -29,13 +29,14 @@ import RouteProtectedAdmin from './utils/routeProtectedAdmin';
 import Dashboard from './pages/dashboard';
 import CitasOwner from './pages/citasOwner';
 import MascotasOwner from './pages/mascotasOwner';
+import NotFound from './pages/notFound';
 
 function App() {
   return (
 
     <Router>
       <Routes>
-
+      <Route path="*" element={<NotFound/>} />
         {/* las generales para todos */}
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />

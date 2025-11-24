@@ -124,7 +124,7 @@ export default function RootAddAdmin() {
         text: 'No hay administradores registrados.',
       });
     }
-    
+
     } catch (err) {
       await Swal.fire({
         icon: 'error',
@@ -368,7 +368,7 @@ export default function RootAddAdmin() {
           justifyContent: 'center',
         }}>Administradores</h2>
 
-        <SearchBox onSearch={setSearchTerm} placeholder="Buscar" />
+        <SearchBox onSearch={setSearchTerm} placeholder="Búsqueda por nombre" />
 
         <button
           onClick={() => setShowCreateModal(true)}
