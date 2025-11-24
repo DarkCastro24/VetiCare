@@ -176,7 +176,35 @@ const ProfileVet = () => {
 
   const handleSaveProfilePhoto = async () => {
     try {
-      const payload = { pf: selectedPf };
+      // Comprobaciones rápidas (que exista el user.id)
+      if (!user?.id) {
+        console.error(
+          "No hay user.id disponible en localStorage/userFromLocal:",
+          user
+        );
+        return Swal.fire({
+          icon: "error",
+          title: "Error",
+          text: "ID de usuario no disponible. Reingresa y vuelve a intentar.",
+        });
+      }
+
+      // Asegurarnos de que pf sea un número
+      const pfValue = Number(selectedPf);
+      if (Number.isNaN(pfValue)) {
+        console.error("selectedPf no es un número:", selectedPf);
+        return Swal.fire({
+          icon: "error",
+          title: "Error",
+          text: "La foto seleccionada no es válida.",
+        });
+      }
+
+      // El JSON que la API debe recibir
+      const payload = { pf: pfValue };
+
+      // Imprimir en consola el JSON que enviamos
+      console.log("Enviando JSON a la API:", JSON.stringify(payload, null, 2));
 
       const response = await fetch(`${API_URL}/api/users/${user.id}`, {
         method: "PUT",
@@ -187,32 +215,45 @@ const ProfileVet = () => {
         body: JSON.stringify(payload),
       });
 
+      const ct = response.headers.get("content-type") || "";
+      let responseBody = null;
+      if (ct.includes("application/json")) {
+        responseBody = await response.json();
+      } else {
+        const text = await response.text();
+        responseBody = text ? text : null;
+      }
+
       if (!response.ok) {
-        const errorText = await response.text();
+        const msg =
+          (typeof responseBody === "string" && responseBody) ||
+          (responseBody && JSON.stringify(responseBody)) ||
+          `Error ${response.status}: ${response.statusText}`;
         return Swal.fire({
           icon: "error",
           title: "Error al actualizar foto de perfil",
-          text: errorText,
+          text: msg,
         });
       }
 
-      setCurrentPf(selectedPf);
-
+      // Actualizar estado y localStorage
+      setCurrentPf(pfValue);
       const storedUser = JSON.parse(localStorage.getItem("user") || "{}");
-      const updatedUser = { ...storedUser, pf: selectedPf };
+      const updatedUser = { ...storedUser, pf: pfValue };
       localStorage.setItem("user", JSON.stringify(updatedUser));
 
-      Swal.fire({
+      await Swal.fire({
         icon: "success",
         title: "Foto de perfil actualizada",
       });
 
       closePhotoModal();
     } catch (error) {
+      console.error("Error en handleSaveProfilePhoto:", error);
       await Swal.fire({
         icon: "error",
         title: "Error inesperado",
-        text: error.message || "No se pudo conectar con el servidor.",
+        text: error?.message || "No se pudo conectar con el servidor.",
       });
     }
   };
