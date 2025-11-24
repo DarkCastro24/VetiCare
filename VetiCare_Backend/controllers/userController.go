@@ -6,8 +6,9 @@ import (
 	"VetiCare/validators"
 	"encoding/json"
 	"fmt"
-	"github.com/gorilla/mux"
 	"net/http"
+
+	"github.com/gorilla/mux"
 )
 
 type UserController struct {
@@ -184,7 +185,8 @@ func (uc *UserController) UpdateUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if updateInput.FullName == nil && updateInput.Email == nil && updateInput.Phone == nil && updateInput.DUI == nil {
+	if updateInput.FullName == nil && updateInput.Email == nil && updateInput.Phone == nil && updateInput.DUI == nil &&
+		updateInput.Pf == nil {
 		http.Error(w, "No se enviaron campos para actualizar", http.StatusBadRequest)
 		return
 	}
