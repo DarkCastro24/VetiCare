@@ -349,7 +349,7 @@ function AdminPet() {
 
         <SearchBox
           onSearch={handleSearch}
-          placeholder="Buscar"
+          placeholder="Búsqueda por nombre"
         />
         <button
           className="btn btn-open-new"

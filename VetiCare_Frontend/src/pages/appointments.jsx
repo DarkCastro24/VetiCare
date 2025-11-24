@@ -12,7 +12,7 @@ import Layout from './layout';
 import { menuItemsVet } from "../config/layout/sidebar";
 const API_URL = import.meta.env.VITE_API_URL;
 function Dayappoint() {
-  const placeholder = "Buscar por nombre del dueño";
+  const placeholder = "Búsqueda por nombre del dueño";
   const token = localStorage.getItem("token");
 
   const columns = ["#", "DUI", "Nombre Completo", "Telefóno", "Horario"];
