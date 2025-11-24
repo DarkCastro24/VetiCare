@@ -242,19 +242,19 @@ function VeterinariansAdmin() {
 
         if (!response.ok) {
           const errorText = await response.json();
-          console.error(`Error ${response.status}:`, errorText);
-          alert(`Error al agregar nuevo veterinario: ${errorText}`);
+          //console.error(`Error ${response.status}:`, errorText);
+          //alert(`Error al agregar nuevo veterinario: ${errorText}`);
           throw new Error(`Error ${response.status}: Failed to add new veterinarian`);
         }
 
 
         const result = await response.json();
-        console.log('Veterinarian added:', result);
+        //console.log('Veterinarian added:', result);
         setModalOpen(false);
         getData();
 
       } catch (error) {
-        console.error('Add error:', error);
+        //console.error('Add error:', error);
         throw error;
       }
     } else {
@@ -411,7 +411,21 @@ function VeterinariansAdmin() {
 
   return (
     <Layout userName="Alison lol" menuItems={menuItemsAdmin} userType="admin">
+
+      
       <div id="admin-main-container">
+        <h2 className="records-header__title mb-0 me-3" style={{
+                    height: '3rem',
+                    color: '#374f59',
+                    margin: '1rem 9rem 1rem 2rem',
+                    border: 'none',
+                    borderRadius: '50px',
+                    fontSize: '3rem',
+                    fontWeight: 600,
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                }}>Veterinarios</h2>
+        
         <div className="search-add-row">
           <SearchBox onSearch={handleSearch} placeholder="Busque por nombre" />
           <AddButton onClick={handleCreate} />
