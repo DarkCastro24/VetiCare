@@ -7,12 +7,14 @@ function CreateAdminForm({ form, setForm, adminTypes, onSubmit, onCancel }) {
   };
 
   return (
+
     <form className="formPetAdmin" onSubmit={e => {
       e.preventDefault(); onSubmit({
         ...form,
         admin_type_id: Number(form.admin_type_id)
       });
     }}>
+      <h2 className="mb-3">Registro de nuevo administrador</h2>
       <div className="divPetAdminNombre">
         <label>Nombre</label>
         <input
