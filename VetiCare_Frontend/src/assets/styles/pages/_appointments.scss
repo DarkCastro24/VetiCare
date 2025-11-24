@@ -1,6 +1,10 @@
   @use '../mixins' as *;
   @use '../variables' as *;
-  
+
+  /**
+ * Estilos para el módulo de Citas del Día.
+ * Mejora la presentación de la tabla, el contenedor y la experiencia del usuario.
+ */
 
   #main-container-appointments {
     background-color: $primary-color;
@@ -10,93 +14,124 @@
     height: 100%;
     overflow-y: auto;
 
-    #title{
-        margin-top: 2rem;
-        margin-left: 2rem;
-        font-family: "The Seasons";;
-        font-size: 2.5rem;
-        
+    /**
+   * Título principal "¡Bienvenido!"
+   */
+
+    #title {
+      margin-top: 2rem;
+      margin-left: 2rem;
+      font-family: "The Seasons";
+      ;
+      font-size: 2.5rem;
+
     }
 
-    p{
-        margin-top: 0rem;
-        margin-left: 2rem;
-        font-family: "The Seasons";;
-        font-size: 2.5rem; 
-        margin-right: 2rem;
+    p {
+      margin-top: 0rem;
+      margin-left: 2rem;
+      font-family: "The Seasons";
+      ;
+      font-size: 2.5rem;
+      margin-right: 2rem;
     }
 
-    #search-box-container{
-  
-        display: flex;
-        flex-direction: row;
+    #search-box-container {
 
-     
+      display: flex;
+      flex-direction: row;
+
+
     }
 
+
+    /**
+   * Contenedor principal de la tabla y la barra de búsqueda
+   */
     #table-container {
       display: flex;
       justify-content: center;
-     width: 100%;
+      width: 100%;
 
-      .simple-table{
-    font-family: "The Seasons";;
-    margin: 4rem;
-     border: 1px solid black;
-
-      th{
-        border: 1px solid black;
-      }
-
-     
-
-      tr{
-        border: 1px solid black;
-        height: 4rem;
-
-
-        text-align: center;
-      }
-
-      td{
-        border: 1px solid black;
-        width: 13rem;
-        height: 5rem;
-    
-      }
-
-
-      td#no-rows{
-        width: 100%;
-      }
-
-
-      td:first-child{
-        width: 4rem;
-        min-width: 7rem;
-      }
-
-      td#extra-row{
-      display: flex;
-      justify-content:center;
-      align-items: center;
-      border: 0px solid black;
       
+    /**
+     * Tabla personalizada de citas del día.
+     * Estilo moderno usando sombras, bordes suaves y colores corporativos.
+     */
+
+      .simple-table {
+        width: 90%;
+        margin: 3rem auto;
+        border-collapse: collapse;
+        font-family: "The Seasons";
+        background-color: white;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.12);
+
+         /**
+       * Encabezado de la tabla con color corporativo verde olivo
+       */
+
+        thead {
+          background-color: #5f6f52;
+          /* tu verde olivo */
+          color: white;
+          font-size: 1.2rem;
+
+          th {
+            padding: 12px;
+            text-align: center;
+            font-weight: normal;
+            border-right: 1px solid rgba(255, 255, 255, 0.2);
+
+            &:last-child {
+              border-right: none;
+            }
+          }
+        }
+
+        /**
+       * Filas y celdas con transición de hover y zebra stripes
+       */
+
+        tbody {
+          tr {
+            transition: background-color 0.2s ease;
+
+            &:nth-child(even) {
+              background-color: rgba(95, 111, 82, 0.08);
+              /* verde clarito suave */
+            }
+
+            &:hover {
+              background-color: rgba(95, 111, 82, 0.18);
+            }
+          }
+
+          td {
+            padding: 14px 10px;
+            text-align: center;
+            border-bottom: 1px solid #dcdcdc;
+            font-size: 1.1rem;
+          }
+
+          td:first-child {
+            font-weight: bold;
+          }
+          /**
+         * Columna de asistencia para contener checkbox centrado
+         */
+          td#extra-row {
+            border: none;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+          }
+        }
       }
-  }
-  
 
 
-    
-  }
-    
-
-
-
-
-
-
-
-
+    }
 
   }

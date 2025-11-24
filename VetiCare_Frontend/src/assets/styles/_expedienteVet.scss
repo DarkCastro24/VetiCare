@@ -1,5 +1,13 @@
 @use './variables' as *;
 
+
+/**
+ * .expedientes-app
+ * -----------------
+ * Establece el fondo, layout y comportamiento general del módulo.
+ * Controla la altura, el scroll y el tema general.
+ */
+
 .expedientes-app {
   height: 100%;
   overflow: hidden;
@@ -14,6 +22,12 @@
     }
   }
 
+  /**
+ * .app-header
+ * ------------
+ * Barra superior con logo, nombre de usuario e icono.
+ * Aplica colores corporativos y responsividad.
+ */
   .app-header {
     background-color: $verde-oscuro;
     height: 90px;
@@ -61,6 +75,13 @@
   .app-body {
     height: calc(100% - 60px);
     position: relative;
+
+
+    /* .sidebar-menu
+ * --------------
+ * Menú lateral para navegación de veterinario.
+ * Estilos para hover, estados activos y adaptaciones móviles.
+ */
 
     .sidebar-menu {
       width: 200px;
@@ -136,6 +157,18 @@
       }
     }
 
+    /**
+ * .expedientes-page
+ * ------------------
+ * Área donde se renderiza la lista de expedientes.
+ * Incluye:
+ *  - barra de herramientas (toolbar)
+ *  - barra de búsqueda
+ *  - botón "Registrar nueva mascota"
+ *  - listado con scroll
+ */
+
+
     .expedientes-page {
 
       background-color: $primary-color;
@@ -200,6 +233,18 @@
         }
       }
 
+      /**
+ * .records-list
+ * --------------
+ * Contenedor scrollable para mostrar las tarjetas de expedientes.
+ *
+ * .record-item
+ * -------------
+ * Tarjeta individual con estilo moderno, bordes redondeados,
+ * colores de la marca y botones de acción.
+ */
+
+
       .records-list {
         flex: 1 1 auto;
         overflow-y: auto;
@@ -250,6 +295,14 @@
     }
   }
 }
+
+/**
+ * Media queries (<770px y <1000px)
+ * --------------------------------
+ * Ajustan sidebar, toolbar y tarjetas para pantallas móviles.
+ * Implementan menú lateral deslizable.
+ */
+
 
 @media (max-width: 770px) {
   .expedientes-app {
