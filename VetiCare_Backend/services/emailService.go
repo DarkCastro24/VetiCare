@@ -1,7 +1,6 @@
 package services
 
 import (
-	"VetiCare/entities"
 	"VetiCare/entities/dto"
 	email "VetiCare/infrastructure/email"
 	"fmt"
@@ -13,7 +12,7 @@ type emailService struct {
 
 type EmailService interface {
 	SendWelcomeEmail(to string, subject string, userInfo dto.WelcomeEmailUser) error
-	SendPasswordResetEmail(to string, subject string, completeUser entities.User, link string) error
+	SendPasswordResetEmail(to string, subject string, link string) error
 }
 
 func NewEmailService(client email.Client) EmailService {
@@ -31,16 +30,15 @@ func (s *emailService) SendWelcomeEmail(to string, subject string, userInfo dto.
 	return s.client.Send(userInfo.Email, subject, body)
 }
 
-func (s *emailService) SendPasswordResetEmail(to string, subject string, completeUser entities.User, link string) error {
-	body := fmt.Sprintf(
-		"Hola %s,\n\nHemos recibido una solicitud para restablecer tu contraseña. \nSi no realizaste esta petición,"+
+func (s *emailService) SendPasswordResetEmail(to string, subject string, link string) error {
+	var body = fmt.Sprintf(
+		"Hola ,\n\nHemos recibido una solicitud para restablecer tu contraseña. \nSi no realizaste esta petición,"+
 			"puedes ignorar este mensaje. \n\n "+
 			"Para continuar con el proceso, utiliza el siguiente enlace proporcionado por el sistema: \n\n"+
 			"Enlace de restablecimiento: %s \n\n"+
 			"Si encuentras algún inconveniente, no dudes en contactarnos.\n\n"+
 			"Saludos",
-		completeUser.FullName,
 		link,
 	)
-	return s.client.Send(completeUser.Email, subject, body)
+	return s.client.Send(to, subject, body)
 }

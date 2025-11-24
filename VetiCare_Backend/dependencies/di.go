@@ -20,8 +20,9 @@ func BuildDeps(db *gorm.DB) Controllers {
 	adminTypeRepo := repositories.NewAdminTypeRepositoryGORM(db)
 	userRoleRepo := repositories.NewUserRoleRepositoryGORM(db)
 	speciesRepo := repositories.NewSpeciesRepositoryGORM(db)
+	tokenRepo := repositories.NewTokenResetRepositoryGORM(db)
 
-	userService := services.NewUserService(userRepo, emailService)
+	userService := services.NewUserService(userRepo, emailService, tokenRepo)
 	adminService := services.NewAdminService(adminRepo)
 	appointmentService := services.NewAppointmentService(appointmentRepo)
 	petService := services.NewPetService(petRepo)

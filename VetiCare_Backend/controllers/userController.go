@@ -22,6 +22,9 @@ func (uc *UserController) RegisterRoutes(r *mux.Router, authMiddleware func(http
 	// Public Routes
 	r.HandleFunc("/api/users/register", uc.Register).Methods("POST")
 	r.HandleFunc("/api/users/login", uc.Login).Methods("POST")
+	r.HandleFunc("/api/users/request-reset-password", uc.RequestPasswordReset).Methods("POST")
+	r.HandleFunc("/api/users/reset-password", uc.ResetPassword).Methods("POST")
+
 	// JWT Routes
 	r.Handle("/api/users", authMiddleware(http.HandlerFunc(uc.GetAllUsers))).Methods("GET")
 	r.Handle("/api/users", authMiddleware(http.HandlerFunc(uc.Register))).Methods("POST")
@@ -31,6 +34,7 @@ func (uc *UserController) RegisterRoutes(r *mux.Router, authMiddleware func(http
 	r.Handle("/api/users/{id}", authMiddleware(http.HandlerFunc(uc.UpdateUser))).Methods("PUT")
 	r.Handle("/api/users/{id}", authMiddleware(http.HandlerFunc(uc.DeleteUser))).Methods("DELETE")
 	r.Handle("/api/users/change_password", authMiddleware(http.HandlerFunc(uc.ChangePassword))).Methods("POST")
+
 }
 
 func (uc *UserController) Register(w http.ResponseWriter, r *http.Request) {
@@ -58,44 +62,32 @@ func (uc *UserController) Register(w http.ResponseWriter, r *http.Request) {
 }
 
 func (uc *UserController) ChangePassword(w http.ResponseWriter, r *http.Request) {
-	//type ChangePasswordInput struct {
-	//	Email           string `json:"email"`
-	//	CurrentPassword string `json:"current_password"`
-	//	NewPassword     string `json:"new_password"`
-	//}
 	var input dto.ChangePasswordDTO
 	if err := json.NewDecoder(r.Body).Decode(&input); err != nil {
 		http.Error(w, "JSON inválido", http.StatusBadRequest)
 		return
 	}
-
 	if input.Email == "" {
 		http.Error(w, "Email es obligatorio", http.StatusBadRequest)
 	}
-
 	if err := validators.ValidateEmail(input.Email); err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
-
 	if input.NewPassword == "" {
 		http.Error(w, "Nueva contraseña es obligatorio", http.StatusBadRequest)
 	}
-
 	if input.CurrentPassword == "" {
 		http.Error(w, "Contraseña actual es obligatoria", http.StatusBadRequest)
 		return
 	}
-
 	if input.NewPassword == input.CurrentPassword {
 		http.Error(w, "La nueva contraseña no puede ser igual a la actual", http.StatusBadRequest)
 	}
-
 	if err := validators.ValidatePassword(input.NewPassword); err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
-
 	err := uc.UserService.ChangePassword(input.Email, input.CurrentPassword, input.NewPassword)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
@@ -223,4 +215,42 @@ func (uc *UserController) DeleteUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	json.NewEncoder(w).Encode(map[string]string{"message": msg})
+}
+
+func (uc *UserController) RequestPasswordReset(w http.ResponseWriter, r *http.Request) {
+	var req dto.ResetRequestDTO
+	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+		http.Error(w, "JSON inválido", http.StatusBadRequest)
+		return
+	}
+
+	if err := validators.ValidateEmail(req.Email); err != nil {
+		http.Error(w, "Error en el email: "+err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	if err := uc.UserService.RequestEmail(req.Email); err != nil {
+		http.Error(w, "No se pudo enviar el correo: "+err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	json.NewEncoder(w).Encode(map[string]string{
+		"message": "Correo enviado",
+	})
+}
+
+func (uc *UserController) ResetPassword(w http.ResponseWriter, r *http.Request) {
+	var req dto.ResetPassDTO
+	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+		http.Error(w, "Cuerpo del request invalido: "+err.Error(), http.StatusBadRequest)
+	}
+
+	if err := validators.ValidatePassword(req.NewPassword); err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+	}
+
+	if err := uc.UserService.ResetPassword(req.Token, req.NewPassword); err != nil {
+		http.Error(w, "Error al actualizar usuario: "+err.Error(), http.StatusInternalServerError)
+	}
+
 }

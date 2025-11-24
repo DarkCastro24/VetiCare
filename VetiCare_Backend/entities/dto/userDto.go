@@ -69,3 +69,12 @@ func ToUserDTO(u *entities.User) UserDTO {
 		},
 	}
 }
+
+type ResetRequestDTO struct {
+	Email string `json:"email"`
+}
+
+type ResetPassDTO struct {
+	Token       string `json:"token"`
+	NewPassword string `json:"newPassword"`
+}

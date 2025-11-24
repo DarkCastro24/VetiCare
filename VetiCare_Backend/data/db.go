@@ -47,6 +47,7 @@ func runMigrations(db *gorm.DB) error {
 		&entities.AdminType{},
 		&entities.UserRole{},
 		&entities.Species{},
+		&entities.PassResetToken{},
 	)
 }
 
