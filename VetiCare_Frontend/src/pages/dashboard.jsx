@@ -36,7 +36,6 @@ export default function Dashboard() {
     const [error, setError] = useState(null);
     const [chartData, setChartData] = useState({ labels: [], datasets: [] });
 
-
     const [attended, setAttended] = useState(0);
     const [pending, setPending] = useState(0);
     const [totalVets, setTotalVets] = useState(0);
@@ -114,10 +113,13 @@ export default function Dashboard() {
             headers: { Authorization: token ? `Bearer ${token}` : '' }
         })
             .then(r => { if (!r.ok) throw r; return r.json(); })
-            .then(data => setVets(data))
-            .catch(e => setError(e.message))
+            .then(data => {
+                const safeData = Array.isArray(data) ? data : [];
+                setVets(safeData);
+            })
+            .catch(e => setError(e.message || 'Error al cargar veterinarios'))
             .finally(() => setLoading(false));
-    }, [token]);
+    }, [token, API_URL]);
 
     useEffect(() => {
         fetch(`${API_URL}/api/dashboard/appointments/monthly_last6months`, {
@@ -130,34 +132,39 @@ export default function Dashboard() {
                 setChartData(transformedData);
 
             })
-            .catch(console.error);
-    }, [token]);
+            .catch(err => {
+                console.error(err);
+                setChartData({ labels: [], datasets: [] });
+            });
+    }, [token, API_URL]);
 
     useEffect(() => {
         fetch(`${API_URL}/api/dashboard/appointments/attended`, {
             headers: { Authorization: token ? `Bearer ${token}` : '' }
         })
             .then(r => { if (!r.ok) throw r; return r.json(); })
-            .then(d => setAttended(d.attended_appointments ?? d.count))
+            .then(d => setAttended(d.attended_appointments ?? d.count ?? 0))
             .catch(console.error);
 
         fetch(`${API_URL}/api/dashboard/appointments/pending`, {
             headers: { Authorization: token ? `Bearer ${token}` : '' }
         })
             .then(r => { if (!r.ok) throw r; return r.json(); })
-            .then(d => setPending(d.pending_appointments ?? d.count))
+            .then(d => setPending(d.pending_appointments ?? d.count ?? 0))
             .catch(console.error);
 
         fetch(`${API_URL}/api/dashboard/vets/total`, {
             headers: { Authorization: token ? `Bearer ${token}` : '' }
         })
             .then(r => { if (!r.ok) throw r; return r.json(); })
-            .then(d => setTotalVets(d.total_vets ?? d.count))
+            .then(d => setTotalVets(d.total_vets ?? d.count ?? 0))
             .catch(console.error);
-    }, [token]);
+    }, [token, API_URL]);
 
     if (loading) return <p className="text-center my-5">Cargando datos…</p>;
     if (error) return <p className="text-danger text-center my-5">Error: {error}</p>;
+
+    const safeVets = Array.isArray(vets) ? vets : [];
 
     return (
         <Layout menuItems={menuItemsAdmin} userType="admin">

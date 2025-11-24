@@ -56,6 +56,8 @@ function MascotasOwner() {
   // Mascota a la que pertenece el historial
   const [historyPet, setHistoryPet] = useState(null);
 
+  const [isFormDirty, setIsFormDirty] = useState(false);
+
   // Usuario actual obtenido de localStorage
   const userFromLocal = JSON.parse(localStorage.getItem("user") || "{}");
 
@@ -77,12 +79,18 @@ function MascotasOwner() {
   // Abre el modal de edición
   const openEditModal = () => setShowEditModal(true);
   // Cierra el modal de edición
-  const closeEditModal = () => setShowEditModal(false);
+  const closeEditModal = () => {
+    setShowEditModal(false);
+    setIsFormDirty(false);
+  };
 
   // Abre el modal para agregar mascota
   const openAddPetModal = () => setShowAddPetModal(true);
   // Cierra el modal para agregar mascota
-  const closeAddPetModal = () => setShowAddPetModal(false);
+  const closeAddPetModal = () => {
+    setShowAddPetModal(false);
+    setIsFormDirty(false);
+  };
 
   // Cierra modal de historial médico y limpia datos
   const closeHistoryModal = () => {
@@ -147,6 +155,19 @@ function MascotasOwner() {
 
     getPets(user.id);
   }, [API_URL, token, user.id, actionWasDone]);
+
+  useEffect(() => {
+    const handleBeforeUnload = (e) => {
+      if (!isFormDirty) return;
+      e.preventDefault();
+      e.returnValue = "";
+    };
+
+    window.addEventListener("beforeunload", handleBeforeUnload);
+    return () => {
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+    };
+  }, [isFormDirty]);
 
   // Obtiene el detalle de una mascota por id
   async function getById(id) {
@@ -226,6 +247,7 @@ function MascotasOwner() {
       });
 
       setActionWasDone((prev) => !prev);
+      setIsFormDirty(false);
       closeEditModal();
     } catch (error) {
       Swal.fire({
@@ -390,6 +412,7 @@ function MascotasOwner() {
         setBirthDate("");
         setSpeciesId("1");
         setBreed("");
+        setIsFormDirty(false);
         setActionWasDone((prev) => !prev);
       } else {
         closeAddPetModal();
@@ -568,7 +591,10 @@ function MascotasOwner() {
                 <input
                   type="text"
                   value={editedName}
-                  onChange={(e) => setEditedName(e.target.value)}
+                  onChange={(e) => {
+                    setEditedName(e.target.value);
+                    setIsFormDirty(true);
+                  }}
                   required
                 />
               </div>
@@ -577,7 +603,10 @@ function MascotasOwner() {
                 <input
                   type="text"
                   value={editedBreed}
-                  onChange={(e) => setEditedBreed(e.target.value)}
+                  onChange={(e) => {
+                    setEditedBreed(e.target.value);
+                    setIsFormDirty(true);
+                  }}
                   required
                 />
               </div>
@@ -603,7 +632,10 @@ function MascotasOwner() {
               <input
                 type="text"
                 value={name}
-                onChange={(e) => setName(e.target.value)}
+                onChange={(e) => {
+                  setName(e.target.value);
+                  setIsFormDirty(true);
+                }}
                 required
               />
 
@@ -611,14 +643,20 @@ function MascotasOwner() {
               <input
                 type="date"
                 value={birthDate}
-                onChange={(e) => setBirthDate(e.target.value)}
+                onChange={(e) => {
+                  setBirthDate(e.target.value);
+                  setIsFormDirty(true);
+                }}
                 required
               />
 
               <label>Especie</label>
               <select
                 value={speciesId}
-                onChange={(e) => setSpeciesId(e.target.value)}
+                onChange={(e) => {
+                  setSpeciesId(e.target.value);
+                  setIsFormDirty(true);
+                }}
                 required
               >
                 <option value="1">Perro</option>
@@ -630,7 +668,10 @@ function MascotasOwner() {
               <input
                 type="text"
                 value={breed}
-                onChange={(e) => setBreed(e.target.value)}
+                onChange={(e) => {
+                  setBreed(e.target.value);
+                  setIsFormDirty(true);
+                }}
                 required
                 style={{ marginBottom: "25px" }}
               />

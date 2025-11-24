@@ -3,13 +3,10 @@ import registerImage from "../assets/images/register/registerDog.jpg";
 import logoImage from "../assets/images/logoHeader.png";
 import { Link, useNavigate } from 'react-router-dom';
 
-
-
 import Swal from 'sweetalert2';
 import "sweetalert2/dist/sweetalert2.min.css";
 
 import { useForm } from 'react-hook-form';
-
 
 function Register() {
 
@@ -58,7 +55,7 @@ function Register() {
             });
 
             if (swalResult.isConfirmed) {
-                navigate("/login"); 
+                navigate("/login");
             }
 
         } catch (error) {
@@ -69,8 +66,19 @@ function Register() {
             });
         }
     };
+
     return (
         <div id="main-container-register">
+
+           
+            <button
+                type="button"
+                className="back-top-button"
+                onClick={() => navigate("/")}
+            >
+                ← Regresar
+            </button>
+
             <div id='image-container-register'>
                 <Image src={registerImage} fluid width={250} height={100} />
             </div>
@@ -116,7 +124,6 @@ function Register() {
                             {...register("dui", {
                                 required: "El campo DUI es requerido",
                                 pattern: {
-                                    // Ejemplo 00000000-0
                                     value: /^[0-9]{8}-[0-9]{1}$/,
                                     message: "El DUI debe tener el formato 00000000-0",
                                 },

@@ -8,6 +8,41 @@
   height: 100%;
   background-color: $primary-color;
   overflow-x: hidden;
+  position: relative;
+
+  .back-top-button {
+    position: absolute;
+    top: 1.5rem;
+    left: 1.5rem;
+    z-index: 10;
+
+    background: $cafe;
+    border-radius: 999px;
+    border: 1px solid black;
+    padding: 0.5rem 1rem;
+    font-family: "The Seasons";
+    font-size: 1.2rem;
+    color: black;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    transition: all 0.2s ease;
+
+    &:hover {
+      background-color: $cafe;
+      color: white;
+      filter: brightness(0.95);
+      text-decoration: underline;
+    }
+
+    @include respond-to($mobile) {
+      top: 1rem;
+      left: 1rem;
+      font-size: 1.1rem;
+      padding: 0.25rem 0.9rem;
+    }
+  }
 
   #image-container-register {
     height: 100%;
@@ -108,17 +143,36 @@
     }
 
     #logo-container-register {
-      flex: content;
-      flex-direction: row;
+      display: flex;
       justify-content: left;
+      flex-direction: row; 
       padding-left: 2rem;
       width: 100%;
 
-      img {
+       @include respond-to($tablet) {
+
+        justify-content: right;
+        margin-top: 5vh;
+      }
+      @include respond-to($mobile) {
+
+        justify-content: right;
+        margin-top: 10vh;
+      }
+
+      
+
+      @include respond-to($desktop) {
+
         justify-content: left;
+      }
+
+      img {
+
 
         @include respond-to($desktop) {
           padding-left: 1.5em;
+
         }
       }
     }
@@ -201,7 +255,7 @@
         font-family: "The Seasons";
         font-size: 1.5rem;
         padding: 0.4rem;
-        transition: filter 0.2s ease; 
+        transition: filter 0.2s ease;
 
         &:hover {
           filter: brightness(0.9);
@@ -221,7 +275,7 @@
         color: $cafe;
         font-size: 1.4rem;
         text-decoration: none;
-        transition: text-decoration 0.2s ease; // opcional, más suave
+        transition: text-decoration 0.2s ease;
 
         &:hover {
           text-decoration: underline;

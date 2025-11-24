@@ -3,9 +3,7 @@ import loginImage from "../assets/images/login/login-image.jpg";
 import logoImage from "../assets/images/logoHeader.png";
 import React from "react";
 import { useForm } from "react-hook-form";
-import { Link } from "react-router-dom";
-
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 import Swal from "sweetalert2";
 import "sweetalert2/dist/sweetalert2.min.css";
@@ -17,7 +15,9 @@ function Login() {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm();
+  } = useForm({
+    mode: "onChange",
+  });
 
   const navigate = useNavigate();
 
@@ -33,24 +33,19 @@ function Login() {
         const errorText = await response.text();
         return Swal.fire({
           icon: "error",
-          title: "Login fallido",
-          text: errorText,
+          title: "Inicio de sesión fallido",
+          text: "Credenciales incorrectas.",
         });
       }
 
       const result = await response.json();
 
       localStorage.setItem("token", result.token);
-
       localStorage.setItem("role_id", result.user.role_id);
-
       localStorage.setItem("user", JSON.stringify(result.user));
-
       localStorage.setItem("email", JSON.stringify(result.user.email));
-
       localStorage.setItem("pf", JSON.stringify(result.user.pf));
 
-      //Manda a otra vista segun su rol del user
       if (result.user.role_id === 1) {
         navigate("/mis_citas", { replace: true });
       } else if (result.user.role_id === 2) {
@@ -69,6 +64,14 @@ function Login() {
 
   return (
     <div id="main-container">
+      <button
+        type="button"
+        className="back-top-button"
+        onClick={() => navigate("/")}
+      >
+        ← Regresar
+      </button>
+
       <div id="image-container">
         <Image src={loginImage} fluid width={250} height={100} />
       </div>
@@ -80,24 +83,48 @@ function Login() {
 
         <h4>¡Bienvenido!</h4>
 
-        <form action="submit" onSubmit={handleSubmit(onSubmit)}>
-          <label htmlFor="correo"> Correo electrónico</label>
-          <input
-            type="text"
-            id="correo"
-            {...register("email", { required: "Email is required" })}
-          />
-          {errors.email && <p>{errors.email.message}</p>}
-          <label htmlFor="password"> Contraseña</label>
-          <input
-            type="password"
-            id="password"
-            {...register("password", { required: "Password is required" })}
-          />
-          <button>Iniciar Sesión</button>
+        <form onSubmit={handleSubmit(onSubmit)} noValidate>
+          <div className="field-group">
+            <label htmlFor="correo">Correo electrónico</label>
+            <input
+              type="email"
+              id="correo"
+              {...register("email", {
+                required: "El campo correo es requerido",
+                pattern: {
+                  value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+                  message: "Ingresa un correo electrónico válido",
+                },
+              })}
+            />
+            <p className={`error-message ${errors.email ? "" : "hidden"}`}>
+              {errors.email?.message}
+            </p>
+          </div>
+
+          <div className="field-group">
+            <label htmlFor="password">Contraseña</label>
+            <input
+              type="password"
+              id="password"
+              {...register("password", {
+                required: "El campo contraseña es requerido",
+                minLength: {
+                  value: 8,
+                  message: "La contraseña debe tener al menos 8 caracteres",
+                },
+              })}
+            />
+            <p className={`error-message ${errors.password ? "" : "hidden"}`}>
+              {errors.password?.message}
+            </p>
+          </div>
+
+          <button type="submit">Iniciar Sesión</button>
         </form>
+
         <div id="register-link">
-          <a href="/register"> ¿No tienes una cuenta? Regístrate</a>
+          <Link to="/register">¿No tienes una cuenta? Regístrate</Link>
         </div>
       </div>
     </div>
