@@ -194,19 +194,6 @@ func (s *UserService) RequestEmail(email string) error {
 	}
 
 	resetURL := fmt.Sprintf("%s/reset-password?token=%s", os.Getenv("FRONTEND_URL"), tokenStr)
-
-	//message := fmt.Sprintf(
-	//	"Hola %s,\n\n"+
-	//		"Hemos recibido una solicitud para restablecer tu contraseña.\n"+
-	//		"Si no realizaste esta petición, puedes ignorar este mensaje.\n\n"+
-	//		"Para continuar con el proceso, utiliza el siguiente enlace proporcionado por el sistema:\n\n"+
-	//		"Enlace de restablecimiento: %s\n\n"+
-	//		"Si encuentras algún inconveniente, no dudes en contactarnos.\n\n"+
-	//		"Saludos.",
-	//	user.FullName,
-	//	resetURL,
-	//)
-
 	return s.EmailService.SendPasswordResetEmail(user.Email, "Olvidaste tu contraseña", resetURL)
 
 }
