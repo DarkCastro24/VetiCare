@@ -49,7 +49,6 @@ Para ejecutar correctamente este proyecto, se requieren los siguientes elementos
 4. Ejecuta el siguiente comando para instalar las dependencias:
    bash
    go mod tidy
-   
 
 ### Frontend
 
@@ -68,23 +67,26 @@ Para ejecutar correctamente este proyecto, se requieren los siguientes elementos
 ### Backend
 
 Para ejecutar el backend, utiliza el siguiente comando:
-bash
-go run main.go
 
+```bash
+go run main.go
+```
 
 ### Frontend
 
 Para ejecutar el frontend en modo desarrollo, usa:
-bash
+
+```bash
 npm run dev
+```
 
+## 4.1. Docker Compose (Contenedor)
 
-### 4.1. Docker compose (Contenedor)
+Para levantar el contenedor con todo el sistema, ejecuta:
 
-Para levantar el contenedor con todo el sistema ejecuta el siguiente comando:
-bash
+```bash
 docker-compose up --build
-
+```
 
 ---
 
