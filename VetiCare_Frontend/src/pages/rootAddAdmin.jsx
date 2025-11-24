@@ -108,10 +108,11 @@ export default function RootAddAdmin() {
       });
       if (!res.ok) {
         const errorText = await response.text();
+        const friendlyMessage = mensajeErrorForm(errorText);
         return Swal.fire({
           icon: 'error',
           title: 'Error',
-          text: errorText,
+          text: friendlyMessage,
         });
       }
       const data = await res.json();
@@ -126,11 +127,13 @@ export default function RootAddAdmin() {
     }
 
     } catch (err) {
+      /*
       await Swal.fire({
         icon: 'error',
         title: 'Error',
-        text: error.message || 'No se pudo conectar con el servidor.',
+        text:'Nwerwerwer.',
       });
+     */
     } finally {
       setLoading(false);
     }

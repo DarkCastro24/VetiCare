@@ -372,23 +372,23 @@ function VeterinariansAdmin() {
 
       if (!response.ok) {
         const rawError = await response.text();
-        const friendly = mensajeErrorForm(rawError);
+       const friendlyMessage = mensajeErrorForm(rawError);
 
-        Swal.fire({
-          icon: "error",
-          title: "No se pudo crear el veterinario",
-          text: rawError,
-        });
-
-        return;
+      Swal.fire({
+        icon: "error",
+        title: "Error al crear usuario",
+        text: friendlyMessage, // ← Ahora mostrará el mensaje específico
+        confirmButtonText: "Entendido"
+      });
+      return;
       }
 
       Swal.fire({
         icon: "success",
         title: "Veterinario creado",
         text: "El registro se completó con éxito",
-        timer: 2500,
-        showConfirmButton: false,
+        timer: 5500,
+        showConfirmButton: true,
       });
 
       getData();   // Actualiza tabla
@@ -396,7 +396,11 @@ function VeterinariansAdmin() {
 
     } catch (error) {
       console.error("Create Vet Error:", error);
-      Swal.fire("Error", "No se pudo conectar con el servidor", "error");
+      Swal.fire({
+      icon: "error",
+      title: "Error al ingresar datos",
+      text: error.message, 
+    });
     }
   }
 

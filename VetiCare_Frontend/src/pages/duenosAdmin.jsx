@@ -97,9 +97,9 @@ function DuenosAdmin() {
       setFilteredOwners(filteredData);
     } catch (error) {
       await Swal.fire({
-        icon: 'error',
-        title: 'Error',
-        text: error.message || 'No se pudo conectar con el servidor.',
+        icon: 'info',
+        title: 'Sin dueños',
+        text: 'No encuentra ningun usuario registrado',
       });
     }
   }
@@ -168,7 +168,7 @@ function DuenosAdmin() {
       await Swal.fire({
         icon: 'error',
         title: 'Error',
-        text: error.message || 'No se pudo conectar con el servidor.',
+        text:'No se pudo conectar con el servidor.',
       });
     }
   };
@@ -208,7 +208,7 @@ function DuenosAdmin() {
         return Swal.fire({
           icon: 'error',
           title: 'Error',
-          text: errorText,
+          text: 'No se pudo conectar con el servidor.',
         });
       }
       console.log(response.status);
@@ -218,7 +218,7 @@ function DuenosAdmin() {
       await Swal.fire({
         icon: 'error',
         title: 'Error',
-        text: error.message || 'No se pudo conectar con el servidor.',
+        text: 'No se pudo conectar con el servidor.',
       });
     }
   }
@@ -277,7 +277,7 @@ function DuenosAdmin() {
           return Swal.fire({
             icon: 'error',
             title: 'Error',
-            text: errorText,
+            text: [errorText],
           });
         }
         const result = await response.json();

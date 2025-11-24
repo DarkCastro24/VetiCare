@@ -144,8 +144,8 @@ function CitasAdmin() {
         setFilteredAppointments(filteredData);
       } catch (error) {
         await Swal.fire({
-          icon: 'error',
-          title: 'Error',
+          icon: 'info',
+          title: 'Sin citas',
           text: 'No se encontró ningún registro de citas',
         });
       }
