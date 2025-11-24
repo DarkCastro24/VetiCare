@@ -6,36 +6,36 @@ function EditAppointmentForm({ initialData, onSubmit }) {
   const [time, setTime] = useState('');
   const [statusId, setStatusId] = useState(1);
 
-useEffect(() => {
-  if (initialData) {
-    const formatted = formatForInput(initialData.date); 
-    setDate(formatted); 
-    setTime(formatTimeForInput(initialData.time));
-    setStatusId(initialData.status_id);
-  }
-}, [initialData]);
+  useEffect(() => {
+    if (initialData) {
+     // const formatted = formatForInput(initialData.date);
+     // setDate(formatted);
+      //setTime(formatTimeForInput(initialData.time));
+      setStatusId(initialData.status_id);
+    }
+  }, [initialData]);
 
 
-  const handleSubmit = async(e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
 
     console.log(initialData);
-      const updatedData = {
-        ...initialData,
-      date: formatForAPI(date) ,           
-      time: time,            
+    const updatedData = {
+      ...initialData,
+      //date: formatForAPI(date) ,           
+      // time: time,            
       status_id: Number(statusId),
 
-           
-     }
+
+    }
 
     onSubmit(initialData.id, updatedData);
-    
-     
+
+
   };
 
-  
+  /*
  function formatForInput(dateStr) {
     const [day, month, year] = dateStr.split('-');
   return `${year}-${month}-${day}`; 
@@ -49,14 +49,15 @@ useEffect(() => {
     const [year, month, day] = dateStr.split('-');
   return `${day}-${month}-${year}`; 
   }
+  */
 
 
   return (
     <form className="edit-form" onSubmit={handleSubmit}>
-  
 
 
-      
+      {/*
+
       <label htmlFor="date">Fecha:</label>
       <input
         type="date"
@@ -65,7 +66,7 @@ useEffect(() => {
         onChange={(e) => setDate(e.target.value)}
         required
       />
-  
+
 
 
       <label htmlFor="time">Hora:</label>
@@ -77,7 +78,7 @@ useEffect(() => {
         required
       />
 
-
+      */}
       <label htmlFor="status">Estado:</label>
       <select
         id="status"
@@ -88,9 +89,9 @@ useEffect(() => {
         <option value={2}>Finalizada</option>
         <option value={3}>Cancelada</option>
       </select>
-      
 
-   
+
+
 
       <button type="submit" className='edit-submit'>Guardar Cambios</button>
     </form>
@@ -98,7 +99,7 @@ useEffect(() => {
 
 
 
- 
+
 
 
 
