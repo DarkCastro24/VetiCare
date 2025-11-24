@@ -36,7 +36,6 @@ export default function Dashboard() {
     const [error, setError] = useState(null);
     const [chartData, setChartData] = useState({ labels: [], datasets: [] });
 
-
     const [attended, setAttended] = useState(0);
     const [pending, setPending] = useState(0);
     const [totalVets, setTotalVets] = useState(0);
@@ -46,10 +45,13 @@ export default function Dashboard() {
             headers: { Authorization: token ? `Bearer ${token}` : '' }
         })
             .then(r => { if (!r.ok) throw r; return r.json(); })
-            .then(data => setVets(data))
-            .catch(e => setError(e.message))
+            .then(data => {
+                const safeData = Array.isArray(data) ? data : [];
+                setVets(safeData);
+            })
+            .catch(e => setError(e.message || 'Error al cargar veterinarios'))
             .finally(() => setLoading(false));
-    }, [token]);
+    }, [token, API_URL]);
 
     useEffect(() => {
         fetch(`${API_URL}/api/dashboard/appointments/monthly_last6months`, {
@@ -61,8 +63,10 @@ export default function Dashboard() {
                     "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"
                 ];
 
-                const labels = DATA.map(i => monthNames[i.month - 1]);
-                const counts = DATA.map(i => i.count);
+                const safeData = Array.isArray(DATA) ? DATA : [];
+                const labels = safeData.map(i => monthNames[(i.month ?? 1) - 1]);
+                const counts = safeData.map(i => i.count ?? 0);
+
                 setChartData({
                     labels,
                     datasets: [{
@@ -89,46 +93,46 @@ export default function Dashboard() {
                     }]
                 });
             })
-            .catch(console.error);
-    }, [token]);
+            .catch(err => {
+                console.error(err);
+                setChartData({ labels: [], datasets: [] });
+            });
+    }, [token, API_URL]);
 
     useEffect(() => {
         fetch(`${API_URL}/api/dashboard/appointments/attended`, {
             headers: { Authorization: token ? `Bearer ${token}` : '' }
         })
             .then(r => { if (!r.ok) throw r; return r.json(); })
-            .then(d => setAttended(d.attended_appointments ?? d.count))
+            .then(d => setAttended(d.attended_appointments ?? d.count ?? 0))
             .catch(console.error);
 
         fetch(`${API_URL}/api/dashboard/appointments/pending`, {
             headers: { Authorization: token ? `Bearer ${token}` : '' }
         })
             .then(r => { if (!r.ok) throw r; return r.json(); })
-            .then(d => setPending(d.pending_appointments ?? d.count))
+            .then(d => setPending(d.pending_appointments ?? d.count ?? 0))
             .catch(console.error);
 
         fetch(`${API_URL}/api/dashboard/vets/total`, {
             headers: { Authorization: token ? `Bearer ${token}` : '' }
         })
             .then(r => { if (!r.ok) throw r; return r.json(); })
-            .then(d => setTotalVets(d.total_vets ?? d.count))
+            .then(d => setTotalVets(d.total_vets ?? d.count ?? 0))
             .catch(console.error);
-    }, [token]);
+    }, [token, API_URL]);
 
     if (loading) return <p className="text-center my-5">Cargando datos…</p>;
     if (error) return <p className="text-danger text-center my-5">Error: {error}</p>;
+
+    const safeVets = Array.isArray(vets) ? vets : [];
 
     return (
         <Layout menuItems={menuItemsAdmin} userType="admin">
             <div id="admin-main-container">
                 <h2 className="records-header__title mb-0 me-3" style={{
-                    //backgroundColor: '#374f59',
                     height: '3rem',
-                    //width: '400px',
                     color: '#374f59',
-                    //padding: arriba derecha abajo izquierda;
-                    //padding: '1rem 1rem 2rem 3rem',
-                    //margin: '1rem 1.2rem 0.5rem 5rem',
                     margin: '1rem 9rem 1rem 2rem',
                     border: 'none',
                     borderRadius: '50px',
@@ -139,8 +143,6 @@ export default function Dashboard() {
                 }}>Dashboard</h2>
 
                 <div className="container-fluid px-4 py-4">
-
-
                     <div className="row g-4">
                         <div className="col-12 col-md-4 col-lg-3">
                             <div className="row row-cols-1 g-2">
@@ -179,14 +181,22 @@ export default function Dashboard() {
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                    {vets.slice(0, 5).map(v => (
-                                                        <tr key={v.vet_id}>
-                                                            <td className="text-truncate" style={{ maxWidth: '200px' }} >
-                                                                {v.vet_name}
+                                                    {safeVets.length === 0 ? (
+                                                        <tr>
+                                                            <td colSpan={2} className="text-center">
+                                                                No hay datos disponibles
                                                             </td>
-                                                            <td className="text-end">{v.appointments}</td>
                                                         </tr>
-                                                    ))}
+                                                    ) : (
+                                                        safeVets.slice(0, 5).map(v => (
+                                                            <tr key={v.vet_id}>
+                                                                <td className="text-truncate" style={{ maxWidth: '200px' }} >
+                                                                    {v.vet_name}
+                                                                </td>
+                                                                <td className="text-end">{v.appointments}</td>
+                                                            </tr>
+                                                        ))
+                                                    )}
                                                 </tbody>
                                             </table>
                                         </div>
@@ -198,7 +208,10 @@ export default function Dashboard() {
                                             Cantidad de citas por mes
                                         </h5>
                                         <div style={{ width: '100%', height: '300px' }}>
-                                            <Bar data={chartData} className="w-100 h-100" />
+                                            <Bar
+                                                data={chartData && chartData.labels ? chartData : { labels: [], datasets: [] }}
+                                                className="w-100 h-100"
+                                            />
                                         </div>
                                     </div>
                                 </div>
