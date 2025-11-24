@@ -2,6 +2,7 @@ package repositories
 
 import (
 	"VetiCare/entities"
+	"github.com/google/uuid"
 	"time"
 )
 
@@ -15,7 +16,9 @@ type UserRepository interface {
 	GetAll() ([]entities.User, error)
 	Update(id string, fields map[string]interface{}) error
 	Delete(id string) (int, error)
-	ChangePassword(email, currentPassword, newPassword string) error
+	ChangePassword(user *entities.User, hashedPassword string) error
+	// new function
+	GetByDUI(dui string) (*entities.User, error)
 }
 
 type AdminRepository interface {
@@ -80,4 +83,10 @@ type UserRoleRepository interface {
 	Create(role *entities.UserRole) error
 	Update(id int, fields map[string]interface{}) error
 	Delete(id int) error
+}
+
+type TokenRepository interface {
+	Create(token *entities.PassResetToken) error
+	Get(token string) (*entities.PassResetToken, error)
+	MarkTokenUsed(id uuid.UUID) error
 }

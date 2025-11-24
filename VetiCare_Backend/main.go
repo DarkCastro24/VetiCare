@@ -1,8 +1,8 @@
 package main
 
 import (
-	"VetiCare/app"
 	"VetiCare/dependencies"
+	"VetiCare/infrastructure"
 	"fmt"
 
 	"github.com/joho/godotenv"
@@ -17,7 +17,7 @@ func main() {
 		log.Println("Error al cargar .env:", err)
 	}
 
-	application := app.InitApp()
+	application := infrastructure.InitApp()
 	db := application.InitDB()
 	deps := dependencies.BuildDeps(db)
 	application.InitRouter(deps)

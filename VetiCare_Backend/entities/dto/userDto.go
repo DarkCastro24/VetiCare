@@ -20,6 +20,30 @@ type UserDTO struct {
 	Pf       int         `json:"pf"`
 }
 
+type LoginDTO struct {
+	Email    string `json:"email"`
+	Password string `json:"password"`
+}
+
+type WelcomeEmailUser struct {
+	FullName string `json:"full_name" validate:"required,alphabetic"`
+	Email    string `json:"email" validate:"required,emailFormat"`
+	Password string `json:"password" validate:"required"`
+}
+
+type UpdateUserDTO struct {
+	FullName *string `json:"full_name" validate:"omitempty, alphabetic"`
+	DUI      *string `json:"dui" validate:"omitempty,duiFormat"`
+	Phone    *string `json:"phone" validate:"omitempty,phoneFormat"`
+	Email    *string `json:"email" validate:"omitempty,emailFormat"`
+}
+
+type ChangePasswordDTO struct {
+	Email           string `json:"email"`
+	CurrentPassword string `json:"current_password"`
+	NewPassword     string `json:"new_password"`
+}
+
 type UserSummaryDTO struct {
 	ID       string `json:"id"`
 	FullName string `json:"full_name"`
@@ -47,4 +71,13 @@ func ToUserDTO(u *entities.User) UserDTO {
 		},
 		Pf: u.Pf,
 	}
+}
+
+type ResetRequestDTO struct {
+	Email string `json:"email"`
+}
+
+type ResetPassDTO struct {
+	Token       string `json:"token"`
+	NewPassword string `json:"newPassword"`
 }
