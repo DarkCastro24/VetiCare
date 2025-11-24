@@ -22,11 +22,13 @@ function ActionComponents({ onEdit, onDelete, elementId, hideEdit = false }) {
                 <img src={pencil} alt="edit icon" />
             </div>
             */}
+            
             {!hideEdit && onEdit && (
                 <div onClick={handleEdit} id="edit-btn" className='action-button'>
                     <img src={pencil} alt="edit icon" />
                 </div>
             )}
+
             <div onClick={handleDelete} id="delete-btn" className='action-button'>
                 <img src={x} alt="delete icon" />
             </div>

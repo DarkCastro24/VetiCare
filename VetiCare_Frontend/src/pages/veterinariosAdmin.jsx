@@ -411,7 +411,6 @@ function VeterinariansAdmin() {
 
   return (
     <Layout userName="Alison lol" menuItems={menuItemsAdmin} userType="admin">
-
       
       <div id="admin-main-container">
         <h2 className="records-header__title mb-0 me-3" style={{
@@ -427,7 +426,7 @@ function VeterinariansAdmin() {
                 }}>Veterinarios</h2>
         
         <div className="search-add-row">
-          <SearchBox onSearch={handleSearch} placeholder="Busque por nombre" />
+          <SearchBox onSearch={handleSearch} placeholder="Búsqueda por nombre" />
           <AddButton onClick={handleCreate} />
         </div>
         <AdminTable rows={filteredVets} columns={admminVeterinarianColumns} onEdit={handleEdit} onDelete={deleteVeterinarian} />

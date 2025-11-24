@@ -347,7 +347,7 @@ function CitasAdmin() {
           justifyContent: 'center',
         }}>Citas</h2>
 
-        <SearchBox onSearch={handleSearch} placeholder="Busque cita por dueño" />
+        <SearchBox onSearch={handleSearch} placeholder="Búsqueda por dueño" />
         <div className="mb-5">
           <AdminTable rows={filteredAppointments} columns={adminAppointmentColumns} onEdit={handleEdit} onDelete={deleteAppointment} 
           hideEdit={true}  />
