@@ -1,10 +1,8 @@
 package controllers
 
 import (
-	"VetiCare/entities"
 	"VetiCare/entities/dto"
 	"VetiCare/services"
-	"VetiCare/utils"
 	"VetiCare/validators"
 	"encoding/json"
 	"fmt"
@@ -13,17 +11,20 @@ import (
 )
 
 type UserController struct {
-	Service *services.UserService
+	UserService *services.UserService
 }
 
 func NewUserController(service *services.UserService) *UserController {
-	return &UserController{Service: service}
+	return &UserController{UserService: service}
 }
 
 func (uc *UserController) RegisterRoutes(r *mux.Router, authMiddleware func(http.Handler) http.Handler) {
 	// Public Routes
 	r.HandleFunc("/api/users/register", uc.Register).Methods("POST")
 	r.HandleFunc("/api/users/login", uc.Login).Methods("POST")
+	r.HandleFunc("/api/users/request-reset-password", uc.RequestPasswordReset).Methods("POST")
+	r.HandleFunc("/api/users/reset-password", uc.ResetPassword).Methods("POST")
+
 	// JWT Routes
 	r.Handle("/api/users", authMiddleware(http.HandlerFunc(uc.GetAllUsers))).Methods("GET")
 	r.Handle("/api/users", authMiddleware(http.HandlerFunc(uc.Register))).Methods("POST")
@@ -33,6 +34,7 @@ func (uc *UserController) RegisterRoutes(r *mux.Router, authMiddleware func(http
 	r.Handle("/api/users/{id}", authMiddleware(http.HandlerFunc(uc.UpdateUser))).Methods("PUT")
 	r.Handle("/api/users/{id}", authMiddleware(http.HandlerFunc(uc.DeleteUser))).Methods("DELETE")
 	r.Handle("/api/users/change_password", authMiddleware(http.HandlerFunc(uc.ChangePassword))).Methods("POST")
+
 }
 
 func (uc *UserController) Register(w http.ResponseWriter, r *http.Request) {
@@ -45,87 +47,48 @@ func (uc *UserController) Register(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
-
-	passwordPlain := userDTO.Password
-	if passwordPlain == "" {
-		passwordPlain = utils.GenerateRandomPassword(8)
-	}
-
-	hashedPassword, err := utils.HashPassword(passwordPlain)
-	
+	// 	Only calls the service to do business logic
+	user, err := uc.UserService.Register(&userDTO)
 	if err != nil {
-		http.Error(w, "Error al hashear contraseña", http.StatusInternalServerError)
-		return
-	}
-
-	user := entities.User{
-		FullName:     userDTO.FullName,
-		DUI:          userDTO.DUI,
-		Phone:        userDTO.Phone,
-		Email:        userDTO.Email,
-		RoleID:       userDTO.RoleID,
-		StatusID:     userDTO.StatusID,
-		PasswordHash: hashedPassword,
-	}
-
-	if err := uc.Service.Register(&user); err != nil {
 		http.Error(w, "El correo o dui ingresados ya estan en uso", http.StatusInternalServerError)
 		return
 	}
 
-	completeUser, err := uc.Service.GetUserByID(user.ID.String())
-	if err != nil {
-		http.Error(w, "Error al obtener usuario creado: "+err.Error(), http.StatusInternalServerError)
-		return
-	}
-
-	body := fmt.Sprintf(
-		"Hola %s,\n\nTe informamos que has sido registrado correctamente en el sistema, "+
-			"tus credenciales asignadas son las siguientes, tienes la opción de cambiar tu contraseña en el sistema si así lo deseas.\n\nUsuario: %s\nContraseña: %s\n\nSaludos.",
-		completeUser.FullName,
-		completeUser.Email,
-		passwordPlain,
-	)
-
-	go func() {
-		if err := utils.SendMail(completeUser.Email, "Registro exitoso en PetVet - Usuario", body); err != nil {
-			fmt.Println("Error enviando correo al usuario:", err)
-		}
-	}()
-
 	w.WriteHeader(http.StatusCreated)
 	json.NewEncoder(w).Encode(map[string]interface{}{
 		"message": "Usuario registrado correctamente",
-		"user":    dto.ToUserDTO(completeUser),
+		"user":    dto.ToUserDTO(user),
 	})
 }
 
 func (uc *UserController) ChangePassword(w http.ResponseWriter, r *http.Request) {
-	type ChangePasswordInput struct {
-		Email           string `json:"email"`
-		CurrentPassword string `json:"current_password"`
-		NewPassword     string `json:"new_password"`
-	}
-	var input ChangePasswordInput
+	var input dto.ChangePasswordDTO
 	if err := json.NewDecoder(r.Body).Decode(&input); err != nil {
 		http.Error(w, "JSON inválido", http.StatusBadRequest)
 		return
 	}
-
+	if input.Email == "" {
+		http.Error(w, "Email es obligatorio", http.StatusBadRequest)
+	}
 	if err := validators.ValidateEmail(input.Email); err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
+	}
+	if input.NewPassword == "" {
+		http.Error(w, "Nueva contraseña es obligatorio", http.StatusBadRequest)
 	}
 	if input.CurrentPassword == "" {
 		http.Error(w, "Contraseña actual es obligatoria", http.StatusBadRequest)
 		return
 	}
+	if input.NewPassword == input.CurrentPassword {
+		http.Error(w, "La nueva contraseña no puede ser igual a la actual", http.StatusBadRequest)
+	}
 	if err := validators.ValidatePassword(input.NewPassword); err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
-
-	err := uc.Service.ChangePassword(input.Email, input.CurrentPassword, input.NewPassword)
+	err := uc.UserService.ChangePassword(input.Email, input.CurrentPassword, input.NewPassword)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
@@ -137,16 +100,12 @@ func (uc *UserController) ChangePassword(w http.ResponseWriter, r *http.Request)
 }
 
 func (uc *UserController) Login(w http.ResponseWriter, r *http.Request) {
-	type loginInput struct {
-		Email    string `json:"email"`
-		Password string `json:"password"`
-	}
-	var input loginInput
+	var input dto.LoginDTO
 	if err := json.NewDecoder(r.Body).Decode(&input); err != nil {
 		http.Error(w, "JSON inválido", http.StatusBadRequest)
 		return
 	}
-	user, err := uc.Service.Login(input.Email, input.Password)
+	user, token, err := uc.UserService.Login(input)
 	if err != nil {
 		http.Error(w, "Credenciales inválidas: "+err.Error(), http.StatusUnauthorized)
 		return
@@ -155,11 +114,7 @@ func (uc *UserController) Login(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Su usuario esta desactivado, no puede iniciar sesión", http.StatusUnauthorized)
 		return
 	}
-	token, err := utils.GenerateJWT(user.ID.String(), user.Email)
-	if err != nil {
-		http.Error(w, "No se pudo generar el token: "+err.Error(), http.StatusInternalServerError)
-		return
-	}
+
 	json.NewEncoder(w).Encode(map[string]interface{}{
 		"message": "Login exitoso",
 		"user":    dto.ToUserDTO(user),
@@ -168,7 +123,7 @@ func (uc *UserController) Login(w http.ResponseWriter, r *http.Request) {
 }
 
 func (uc *UserController) GetAllUsers(w http.ResponseWriter, _ *http.Request) {
-	users, err := uc.Service.GetAllUsers()
+	users, err := uc.UserService.GetAllUsers()
 	if err != nil {
 		http.Error(w, "Error al obtener usuarios: "+err.Error(), http.StatusInternalServerError)
 		return
@@ -181,7 +136,7 @@ func (uc *UserController) GetAllUsers(w http.ResponseWriter, _ *http.Request) {
 }
 
 func (uc *UserController) GetOwners(w http.ResponseWriter, _ *http.Request) {
-	users, err := uc.Service.GetUsersByRole(1) // Dueños
+	users, err := uc.UserService.GetUsersByRole(1) // Dueños
 	if err != nil {
 		http.Error(w, "Error al obtener dueños: "+err.Error(), http.StatusInternalServerError)
 		return
@@ -194,7 +149,7 @@ func (uc *UserController) GetOwners(w http.ResponseWriter, _ *http.Request) {
 }
 
 func (uc *UserController) GetVets(w http.ResponseWriter, _ *http.Request) {
-	users, err := uc.Service.GetUsersByRole(2) // Veterinarios
+	users, err := uc.UserService.GetUsersByRole(2) // Veterinarios
 	if err != nil {
 		http.Error(w, "Error al obtener veterinarios: "+err.Error(), http.StatusInternalServerError)
 		return
@@ -208,7 +163,7 @@ func (uc *UserController) GetVets(w http.ResponseWriter, _ *http.Request) {
 
 func (uc *UserController) GetUserByID(w http.ResponseWriter, r *http.Request) {
 	id := mux.Vars(r)["id"]
-	user, err := uc.Service.GetUserByID(id)
+	user, err := uc.UserService.GetUserByID(id)
 	if err != nil {
 		http.Error(w, "Error al buscar usuario: "+err.Error(), http.StatusInternalServerError)
 		return
@@ -222,40 +177,24 @@ func (uc *UserController) GetUserByID(w http.ResponseWriter, r *http.Request) {
 
 func (uc *UserController) UpdateUser(w http.ResponseWriter, r *http.Request) {
 	id := mux.Vars(r)["id"]
-	var data map[string]interface{}
-	if err := json.NewDecoder(r.Body).Decode(&data); err != nil {
+	//var data map[string]interface{}
+	var updateInput dto.UpdateUserDTO
+	if err := json.NewDecoder(r.Body).Decode(&updateInput); err != nil {
 		http.Error(w, "JSON inválido", http.StatusBadRequest)
 		return
 	}
-	if len(data) == 0 {
+
+	if updateInput.FullName == nil && updateInput.Email == nil && updateInput.Phone == nil && updateInput.DUI == nil {
 		http.Error(w, "No se enviaron campos para actualizar", http.StatusBadRequest)
 		return
 	}
-	if fullName, ok := data["full_name"].(string); ok {
-		if err := validators.ValidateFullName(fullName); err != nil {
-			http.Error(w, err.Error(), http.StatusBadRequest)
-			return
-		}
+
+	err := validators.ValidateUpdatedUserDTO(updateInput)
+	if err != nil {
+		http.Error(w, "Error en el formato: "+err.Error(), http.StatusBadRequest)
 	}
-	if dui, ok := data["dui"].(string); ok {
-		if err := validators.ValidateDUI(dui); err != nil {
-			http.Error(w, err.Error(), http.StatusBadRequest)
-			return
-		}
-	}
-	if phone, ok := data["phone"].(string); ok {
-		if err := validators.ValidatePhone(phone); err != nil {
-			http.Error(w, err.Error(), http.StatusBadRequest)
-			return
-		}
-	}
-	if email, ok := data["email"].(string); ok {
-		if err := validators.ValidateEmail(email); err != nil {
-			http.Error(w, err.Error(), http.StatusBadRequest)
-			return
-		}
-	}
-	if err := uc.Service.UpdateUser(id, data); err != nil {
+
+	if err := uc.UserService.UpdateUser(id, updateInput); err != nil {
 		http.Error(w, "Error al actualizar usuario: "+err.Error(), http.StatusInternalServerError)
 		return
 	}
@@ -266,7 +205,7 @@ func (uc *UserController) UpdateUser(w http.ResponseWriter, r *http.Request) {
 
 func (uc *UserController) DeleteUser(w http.ResponseWriter, r *http.Request) {
 	id := mux.Vars(r)["id"]
-	msg, err := uc.Service.DeleteUser(id)
+	msg, err := uc.UserService.DeleteUser(id)
 	if err != nil {
 		if err.Error() == "usuario no encontrado" {
 			http.Error(w, err.Error(), http.StatusNotFound)
@@ -276,4 +215,42 @@ func (uc *UserController) DeleteUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	json.NewEncoder(w).Encode(map[string]string{"message": msg})
+}
+
+func (uc *UserController) RequestPasswordReset(w http.ResponseWriter, r *http.Request) {
+	var req dto.ResetRequestDTO
+	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+		http.Error(w, "JSON inválido", http.StatusBadRequest)
+		return
+	}
+
+	if err := validators.ValidateEmail(req.Email); err != nil {
+		http.Error(w, "Error en el email: "+err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	if err := uc.UserService.RequestEmail(req.Email); err != nil {
+		http.Error(w, "No se pudo enviar el correo: "+err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	json.NewEncoder(w).Encode(map[string]string{
+		"message": "Correo enviado",
+	})
+}
+
+func (uc *UserController) ResetPassword(w http.ResponseWriter, r *http.Request) {
+	var req dto.ResetPassDTO
+	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+		http.Error(w, "Cuerpo del request invalido: "+err.Error(), http.StatusBadRequest)
+	}
+
+	if err := validators.ValidatePassword(req.NewPassword); err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+	}
+
+	if err := uc.UserService.ResetPassword(req.Token, req.NewPassword); err != nil {
+		http.Error(w, "Error al actualizar usuario: "+err.Error(), http.StatusInternalServerError)
+	}
+
 }

@@ -142,8 +142,8 @@
 }
 
 .edit-group.horizontal {
-  flex-direction: row;
-  flex-wrap: wrap;
+  flex-direction: column;
+  flex-wrap: nowrap;
   gap: 1rem;
 }
 

@@ -1,38 +1,34 @@
-@use './variables' as *;
-@use './mixins' as *;
-@use './base' as *;
-@use './pages/login' as *;
-@use './pages/register' as *;
+@use "./variables" as *;
+@use "./mixins" as *;
+@use "./base" as *;
 
-@use './pages/appointments' as *;
-@use './components/searchbox' as *;
-@use './components/table' as *;
-@use './components/checkbox' as *;
+@use "./pages/login" as *;
+@use "./pages/register" as *;
+@use "./pages/appointments" as *;
+@use "./pages/adminHome" as *;
+@use "./pages/adminOwners" as *;
+@use "./pages/adminPet";
+@use "./pages/profileVet" as *;
 
-@use './header';
-@use './home';
-@use './sobreNosotros';
-@use './expedienteVet';
-@use './pages/adminHome' as *;
-@use './components/adminTable' as *;
-@use './components/actionButtons' as *;
-@use './components/editModal' as *;
-@use './components/editAppoint' as *;
-@use './components/editForm' as *;
-@use './pages/adminOwners' as *;
-@use './components/userAppointment' as *;
-@use './components/modalExpVet' as *;
+@use "./components/searchbox" as *;
+@use "./components/table" as *;
+@use "./components/checkbox" as *;
+@use "./components/adminTable" as *;
+@use "./components/actionButtons" as *;
+@use "./components/editModal" as *;
+@use "./components/editAppoint" as *;
+@use "./components/editForm" as *;
+@use "./components/userAppointment" as *;
+@use "./components/modalExpVet" as *;
 
-
-@use './pages/adminPet';
-@use './pages/profileVet' as *;
-
-
+@use "./header";
+@use "./home";
+@use "./sobreNosotros";
+@use "./expedienteVet";
 
 body,
 html,
 #root {
-
   width: 100vw;
   height: 100vh;
   overflow-y: auto;
@@ -40,70 +36,95 @@ html,
   padding: 0;
   text-align: left;
   -webkit-appearance: none;
-
-
   *,
   *::before,
   *::after {
     box-sizing: border-box;
   }
-
-
-
   .app-header.vet-header {
-    background-color: $verde-oscuro ;
+    background-color: $verde-oscuro;
     width: 100%;
-
   }
-
   .app-header.admin-header {
     background-color: $admin-azul;
   }
-
-
   .sidebar-menu.vet-sidebar {
     background-color: $verde-oscuro;
   }
-
   .sidebar-menu.admin-sidebar {
-    background-color: $admin-azul ;
+    background-color: $admin-azul;
   }
-
-
   .admin-background {
     background-color: $admin-background;
-
   }
-
   .vet-background {
     background-color: $primary-color;
-
-
   }
-
   .search-add-row {
-
-
-     @include respond-to($mobile) {
+    @include respond-to($mobile) {
       display: flex;
       flex-direction: column;
       justify-content: center;
       align-items: center;
-
-
-
     }
-    
     @include respond-to($tablet) {
       display: flex;
       flex-direction: row;
       justify-content: space-between;
       align-items: center;
       padding-right: 2rem;
-
-
     }
+  }
+  .profile-avatar-wrapper {
+    position: relative;
+    display: inline-block;
+  }
+  .profile-avatar {
+    width: 96px;
+    height: 96px;
+    border-radius: 50%;
+    object-fit: cover;
+  }
+  .btn-change-photo {
+    position: absolute;
+    bottom: -8px;
+    right: -8px;
+    font-size: 11px;
+    padding: 4px 8px;
+    border-radius: 999px;
+    border: none;
+    background-color: #a5b68d;
+    color: #fff;
+    cursor: pointer;
+  }
+  .profile-photo-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 15px;
+  }
+  .profile-photo-option {
+    border: 2px solid transparent;
+    border-radius: 50%;
+    padding: 2px;
+    background: none;
+    cursor: pointer;
+  }
+  .profile-photo-option img {
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    object-fit: cover;
+  }
+  .profile-photo-option.selected {
+    border-color: #a5b68d;
+  }
 
-   
+  .header-user-avatar {
+    width: 42px !important;
+    height: 42px !important;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #fff;
   }
 }

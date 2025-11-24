@@ -2,13 +2,17 @@ package dependencies
 
 import (
 	"VetiCare/controllers"
+	"VetiCare/infrastructure/email"
 	"VetiCare/repositories"
 	"VetiCare/services"
 	"gorm.io/gorm"
 )
 
 func BuildDeps(db *gorm.DB) Controllers {
-	
+
+	smtpClient := email.NewSMTPClient()
+	emailService := services.NewEmailService(smtpClient)
+
 	userRepo := repositories.NewUserRepositoryGORM(db)
 	adminRepo := repositories.NewAdminRepositoryGORM(db)
 	appointmentRepo := repositories.NewAppointmentRepositoryGORM(db)
@@ -16,8 +20,9 @@ func BuildDeps(db *gorm.DB) Controllers {
 	adminTypeRepo := repositories.NewAdminTypeRepositoryGORM(db)
 	userRoleRepo := repositories.NewUserRoleRepositoryGORM(db)
 	speciesRepo := repositories.NewSpeciesRepositoryGORM(db)
+	tokenRepo := repositories.NewTokenResetRepositoryGORM(db)
 
-	userService := services.NewUserService(userRepo)
+	userService := services.NewUserService(userRepo, emailService, tokenRepo)
 	adminService := services.NewAdminService(adminRepo)
 	appointmentService := services.NewAppointmentService(appointmentRepo)
 	petService := services.NewPetService(petRepo)
